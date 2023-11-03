@@ -1,0 +1,11 @@
+Topic: Agile Management Tool
+Description: Our semester project will be a backend app for an Agile team. This software will serve as a solution for managing tasks and tracking progress.
+The core functionality of this software includes:
+1.	Task Hierarchy Management (WBS): This feature will allow the team to structure their tasks in a hierarchical manner, facilitating better organization and tracking.
+2.	Backlog Management: The software will maintain a backlog, which is essentially a list of tasks that are ready for implementation. Each task will be estimated using story points.
+3.	Task Estimation Using Story Points: This feature will enable the team to estimate the effort required for each task using story points, promoting efficient resource allocation.
+4.	Sprint Planning and Tracking: The software will also handle sprints, assisting the team in planning their work for each sprint and tracking their progress.
+5.	Task State Management: The system will manage various task states such as READY, IN PROGRESS, and DONE, and support state changes.
+6.	Time Tracking: This feature will allow team members to log the time they spend on each task, aiding in future task estimations and workload management.
+7.	User Management: The system will also handle user management, assigning different roles and permissions to team members based on their responsibilities within the team.
+This backend system is primarily targeted at developers and Agile teams who are seeking a solution to manage their tasks, sprints, and overall progress. We believe that our software will significantly enhance productivity and efficiency within Agile teams.
