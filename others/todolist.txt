@@ -1,0 +1,5 @@
+Config pro H2 DB
+Přidat metody do UML class dia.
+Vytvořit kostru pro model
+Vytvořit DAO
+Sepsat CP1.txt
