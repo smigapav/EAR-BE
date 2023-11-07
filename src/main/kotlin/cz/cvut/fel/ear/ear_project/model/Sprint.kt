@@ -8,4 +8,10 @@ import jakarta.persistence.*
 abstract class Sprint : AbstractEntity() {
     @Basic(optional = false)
     lateinit var name : String
+
+    @ManyToOne
+    lateinit var project: Project
+
+    @OneToMany(mappedBy = "sprint")
+    lateinit var stories : List<Story>
 }

@@ -19,4 +19,7 @@ class Task : AbstractEntity() {
 
     @ManyToOne
     lateinit var story : Story
+
+    @ManyToOne(optional = true)
+    var user : User? = null
 }
