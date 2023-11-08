@@ -9,7 +9,4 @@ interface StoryRepository : JpaRepository<Story, Long> {
 
     fun findByName(name: String): Story?
     fun findByBacklog(backlog: Backlog): List<Story>
-    //TODO: add other methods
-    //fun findByState(state: String): List<Story>
-    //fun findByEstimationGreaterThan(estimation: Int): List<Story>
 }

@@ -9,9 +9,7 @@ class UserService(private val userRepository: UserRepository) {
         user: User,
         name: String,
     ) {
-        val tmpUser = userRepository.findByUsername(user.username)
-        if (tmpUser != null) {
-            tmpUser.username = name
-        }
+        val tmpUser = user.username?.let { userRepository.findByUsername(it) }
+        tmpUser?.username = name
     }
 }
