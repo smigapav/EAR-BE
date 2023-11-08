@@ -1,0 +1,26 @@
+Story
+Task
+Project
+User
+Sprint
+Backlog
+State (enum)
+User role (enum)???
+TimeLog???
+Permission
+
+Pro jaké uživatele bude systém určen?
+
+Typ uživatele bude jenom 1, bude však mít několik různých oprávnění na daném projektu: ProjectAdmin, StoriesAndTasksManager, CanManageSprint
+
+Jaké bude plnit funkce?
+
+ProjectAdmin - Může přidávat/odebírat další uživatele do/z projektu, může uživatelům měnit práva, uživatel co projekt vytvoří bude mít automaticky tuto roli
+
+StoriesAndTasksManager - Může přidávat/odebírat/upravovat stories a tasky
+
+CanManageSprint - Může začít/ukončit sprint
+
+Jaká bude mít systém omezení?
+
+Na každém tasku bude moct pracovat pouze 1 uživatel
