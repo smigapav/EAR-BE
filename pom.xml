@@ -139,6 +139,25 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<plugin>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<artifactId>kotlin-maven-plugin</artifactId>
+				<version>1.8.10</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.jetbrains.kotlin</groupId>
+						<artifactId>kotlin-maven-lombok</artifactId>
+						<version>1.8.20-RC</version>
+					</dependency>
+					<dependency>
+						<groupId>org.projectlombok</groupId>
+						<artifactId>lombok</artifactId>
+						<version>1.18.20</version>
+						<scope>provided</scope>
+					</dependency>
+				</dependencies>
+			</plugin>
 		</plugins>
 	</build>
 

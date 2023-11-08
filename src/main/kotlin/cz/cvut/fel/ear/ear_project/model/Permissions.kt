@@ -4,14 +4,16 @@ import jakarta.persistence.Entity
 import jakarta.persistence.ManyToOne
 
 @Entity
-class Permissions : AbstractEntity() {
-    var projectAdmin : Boolean = false
-    var storiesAndTasksManager : Boolean = false
-    var canManageSprints : Boolean = false
+data class Permissions(
+    var projectAdmin : Boolean = false,
+
+    var storiesAndTasksManager : Boolean = false,
+
+    var canManageSprints : Boolean = false,
 
     @ManyToOne
-    lateinit var user: User
+    var user: User? = null,
 
     @ManyToOne
-    lateinit var project: Project
-}
+    var project: Project? = null
+) : AbstractEntity()

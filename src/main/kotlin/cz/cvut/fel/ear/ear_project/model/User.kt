@@ -3,19 +3,61 @@ package cz.cvut.fel.ear.ear_project.model
 import jakarta.persistence.*
 
 @Entity
-class User : AbstractEntity() {
+data class User(
     @Basic(optional = false)
-    lateinit var username: String
+    var username: String? = null,
 
     @Basic(optional = false)
-    lateinit var webApiKey: String
+    var webApiKey: String? = null,
 
     @OneToMany(mappedBy = "user")
-    lateinit var tasks : List<Task>
+    var tasks : MutableList<Task>? = null,
 
     @ManyToMany(mappedBy = "users")
-    lateinit var projects : List<Project>
+    var projects : MutableList<Project>? = null,
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE])
-    lateinit var permissions: List<Permissions>
+    var permissions: MutableList<Permissions>? = null
+) : AbstractEntity() {
+    fun addTask(task: Task) {
+        if (tasks == null) {
+            tasks = mutableListOf()
+        }
+        tasks!!.add(task)
+    }
+
+    fun addProject(project: Project) {
+        if (projects == null) {
+            projects = mutableListOf()
+        }
+        projects!!.add(project)
+    }
+
+    fun addPermission(permission: Permissions) {
+        if (permissions == null) {
+            permissions = mutableListOf()
+        }
+        permissions!!.add(permission)
+    }
+
+    fun removeTask(task: Task) {
+        if (tasks == null) {
+            return
+        }
+        tasks!!.remove(task)
+    }
+
+    fun removeProject(project: Project) {
+        if (projects == null) {
+            return
+        }
+        projects!!.remove(project)
+    }
+
+    fun removePermission(permission: Permissions) {
+        if (permissions == null) {
+            return
+        }
+        permissions!!.remove(permission)
+    }
 }

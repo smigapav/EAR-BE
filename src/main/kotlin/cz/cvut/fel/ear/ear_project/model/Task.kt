@@ -5,21 +5,20 @@ import jakarta.persistence.Entity
 import jakarta.persistence.ManyToOne
 
 @Entity
-class Task : AbstractEntity() {
+data class Task(
+    var state: State = State.WAITING,
 
-    var state: State = State.WAITING
-
-    var timeSpent: Int = 0
-
-    @Basic(optional = false)
-    lateinit var name: String
+    var timeSpent: Int = 0,
 
     @Basic(optional = false)
-    lateinit var description: String
+    var name: String? = null,
+
+    @Basic(optional = false)
+    var description: String? = null,
 
     @ManyToOne
-    lateinit var story : Story
+    var story : Story? = null,
 
     @ManyToOne(optional = true)
     var user : User? = null
-}
+) : AbstractEntity()

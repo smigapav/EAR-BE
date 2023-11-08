@@ -3,25 +3,38 @@ package cz.cvut.fel.ear.ear_project.model
 import jakarta.persistence.*
 
 @Entity
-class Story : AbstractEntity() {
-
-    var price: Int = 0
-
-    @Basic(optional = false)
-    lateinit var name: String
+data class Story(
+    var price: Int = 0,
 
     @Basic(optional = false)
-    lateinit var description: String
+    var name: String? = null,
+
+    @Basic(optional = false)
+    var description: String? = null,
 
     @ManyToOne
-    lateinit var project : Project
+    var project : Project? = null,
 
     @OneToMany(mappedBy = "story", cascade = [CascadeType.REMOVE])
-    lateinit var tasks : List<Task>
+    var tasks : MutableList<Task>? = null,
 
     @ManyToOne
-    lateinit var sprint : Sprint
+    var sprint : Sprint? = null,
 
     @ManyToOne
-    lateinit var backlog : Backlog
+    var backlog : Backlog? = null
+) : AbstractEntity() {
+    fun addTask(task: Task) {
+        if (tasks == null) {
+            tasks = mutableListOf()
+        }
+        tasks!!.add(task)
+    }
+
+    fun removeTask(task: Task) {
+        if (tasks == null) {
+            return
+        }
+        tasks!!.remove(task)
+    }
 }

@@ -6,12 +6,23 @@ import jakarta.persistence.*
 @DiscriminatorColumn(name = "SPRINT_TYPE")
 @Entity
 abstract class Sprint : AbstractEntity() {
-    @Basic(optional = false)
-    lateinit var name : String
+    abstract var name : String?
 
-    @ManyToOne
-    lateinit var project: Project
+    abstract var project: Project?
 
-    @OneToMany(mappedBy = "sprint")
-    lateinit var stories : List<Story>
+    abstract var stories : MutableList<Story>?
+
+    fun addStory(story: Story) {
+        if (stories == null) {
+            stories = mutableListOf()
+        }
+        stories!!.add(story)
+    }
+
+    fun removeStory(story: Story) {
+        if (stories == null) {
+            return
+        }
+        stories!!.remove(story)
+    }
 }

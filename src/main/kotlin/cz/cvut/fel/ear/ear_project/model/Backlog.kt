@@ -5,10 +5,24 @@ import jakarta.persistence.OneToMany
 import jakarta.persistence.OneToOne
 
 @Entity
-class Backlog : AbstractEntity() {
+data class Backlog(
     @OneToOne(mappedBy = "backlog")
-    lateinit var project: Project
+    var project: Project? = null,
 
     @OneToMany(mappedBy = "backlog")
-    lateinit var stories : List<Story>
+    var stories : MutableList<Story>? = null
+) : AbstractEntity() {
+    fun addStory(story: Story) {
+        if (stories == null) {
+            stories = mutableListOf()
+        }
+        stories!!.add(story)
+    }
+
+    fun removeStory(story: Story) {
+        if (stories == null) {
+            return
+        }
+        stories!!.remove(story)
+    }
 }

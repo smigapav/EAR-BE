@@ -1,28 +1,80 @@
 package cz.cvut.fel.ear.ear_project.model
 
-import jakarta.persistence.Basic
-import jakarta.persistence.Entity
-import jakarta.persistence.ManyToMany
-import jakarta.persistence.OneToMany
-import jakarta.persistence.OneToOne
+import jakarta.persistence.*
 
 @Entity
-class Project : AbstractEntity() {
+data class Project(
     @Basic(optional = false)
-    lateinit var name : String
+    var name : String? = null,
 
     @ManyToMany
-    lateinit var users : List<User>
+    var users : MutableList<User>? = null,
 
     @OneToMany(mappedBy = "project")
-    lateinit var permissions: List<Permissions>
+    var permissions: MutableList<Permissions>? = null,
 
     @OneToMany(mappedBy = "project")
-    lateinit var stories : List<Story>
+    var stories : MutableList<Story>? = null,
 
     @OneToOne
-    lateinit var backlog: Backlog
+    var backlog: Backlog? = null,
 
     @OneToMany(mappedBy = "project")
-    lateinit var sprints : MutableList<Sprint>
+    var sprints : MutableList<Sprint>? = null
+) : AbstractEntity() {
+    fun addUser(user: User) {
+        if (users == null) {
+            users = mutableListOf()
+        }
+        users!!.add(user)
+    }
+
+    fun addPermission(permission: Permissions) {
+        if (permissions == null) {
+            permissions = mutableListOf()
+        }
+        permissions!!.add(permission)
+    }
+
+    fun addStory(story: Story) {
+        if (stories == null) {
+            stories = mutableListOf()
+        }
+        stories!!.add(story)
+    }
+
+    fun addSprint(sprint: Sprint) {
+        if (sprints == null) {
+            sprints = mutableListOf()
+        }
+        sprints!!.add(sprint)
+    }
+
+    fun removeUser(user: User) {
+        if (users == null) {
+            return
+        }
+        users!!.remove(user)
+    }
+
+    fun removePermission(permission: Permissions) {
+        if (permissions == null) {
+            return
+        }
+        permissions!!.remove(permission)
+    }
+
+    fun removeStory(story: Story) {
+        if (stories == null) {
+            return
+        }
+        stories!!.remove(story)
+    }
+
+    fun removeSprint(sprint: Sprint) {
+        if (sprints == null) {
+            return
+        }
+        sprints!!.remove(sprint)
+    }
 }
