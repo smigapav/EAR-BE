@@ -6,5 +6,5 @@ import jakarta.persistence.Entity
 @Entity
 class Project : AbstractEntity() {
     @Basic(optional = false)
-    lateinit var name : String
+    lateinit var name: String
 }

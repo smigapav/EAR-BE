@@ -7,5 +7,5 @@ import jakarta.persistence.*
 @Entity
 abstract class Sprint : AbstractEntity() {
     @Basic(optional = false)
-    lateinit var name : String
+    lateinit var name: String
 }

@@ -6,7 +6,6 @@ import jakarta.persistence.ManyToOne
 
 @Entity
 class Task : AbstractEntity() {
-
     var state: State = State.WAITING
 
     var timeSpent: Int = 0
@@ -18,5 +17,5 @@ class Task : AbstractEntity() {
     lateinit var description: String
 
     @ManyToOne
-    lateinit var story : Story
+    lateinit var story: Story
 }

@@ -4,7 +4,7 @@ import jakarta.persistence.Entity
 
 @Entity
 class Permissions : AbstractEntity() {
-    var projectAdmin : Boolean = false
-    var storiesAndTasksManager : Boolean = false
-    var canManageSprints : Boolean = false
+    var projectAdmin: Boolean = false
+    var storiesAndTasksManager: Boolean = false
+    var canManageSprints: Boolean = false
 }
