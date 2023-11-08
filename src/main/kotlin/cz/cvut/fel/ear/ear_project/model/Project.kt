@@ -3,6 +3,7 @@ package cz.cvut.fel.ear.ear_project.model
 import jakarta.persistence.*
 
 @Entity
+@Table(name = "projects")
 data class Project(
     @Basic(optional = false)
     var name: String? = null,

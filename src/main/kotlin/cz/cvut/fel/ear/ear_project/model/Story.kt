@@ -3,6 +3,7 @@ package cz.cvut.fel.ear.ear_project.model
 import jakarta.persistence.*
 
 @Entity
+@Table(name = "stories")
 data class Story(
     var price: Int = 0,
     @Basic(optional = false)

@@ -3,8 +3,10 @@ package cz.cvut.fel.ear.ear_project.model
 import jakarta.persistence.Basic
 import jakarta.persistence.Entity
 import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
 
 @Entity
+@Table(name = "tasks")
 data class Task(
     var state: State = State.WAITING,
     var timeSpent: Int = 0,

@@ -1,19 +1,21 @@
 package cz.cvut.fel.ear.ear_project.model
 
 import jakarta.persistence.*
+import java.util.*
 
 @Entity
-data class User(
+@Table(name = "users")
+class User(
     @Basic(optional = false)
-    var username: String? = null,
+    var username: String = "",
     @Basic(optional = false)
-    var webApiKey: String? = null,
+    var webApiKey: String = generateUniqueWebApiKey(),
     @OneToMany(mappedBy = "user")
-    var tasks: MutableList<Task>? = null,
+    var tasks: MutableList<Task> = mutableListOf(),
     @ManyToMany(mappedBy = "users")
-    var projects: MutableList<Project>? = null,
+    var projects: MutableList<Project> = mutableListOf(),
     @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE])
-    var permissions: MutableList<Permissions>? = null,
+    var permissions: MutableList<Permissions> = mutableListOf(),
 ) : AbstractEntity() {
     fun addTask(task: Task) {
         if (tasks == null) {
@@ -55,5 +57,25 @@ data class User(
             return
         }
         permissions!!.remove(permission)
+    }
+
+    override fun toString(): String {
+        return "User(id='$id', username='$username', webApiKey='$webApiKey', tasks=$tasks, projects=$projects, permissions=$permissions)"
+    }
+
+    companion object {
+        fun generateUniqueWebApiKey(): String {
+            // Generate a random UUID and convert it to a string
+            val uuid = UUID.randomUUID().toString()
+
+            // Create a random string to add uniqueness
+            val randomString =
+                (1..6)
+                    .map { ('a'..'z').random() } // Use lowercase letters for randomness
+                    .joinToString("")
+
+            // Combine the UUID and random string to create the unique API key
+            return "$uuid-$randomString"
+        }
     }
 }
