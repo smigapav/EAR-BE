@@ -6,18 +6,14 @@ import jakarta.persistence.*
 data class User(
     @Basic(optional = false)
     var username: String? = null,
-
     @Basic(optional = false)
     var webApiKey: String? = null,
-
     @OneToMany(mappedBy = "user")
-    var tasks : MutableList<Task>? = null,
-
+    var tasks: MutableList<Task>? = null,
     @ManyToMany(mappedBy = "users")
-    var projects : MutableList<Project>? = null,
-
+    var projects: MutableList<Project>? = null,
     @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE])
-    var permissions: MutableList<Permissions>? = null
+    var permissions: MutableList<Permissions>? = null,
 ) : AbstractEntity() {
     fun addTask(task: Task) {
         if (tasks == null) {

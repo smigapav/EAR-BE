@@ -5,22 +5,17 @@ import jakarta.persistence.*
 @Entity
 data class Project(
     @Basic(optional = false)
-    var name : String? = null,
-
+    var name: String? = null,
     @ManyToMany
-    var users : MutableList<User>? = null,
-
+    var users: MutableList<User>? = null,
     @OneToMany(mappedBy = "project")
     var permissions: MutableList<Permissions>? = null,
-
     @OneToMany(mappedBy = "project")
-    var stories : MutableList<Story>? = null,
-
+    var stories: MutableList<Story>? = null,
     @OneToOne
     var backlog: Backlog? = null,
-
     @OneToMany(mappedBy = "project")
-    var sprints : MutableList<Sprint>? = null
+    var sprints: MutableList<Sprint>? = null,
 ) : AbstractEntity() {
     fun addUser(user: User) {
         if (users == null) {

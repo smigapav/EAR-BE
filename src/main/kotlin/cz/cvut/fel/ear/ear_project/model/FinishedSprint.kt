@@ -8,16 +8,12 @@ import java.time.LocalDateTime
 data class FinishedSprint(
     @Basic(optional = false)
     override var name: String? = null,
-
     @ManyToOne
     override var project: Project? = null,
-
     @OneToMany(mappedBy = "sprint")
     override var stories: MutableList<Story>? = null,
-
-    var start : LocalDateTime? = null,
-
-    var finish : LocalDateTime? = null
+    var start: LocalDateTime? = null,
+    var finish: LocalDateTime? = null,
 ) : Sprint() {
     fun setStart() {
         start = LocalDateTime.now()

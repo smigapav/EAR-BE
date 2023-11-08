@@ -7,10 +7,8 @@ import jakarta.persistence.*
 data class UnstartedSprint(
     @Basic(optional = false)
     override var name: String? = null,
-
     @ManyToOne
     override var project: Project? = null,
-
     @OneToMany(mappedBy = "sprint")
-    override var stories: MutableList<Story>? = null
+    override var stories: MutableList<Story>? = null,
 ) : Sprint()

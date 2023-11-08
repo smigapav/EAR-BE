@@ -6,11 +6,11 @@ import jakarta.persistence.*
 @DiscriminatorColumn(name = "SPRINT_TYPE")
 @Entity
 abstract class Sprint : AbstractEntity() {
-    abstract var name : String?
+    abstract var name: String?
 
     abstract var project: Project?
 
-    abstract var stories : MutableList<Story>?
+    abstract var stories: MutableList<Story>?
 
     fun addStory(story: Story) {
         if (stories == null) {

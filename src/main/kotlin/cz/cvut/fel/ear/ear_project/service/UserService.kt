@@ -4,8 +4,9 @@ import cz.cvut.fel.ear.ear_project.model.User
 
 class UserService {
     fun changeUserName(
-        user : User,
-        name : String) {
+        user: User,
+        name: String,
+    ) {
         user.username = name
     }
 }

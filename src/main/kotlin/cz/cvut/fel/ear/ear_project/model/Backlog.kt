@@ -8,9 +8,8 @@ import jakarta.persistence.OneToOne
 data class Backlog(
     @OneToOne(mappedBy = "backlog")
     var project: Project? = null,
-
     @OneToMany(mappedBy = "backlog")
-    var stories : MutableList<Story>? = null
+    var stories: MutableList<Story>? = null,
 ) : AbstractEntity() {
     fun addStory(story: Story) {
         if (stories == null) {
