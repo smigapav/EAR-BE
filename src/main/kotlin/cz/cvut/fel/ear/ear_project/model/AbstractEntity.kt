@@ -9,5 +9,5 @@ import java.io.Serializable
 abstract class AbstractEntity : Serializable {
     @Id
     @GeneratedValue
-    private var id: Int? = null
+    val id: Long? = null
 }
