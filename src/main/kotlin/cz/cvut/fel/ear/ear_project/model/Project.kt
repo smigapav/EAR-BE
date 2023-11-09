@@ -15,10 +15,10 @@ data class Project(
     var permissions: MutableList<Permissions> = mutableListOf(),
     @OneToMany(mappedBy = "project")
     var stories: MutableList<Story> = mutableListOf(),
-    @OneToOne
-    var backlog: Backlog? = null,
     @OneToMany(mappedBy = "project")
     var sprints: MutableList<Sprint> = mutableListOf(),
+    @OneToOne
+    var backlog: Backlog? = null,
 ) : AbstractEntity() {
     fun addUser(user: User) {
         if (users.contains(user)) {

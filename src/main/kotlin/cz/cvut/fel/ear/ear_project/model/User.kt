@@ -7,17 +7,18 @@ import java.util.*
 
 @Entity
 @Table(name = "users")
-class User : AbstractEntity() {
+class User(
     @Basic(optional = false)
-    var username: String? = null
+    var username: String? = null,
     @Basic(optional = false)
-    val webApiKey: String = generateUniqueWebApiKey()
+    val webApiKey: String = generateUniqueWebApiKey(),
     @OneToMany(mappedBy = "user")
-    var tasks: MutableList<Task> = mutableListOf()
+    var tasks: MutableList<Task> = mutableListOf(),
     @ManyToMany(mappedBy = "users")
-    var projects: MutableList<Project> = mutableListOf()
+    var projects: MutableList<Project> = mutableListOf(),
     @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE])
-    var permissions: MutableList<Permissions> = mutableListOf()
+    var permissions: MutableList<Permissions> = mutableListOf(),
+) : AbstractEntity() {
     fun addTask(task: Task) {
         if (tasks == null) {
             tasks = mutableListOf()
