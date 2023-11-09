@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface StoryRepository : JpaRepository<Story, Long> {
-//    fun findById(id: String): Story?
-//    fun findByName(name: String): Story?
-//    fun findByBacklog(backlog: Backlog): List<Story>
+    fun findByName(name: String): Story?
+    fun findByBacklog(backlog: Backlog): List<Story>
 }

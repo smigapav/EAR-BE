@@ -6,7 +6,7 @@ import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "backlogs")
+@Table(name = "Backlogs")
 data class Backlog(
     @OneToOne(mappedBy = "backlog")
     var project: Project? = null,

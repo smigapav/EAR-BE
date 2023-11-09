@@ -6,8 +6,9 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface TaskRepository : JpaRepository<Task, Long> {
-//    fun findByName(name: String): Task?
-//    fun findByState(state: String): List<Task>?
-//    fun findByStory(story: Story): List<Task>
-//    fun findByAssignedTo(user: User): List<Task>
+    fun findByName(name: String): Task?
+
+    //fun findByState(state: String): List<Task>?
+    fun findByStory(story: Story): List<Task>
+    //fun findByAssignedTo(user: User): List<Task>
 }
