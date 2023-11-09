@@ -5,6 +5,7 @@ import jakarta.persistence.*
 @Entity
 @DiscriminatorValue("UNSTARTED")
 data class UnstartedSprint(
+
     @Basic(optional = false)
     override var name: String? = null,
 
@@ -13,4 +14,5 @@ data class UnstartedSprint(
 
     @OneToMany(mappedBy = "sprint")
     override var stories: MutableList<Story>? = null
+
 ) : Sprint()

@@ -2,27 +2,30 @@ package cz.cvut.fel.ear.ear_project.model
 
 import jakarta.persistence.*
 
+@Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "SPRINT_TYPE")
-@Entity
+@Table(name = "Sprints")
 abstract class Sprint : AbstractEntity() {
-    abstract var name : String?
 
-    abstract var project: Project?
+    @Column
+    open var name: String? = null
 
-    abstract var stories : MutableList<Story>?
+    @ManyToOne
+    open var project: Project? = null
+
+    @OneToMany(mappedBy = "sprint")
+    open var stories: MutableList<Story>? = null
 
     fun addStory(story: Story) {
-        if (stories == null) {
+        if(stories == null) {
             stories = mutableListOf()
         }
-        stories!!.add(story)
+        stories?.add(story)
     }
 
     fun removeStory(story: Story) {
-        if (stories == null) {
-            return
-        }
-        stories!!.remove(story)
+        stories?.remove(story)
     }
 }
+

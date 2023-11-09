@@ -15,7 +15,7 @@ class SprintService(private val sprintRepository: SprintRepository) {
         sprintId: String,
         name: String,
     ) {
-        val sprint = sprintRepository.findById(sprintId)
+        val sprint = sprintRepository.findById(sprintId).orElse(null)
         if (sprint != null) {
             sprint.name = name
             sprintRepository.save(sprint)
