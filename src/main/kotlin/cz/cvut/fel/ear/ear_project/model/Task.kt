@@ -7,7 +7,7 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "tasks")
-data class Task(
+class Task(
     var state: State = State.WAITING,
     var timeSpent: Int = 0,
     @Basic(optional = false)
