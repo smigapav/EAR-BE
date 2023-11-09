@@ -1,7 +1,7 @@
 package cz.cvut.fel.ear.ear_project.model
 
 import cz.cvut.fel.ear.ear_project.exceptions.ItemAlreadyPresentException
-import cz.cvut.fel.ear.ear_project.exceptions.ItemNotFound
+import cz.cvut.fel.ear.ear_project.exceptions.ItemNotFoundException
 import jakarta.persistence.*
 import java.util.*
 
@@ -53,7 +53,7 @@ class User : AbstractEntity() {
             return
         }
         if (!tasks!!.contains(task)) {
-            throw ItemNotFound("Task not found in user")
+            throw ItemNotFoundException("Task not found in user")
         }
         tasks!!.remove(task)
     }
@@ -63,7 +63,7 @@ class User : AbstractEntity() {
             return
         }
         if (!projects!!.contains(project)) {
-            throw ItemNotFound("Project not found in user")
+            throw ItemNotFoundException("Project not found in user")
         }
         projects!!.remove(project)
     }
@@ -73,7 +73,7 @@ class User : AbstractEntity() {
             return
         }
         if (!permissions!!.contains(permission)) {
-            throw ItemNotFound("Permission not found in user")
+            throw ItemNotFoundException("Permission not found in user")
         }
         permissions!!.remove(permission)
     }
