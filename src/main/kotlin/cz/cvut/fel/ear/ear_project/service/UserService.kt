@@ -4,8 +4,6 @@ import cz.cvut.fel.ear.ear_project.dao.PermissionsRepository
 import cz.cvut.fel.ear.ear_project.dao.ProjectRepository
 import cz.cvut.fel.ear.ear_project.dao.TaskRepository
 import cz.cvut.fel.ear.ear_project.dao.UserRepository
-import cz.cvut.fel.ear.ear_project.exceptions.ItemAlreadyPresentException
-import cz.cvut.fel.ear.ear_project.exceptions.ItemNotFound
 import cz.cvut.fel.ear.ear_project.model.Task
 import cz.cvut.fel.ear.ear_project.model.User
 import org.springframework.beans.factory.annotation.Autowired
