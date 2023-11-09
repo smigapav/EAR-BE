@@ -6,24 +6,18 @@ import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "Backlogs")
+@Table(name = "backlogs")
 data class Backlog(
     @OneToOne(mappedBy = "backlog")
     var project: Project? = null,
     @OneToMany(mappedBy = "backlog")
-    var stories: MutableList<Story>? = null,
+    var stories: MutableList<Story> = mutableListOf(),
 ) : AbstractEntity() {
     fun addStory(story: Story) {
-        if (stories == null) {
-            stories = mutableListOf()
-        }
-        stories!!.add(story)
+        stories.add(story)
     }
 
     fun removeStory(story: Story) {
-        if (stories == null) {
-            return
-        }
-        stories!!.remove(story)
+        stories.remove(story)
     }
 }

@@ -14,4 +14,24 @@ data class Permissions(
     var user: User? = null,
     @ManyToOne
     var project: Project? = null,
-) : AbstractEntity()
+) : AbstractEntity() {
+    fun addUser(user: User) {
+        if (this.user != user) {
+            this.user = user
+        }
+    }
+
+    fun removeUser() {
+        this.user = null
+    }
+
+    fun addProject(project: Project) {
+        if (this.project != project) {
+            this.project = project
+        }
+    }
+
+    fun removeProject() {
+        this.project = null
+    }
+}
