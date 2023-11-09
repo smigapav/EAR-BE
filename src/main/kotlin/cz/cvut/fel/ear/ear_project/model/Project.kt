@@ -8,15 +8,15 @@ data class Project(
     @Basic(optional = false)
     var name: String? = null,
     @ManyToMany
-    var users: MutableList<User>? = null,
+    var users: MutableList<User> = mutableListOf(),
     @OneToMany(mappedBy = "project")
-    var permissions: MutableList<Permissions>? = null,
+    var permissions: MutableList<Permissions> = mutableListOf(),
     @OneToMany(mappedBy = "project")
-    var stories: MutableList<Story>? = null,
+    var stories: MutableList<Story> = mutableListOf(),
+    @OneToMany(mappedBy = "project")
+    var sprints: MutableList<Sprint> = mutableListOf(),
     @OneToOne
     var backlog: Backlog? = null,
-    @OneToMany(mappedBy = "project")
-    var sprints: MutableList<Sprint>? = null,
 ) : AbstractEntity() {
     fun addUser(user: User) {
         if (users == null) {
