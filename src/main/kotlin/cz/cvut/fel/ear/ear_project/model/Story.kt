@@ -29,16 +29,16 @@ class Story(
         if (tasks.contains(task)) {
             throw ItemAlreadyPresentException("Task already present in story")
         }
-        tasks!!.add(task)
+        tasks.add(task)
     }
 
     fun removeTask(task: Task) {
         if (tasks == null) {
             return
         }
-        if (!tasks!!.contains(task)) {
+        if (!tasks.contains(task)) {
             throw ItemNotFoundException("Task not found in story")
         }
-        tasks!!.remove(task)
+        tasks.remove(task)
     }
 }

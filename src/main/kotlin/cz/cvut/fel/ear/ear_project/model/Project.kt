@@ -1,6 +1,7 @@
 package cz.cvut.fel.ear.ear_project.model
 
 import cz.cvut.fel.ear.ear_project.exceptions.EmptyNameException
+import cz.cvut.fel.ear.ear_project.exceptions.ItemAlreadyPresentException
 import cz.cvut.fel.ear.ear_project.exceptions.ItemNotFoundException
 import jakarta.persistence.*
 
@@ -22,20 +23,21 @@ data class Project(
 ) : AbstractEntity() {
     fun addUser(user: User) {
         if (users.contains(user)) {
-            throw ItemNotFoundException("User already present in project")
+            throw ItemAlreadyPresentException("User already present in project")
         }
         users.add(user)
     }
 
     fun addPermission(permission: Permissions) {
-        if (!permissions.contains(permission)) {
-            permissions.add(permission)
+        if (permissions.contains(permission)) {
+            throw ItemAlreadyPresentException("Permission already present in project")
         }
+        permissions.add(permission)
     }
 
     fun addStory(story: Story) {
         if (stories.contains(story)) {
-            throw ItemNotFoundException("Story already present in project")
+            throw ItemAlreadyPresentException("Story already present in project")
         }
         stories.add(story)
     }
@@ -49,7 +51,7 @@ data class Project(
 
     fun addSprint(sprint: Sprint) {
         if (sprints.contains(sprint)) {
-            throw ItemNotFoundException("Sprint already present in project")
+            throw ItemAlreadyPresentException("Sprint already present in project")
         }
         sprints.add(sprint)
     }
@@ -57,8 +59,6 @@ data class Project(
     fun removeUser(user: User) {
         if (!users.contains(user)) {
             throw ItemNotFoundException("User not found in project")
-        } else if (users.size == 1) {
-            throw ItemNotFoundException("Cannot remove last user from project")
         }
         users.remove(user)
     }
@@ -78,6 +78,9 @@ data class Project(
     }
 
     fun removePermission(permission: Permissions) {
+        if (!permissions.contains(permission)) {
+            throw ItemNotFoundException("Permission not found in project")
+        }
         permissions.remove(permission)
     }
 }

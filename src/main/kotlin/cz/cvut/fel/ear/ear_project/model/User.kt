@@ -23,60 +23,60 @@ class User(
         if (tasks == null) {
             tasks = mutableListOf()
         }
-        if (tasks!!.contains(task)) {
+        if (tasks.contains(task)) {
             throw ItemAlreadyPresentException("Task already present in user")
         }
-        tasks!!.add(task)
+        tasks.add(task)
     }
 
     fun addProject(project: Project) {
         if (projects == null) {
             projects = mutableListOf()
         }
-        if (projects!!.contains(project)) {
+        if (projects.contains(project)) {
             throw ItemAlreadyPresentException("Project already present in user")
         }
-        projects!!.add(project)
+        projects.add(project)
     }
 
     fun addPermission(permission: Permissions) {
         if (permissions == null) {
             permissions = mutableListOf()
         }
-        if (permissions!!.contains(permission)) {
+        if (permissions.contains(permission)) {
             throw ItemAlreadyPresentException("Permission already present in user")
         }
-        permissions!!.add(permission)
+        permissions.add(permission)
     }
 
     fun removeTask(task: Task) {
         if (tasks == null) {
             return
         }
-        if (!tasks!!.contains(task)) {
+        if (!tasks.contains(task)) {
             throw ItemNotFoundException("Task not found in user")
         }
-        tasks!!.remove(task)
+        tasks.remove(task)
     }
 
     fun removeProject(project: Project) {
         if (projects == null) {
             return
         }
-        if (!projects!!.contains(project)) {
+        if (!projects.contains(project)) {
             throw ItemNotFoundException("Project not found in user")
         }
-        projects!!.remove(project)
+        projects.remove(project)
     }
 
     fun removePermission(permission: Permissions) {
         if (permissions == null) {
             return
         }
-        if (!permissions!!.contains(permission)) {
+        if (!permissions.contains(permission)) {
             throw ItemNotFoundException("Permission not found in user")
         }
-        permissions!!.remove(permission)
+        permissions.remove(permission)
     }
 
     override fun toString(): String {

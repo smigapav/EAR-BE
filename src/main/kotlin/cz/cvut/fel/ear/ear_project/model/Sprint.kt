@@ -1,5 +1,7 @@
 package cz.cvut.fel.ear.ear_project.model
 
+import cz.cvut.fel.ear.ear_project.exceptions.ItemAlreadyPresentException
+import cz.cvut.fel.ear.ear_project.exceptions.ItemNotFoundException
 import jakarta.persistence.*
 
 @Entity(name = "sprints")
@@ -19,11 +21,20 @@ abstract class Sprint(
         if(stories == null) {
             stories = mutableListOf()
         }
+        if (stories.contains(story)) {
+            throw ItemAlreadyPresentException("Story already present in sprint")
+        }
         stories?.add(story)
     }
 
     fun removeStory(story: Story) {
-        stories?.remove(story)
+        if (stories == null) {
+            return
+        }
+        if (!stories.contains(story)) {
+            throw ItemNotFoundException("Story not found in sprint")
+        }
+        stories.remove(story)
     }
 
     override fun toString(): String {

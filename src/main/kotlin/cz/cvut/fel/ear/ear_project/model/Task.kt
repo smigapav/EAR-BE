@@ -18,4 +18,6 @@ class Task(
     var story: Story? = null,
     @ManyToOne(optional = true)
     var user: User? = null,
-) : AbstractEntity()
+) : AbstractEntity() {
+
+}
