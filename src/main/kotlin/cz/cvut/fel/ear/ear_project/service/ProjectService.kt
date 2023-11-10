@@ -1,0 +1,79 @@
+package cz.cvut.fel.ear.ear_project.service
+
+import cz.cvut.fel.ear.ear_project.dao.*
+import cz.cvut.fel.ear.ear_project.model.*
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
+
+@Service
+class ProjectService(
+    @Autowired
+    private val projectRepository: ProjectRepository,
+    @Autowired
+    private val userRepository: UserRepository,
+    @Autowired
+    private val backlogRepository: BacklogRepository,
+    @Autowired
+    private val permissionsRepository: PermissionsRepository,
+    @Autowired
+    private val storyRepository: StoryRepository,
+) {
+    fun createProject(user: User, project: Project) {
+        val permissions = Permissions(
+            true,
+            true,
+            true,
+            user,
+            project
+        )
+        val backlog = Backlog(
+            project
+        )
+        project.addUser(user)
+        project.addPermission(permissions)
+        user.addProject(project)
+        user.addPermission(permissions)
+        project.backlog = backlog
+        permissionsRepository.save(permissions)
+        projectRepository.save(project)
+        backlogRepository.save(backlog)
+        userRepository.save(user)
+    }
+
+    fun addExistingUser(user: User, project: Project) {
+        val permissions = Permissions()
+        permissions.user = user
+        permissions.project = project
+        project.addUser(user)
+        project.addPermission(permissions)
+        user.addProject(project)
+        user.addPermission(permissions)
+        permissionsRepository.save(permissions)
+        projectRepository.save(project)
+        userRepository.save(user)
+    }
+
+    fun removeUser(user: User, project: Project) {
+        val permissions = project.permissions.find { it.user == user }
+        project.removeUser(user)
+        project.removePermission(permissions!!)
+        user.removeProject(project)
+        user.removePermission(permissions)
+        permissionsRepository.delete(permissions)
+        projectRepository.save(project)
+        userRepository.save(user)
+    }
+
+    fun createStory(story: Story, project: Project) {
+        project.addStory(story)
+        story.project = project
+        projectRepository.save(project)
+        storyRepository.save(story)
+    }
+
+    fun removeStory(story: Story, project: Project) {
+        project.removeStory(story)
+        projectRepository.save(project)
+        storyRepository.delete(story)
+    }
+}

@@ -31,13 +31,13 @@ class UserService(
         userRepository.delete(user)
     }
 
-//    @Transactional
-//    fun addTask(user: User, task: Task) {
-//        user.addTask(task)
-//        userRepository.save(user)
-//        task.addUser(user)
-//        taskRepository.save(task)
-//    }
+    @Transactional
+    fun addTask(user: User, task: Task) {
+        user.addTask(task)
+        userRepository.save(user)
+        task.user = user
+        taskRepository.save(task)
+    }
 
     @Transactional
     fun removeTask(user: User, task: Task) {
