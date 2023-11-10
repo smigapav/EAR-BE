@@ -1,7 +1,5 @@
 package cz.cvut.fel.ear.ear_project.service
 
-import cz.cvut.fel.ear.ear_project.dao.PermissionsRepository
-import cz.cvut.fel.ear.ear_project.dao.ProjectRepository
 import cz.cvut.fel.ear.ear_project.dao.TaskRepository
 import cz.cvut.fel.ear.ear_project.dao.UserRepository
 import cz.cvut.fel.ear.ear_project.model.Task
@@ -22,6 +20,9 @@ class UserService(
     }
 
     fun removeUser(user: User) {
+        if (!userExists(user)) {
+            throw IllegalArgumentException("User does not exist")
+        }
         userRepository.delete(user)
     }
 
@@ -42,6 +43,9 @@ class UserService(
     }
 
     fun changeUsername(user: User, username: String) {
+        if (!userExists(user)) {
+            throw IllegalArgumentException("User does not exist")
+        }
         user.username = username
         userRepository.save(user)
     }
@@ -52,5 +56,9 @@ class UserService(
 
     fun findUserById(id: Long): User? {
         return userRepository.findById(id).orElse(null)
+    }
+
+    fun userExists(user: User): Boolean {
+        return !userRepository.findById(user.id!!).isEmpty
     }
 }

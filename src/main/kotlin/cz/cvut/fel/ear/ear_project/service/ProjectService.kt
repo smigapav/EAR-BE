@@ -23,6 +23,9 @@ class ProjectService(
 ) {
     @Transactional
     fun createProject(user: User, project: Project) {
+        if (!userExists(user)) {
+            throw IllegalArgumentException("User does not exist")
+        }
         val permissions = Permissions(
             true,
             true,
@@ -45,12 +48,18 @@ class ProjectService(
     }
 
     fun changeProjectName(name: String, project: Project) {
+        if (!projectExists(project)) {
+            throw IllegalArgumentException("Project does not exist")
+        }
         project.name = name
         projectRepository.save(project)
     }
 
     @Transactional
     fun addExistingUser(user: User, project: Project) {
+        if (!userExists(user) || !projectExists(project)) {
+            throw IllegalArgumentException("User or Project does not exist")
+        }
         val permissions = Permissions()
         permissions.user = user
         permissions.project = project
@@ -65,6 +74,9 @@ class ProjectService(
 
     @Transactional
     fun removeUser(user: User, project: Project) {
+        if (!userExists(user) || !projectExists(project)) {
+            throw IllegalArgumentException("User or Project does not exist")
+        }
         val permissions = project.permissions.find { it.user == user }
         project.removeUser(user)
         project.removePermission(permissions!!)
@@ -77,6 +89,9 @@ class ProjectService(
 
     @Transactional
     fun createStory(story: Story, project: Project) {
+        if (!projectExists(project)) {
+            throw IllegalArgumentException("Project does not exist")
+        }
         val backlog = project.backlog
         backlog!!.addStory(story)
         project.addStory(story)
@@ -89,6 +104,9 @@ class ProjectService(
 
     @Transactional
     fun removeStory(story: Story, project: Project) {
+        if (!storyExists(story) || !projectExists(project)) {
+            throw IllegalArgumentException("Story or Project does not exist")
+        }
         val backlog = project.backlog
         project.removeStory(story)
         backlog!!.removeStory(story)
@@ -97,7 +115,10 @@ class ProjectService(
     }
 
     @Transactional
-    fun addSprint(sprint: UnstartedSprint, project: Project) {
+    fun createSprint(sprint: UnstartedSprint, project: Project) {
+        if (!projectExists(project)) {
+            throw IllegalArgumentException("Project does not exist")
+        }
         project.addSprint(sprint)
         sprint.project = project
         projectRepository.save(project)
@@ -106,8 +127,27 @@ class ProjectService(
 
     @Transactional
     fun removeSprint(sprint: Sprint, project: Project) {
+        if (!sprintExists(sprint) || !projectExists(project)) {
+            throw IllegalArgumentException("Sprint or project does not exist")
+        }
         project.removeSprint(sprint)
         projectRepository.save(project)
         sprintRepository.delete(sprint)
+    }
+
+    fun storyExists(story: Story): Boolean {
+        return !storyRepository.findById(story.id!!).isEmpty
+    }
+
+    fun projectExists(project: Project): Boolean {
+        return !projectRepository.findById(project.id!!).isEmpty
+    }
+
+    fun userExists(user: User): Boolean {
+        return !userRepository.findById(user.id!!).isEmpty
+    }
+
+    fun sprintExists(sprint: Sprint): Boolean {
+        return !sprintRepository.findById(sprint.id!!.toString()).isEmpty
     }
 }

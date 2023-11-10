@@ -16,22 +16,34 @@ class StoryService(
     private val taskRepository: TaskRepository,
 ) {
     fun changePrice(story: Story, price: Int) {
+        if (!storyExists(story)) {
+            throw IllegalArgumentException("Story does not exist")
+        }
         story.price = price
         storyRepository.save(story)
     }
 
     fun changeName(story: Story, name: String) {
+        if (!storyExists(story)) {
+            throw IllegalArgumentException("Story does not exist")
+        }
         story.name = name
         storyRepository.save(story)
     }
 
     fun changeDescription(story: Story, description: String) {
+        if (!storyExists(story)) {
+            throw IllegalArgumentException("Story does not exist")
+        }
         story.description = description
         storyRepository.save(story)
     }
 
     @Transactional
     fun createTask(task: Task, story: Story) {
+        if (!storyExists(story)) {
+            throw IllegalArgumentException("Story does not exist")
+        }
         task.story = story
         story.addTask(task)
         storyRepository.save(story)
@@ -40,8 +52,19 @@ class StoryService(
 
     @Transactional
     fun removeTask(task: Task, story: Story) {
+        if (!taskExists(task) || !storyExists(story)) {
+            throw IllegalArgumentException("Task or Story does not exist")
+        }
         story.removeTask(task)
         storyRepository.save(story)
         taskRepository.delete(task)
+    }
+
+    fun taskExists(task: Task): Boolean {
+        return !taskRepository.findById(task.id!!).isEmpty
+    }
+
+    fun storyExists(story: Story): Boolean {
+        return !storyRepository.findById(story.id!!).isEmpty
     }
 }
