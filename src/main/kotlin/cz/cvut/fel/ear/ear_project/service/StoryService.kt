@@ -6,6 +6,7 @@ import cz.cvut.fel.ear.ear_project.model.Story
 import cz.cvut.fel.ear.ear_project.model.Task
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class StoryService(
@@ -29,6 +30,7 @@ class StoryService(
         storyRepository.save(story)
     }
 
+    @Transactional
     fun createTask(task: Task, story: Story) {
         task.story = story
         story.addTask(task)
@@ -36,6 +38,7 @@ class StoryService(
         taskRepository.save(task)
     }
 
+    @Transactional
     fun removeTask(task: Task, story: Story) {
         story.removeTask(task)
         storyRepository.save(story)

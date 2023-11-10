@@ -16,17 +16,11 @@ class UserService(
     private val userRepository: UserRepository,
     @Autowired
     private val taskRepository: TaskRepository,
-    @Autowired
-    private val projectRepository: ProjectRepository,
-    @Autowired
-    private val permissionRepository: PermissionsRepository
 ) {
-    @Transactional
     fun insertUser(user: User) {
         userRepository.save(user)
     }
 
-    @Transactional
     fun removeUser(user: User) {
         userRepository.delete(user)
     }
@@ -47,7 +41,6 @@ class UserService(
         taskRepository.save(task)
     }
 
-    @Transactional
     fun changeUsername(user: User, username: String) {
         user.username = username
         userRepository.save(user)

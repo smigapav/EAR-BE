@@ -4,6 +4,7 @@ import cz.cvut.fel.ear.ear_project.dao.*
 import cz.cvut.fel.ear.ear_project.model.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ProjectService(
@@ -20,6 +21,7 @@ class ProjectService(
     @Autowired
     private val sprintRepository: SprintRepository,
 ) {
+    @Transactional
     fun createProject(user: User, project: Project) {
         val permissions = Permissions(
             true,
@@ -47,6 +49,7 @@ class ProjectService(
         projectRepository.save(project)
     }
 
+    @Transactional
     fun addExistingUser(user: User, project: Project) {
         val permissions = Permissions()
         permissions.user = user
@@ -60,6 +63,7 @@ class ProjectService(
         userRepository.save(user)
     }
 
+    @Transactional
     fun removeUser(user: User, project: Project) {
         val permissions = project.permissions.find { it.user == user }
         project.removeUser(user)
@@ -71,6 +75,7 @@ class ProjectService(
         userRepository.save(user)
     }
 
+    @Transactional
     fun createStory(story: Story, project: Project) {
         val backlog = project.backlog
         backlog!!.addStory(story)
@@ -82,6 +87,7 @@ class ProjectService(
         backlogRepository.save(backlog)
     }
 
+    @Transactional
     fun removeStory(story: Story, project: Project) {
         val backlog = project.backlog
         project.removeStory(story)
@@ -90,12 +96,15 @@ class ProjectService(
         storyRepository.delete(story)
     }
 
+    @Transactional
     fun addSprint(sprint: UnstartedSprint, project: Project) {
         project.addSprint(sprint)
         sprint.project = project
         projectRepository.save(project)
+        sprintRepository.save(sprint)
     }
 
+    @Transactional
     fun removeSprint(sprint: Sprint, project: Project) {
         project.removeSprint(sprint)
         projectRepository.save(project)
