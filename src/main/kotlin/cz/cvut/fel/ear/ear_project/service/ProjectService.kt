@@ -17,6 +17,8 @@ class ProjectService(
     private val permissionsRepository: PermissionsRepository,
     @Autowired
     private val storyRepository: StoryRepository,
+    @Autowired
+    private val sprintRepository: SprintRepository,
 ) {
     fun createProject(user: User, project: Project) {
         val permissions = Permissions(
@@ -38,6 +40,11 @@ class ProjectService(
         projectRepository.save(project)
         backlogRepository.save(backlog)
         userRepository.save(user)
+    }
+
+    fun changeProjectName(name: String, project: Project) {
+        project.name = name
+        projectRepository.save(project)
     }
 
     fun addExistingUser(user: User, project: Project) {
@@ -65,15 +72,33 @@ class ProjectService(
     }
 
     fun createStory(story: Story, project: Project) {
+        val backlog = project.backlog
+        backlog!!.addStory(story)
         project.addStory(story)
         story.project = project
+        story.backlog = backlog
         projectRepository.save(project)
         storyRepository.save(story)
+        backlogRepository.save(backlog)
     }
 
     fun removeStory(story: Story, project: Project) {
+        val backlog = project.backlog
         project.removeStory(story)
+        backlog!!.removeStory(story)
         projectRepository.save(project)
         storyRepository.delete(story)
+    }
+
+    fun addSprint(sprint: UnstartedSprint, project: Project) {
+        project.addSprint(sprint)
+        sprint.project = project
+        projectRepository.save(project)
+    }
+
+    fun removeSprint(sprint: Sprint, project: Project) {
+        project.removeSprint(sprint)
+        projectRepository.save(project)
+        sprintRepository.delete(sprint)
     }
 }
