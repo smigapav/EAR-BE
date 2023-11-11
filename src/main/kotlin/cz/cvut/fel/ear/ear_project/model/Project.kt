@@ -17,7 +17,7 @@ data class Project(
     @OneToMany(mappedBy = "project")
     var stories: MutableList<Story> = mutableListOf(),
     @OneToMany(mappedBy = "project")
-    var sprints: MutableList<Sprint> = mutableListOf(),
+    var sprints: MutableList<AbstractSprint> = mutableListOf(),
     @OneToOne
     var backlog: Backlog? = null,
 ) : AbstractEntity() {
@@ -49,7 +49,7 @@ data class Project(
         this.name = name
     }
 
-    fun addSprint(sprint: Sprint) {
+    fun addSprint(sprint: AbstractSprint) {
         if (sprints.contains(sprint)) {
             throw ItemAlreadyPresentException("Sprint already present in project")
         }
@@ -70,7 +70,7 @@ data class Project(
         stories.remove(story)
     }
 
-    fun removeSprint(sprint: Sprint) {
+    fun removeSprint(sprint: AbstractSprint) {
         if (!sprints.contains(sprint)) {
             throw ItemNotFoundException("Sprint not found in project")
         }

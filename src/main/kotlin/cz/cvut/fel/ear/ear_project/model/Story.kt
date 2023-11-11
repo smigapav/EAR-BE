@@ -18,7 +18,7 @@ class Story(
     @OneToMany(mappedBy = "story", cascade = [CascadeType.REMOVE])
     var tasks: MutableList<Task> = mutableListOf(),
     @ManyToOne
-    var sprint: Sprint? = null,
+    var sprint: AbstractSprint? = null,
     @ManyToOne
     var backlog: Backlog? = null,
 ) : AbstractEntity() {

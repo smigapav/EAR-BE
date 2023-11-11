@@ -1,6 +1,6 @@
 package cz.cvut.fel.ear.ear_project.model
 
-enum class State {
+enum class TaskState {
     WAITING,
     IN_PROGRESS,
     IN_REVIEW,

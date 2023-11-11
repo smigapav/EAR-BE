@@ -115,7 +115,7 @@ class ProjectService(
     }
 
     @Transactional
-    fun createSprint(sprint: UnstartedSprint, project: Project) {
+    fun createSprint(sprint: AbstractSprint, project: Project) {
         if (!projectExists(project)) {
             throw IllegalArgumentException("Project does not exist")
         }
@@ -126,7 +126,7 @@ class ProjectService(
     }
 
     @Transactional
-    fun removeSprint(sprint: Sprint, project: Project) {
+    fun removeSprint(sprint: AbstractSprint, project: Project) {
         if (!sprintExists(sprint) || !projectExists(project)) {
             throw IllegalArgumentException("Sprint or project does not exist")
         }
@@ -147,7 +147,7 @@ class ProjectService(
         return !userRepository.findById(user.id!!).isEmpty
     }
 
-    fun sprintExists(sprint: Sprint): Boolean {
+    fun sprintExists(sprint: AbstractSprint): Boolean {
         return !sprintRepository.findById(sprint.id!!).isEmpty
     }
 }

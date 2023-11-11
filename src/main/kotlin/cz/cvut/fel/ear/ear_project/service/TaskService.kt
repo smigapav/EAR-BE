@@ -1,9 +1,8 @@
 package cz.cvut.fel.ear.ear_project.service
 
 import cz.cvut.fel.ear.ear_project.dao.TaskRepository
-import cz.cvut.fel.ear.ear_project.model.State
+import cz.cvut.fel.ear.ear_project.model.TaskState
 import cz.cvut.fel.ear.ear_project.model.Task
-import cz.cvut.fel.ear.ear_project.model.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -12,11 +11,11 @@ class TaskService(
     @Autowired
     private val taskRepository: TaskRepository,
 ) {
-    fun changeState(task: Task, state: State) {
+    fun changeState(task: Task, taskState: TaskState) {
         if (!taskExists(task)) {
             throw IllegalArgumentException("Task does not exist")
         }
-        task.state = state
+        task.taskState = taskState
         taskRepository.save(task)
     }
 

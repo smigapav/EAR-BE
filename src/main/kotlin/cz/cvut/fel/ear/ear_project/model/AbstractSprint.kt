@@ -6,7 +6,7 @@ import jakarta.persistence.*
 
 @Entity(name = "sprints")
 @DiscriminatorColumn(name = "sprint_type", discriminatorType = DiscriminatorType.STRING)
-abstract class Sprint(
+abstract class AbstractSprint(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     open var id: Long? = null,
@@ -16,7 +16,8 @@ abstract class Sprint(
     open var project: Project? = null,
     @OneToMany(mappedBy = "sprint")
     open var stories: MutableList<Story> = mutableListOf(),
-) {
+    open var state: SprintState = SprintState.WAITING,
+    ) {
     fun addStory(story: Story) {
         if(stories == null) {
             stories = mutableListOf()

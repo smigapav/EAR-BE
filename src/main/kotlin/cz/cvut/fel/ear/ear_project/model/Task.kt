@@ -8,7 +8,7 @@ import jakarta.persistence.Table
 @Entity
 @Table(name = "tasks")
 class Task(
-    var state: State = State.WAITING,
+    var taskState: TaskState = TaskState.WAITING,
     var timeSpent: Int = 0,
     @Basic(optional = false)
     var name: String? = null,
