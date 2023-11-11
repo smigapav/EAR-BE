@@ -22,4 +22,9 @@ class RunningSprintService(
     fun findAll(): List<Sprint> {
         return sprintRepository.findAll()
     }
+
+    @Transactional
+    fun startSprint(sprint: RunningSprint) {
+        sprintRepository.changeTypeToRunning(sprint.id!!)
+    }
 }

@@ -148,6 +148,6 @@ class ProjectService(
     }
 
     fun sprintExists(sprint: Sprint): Boolean {
-        return !sprintRepository.findById(sprint.id!!.toString()).isEmpty
+        return !sprintRepository.findById(sprint.id!!).isEmpty
     }
 }
