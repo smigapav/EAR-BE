@@ -8,7 +8,7 @@ import jakarta.persistence.Entity
 class KanbanSprint: AbstractSprint() {
     override var state: SprintState = SprintState.WAITING
         get() {
-            if (state == SprintState.WAITING) {
+            if (field == SprintState.WAITING) {
                 return SprintState.WAITING
             }
             for (story in stories) {

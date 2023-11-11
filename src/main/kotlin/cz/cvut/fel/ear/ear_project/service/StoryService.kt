@@ -67,4 +67,8 @@ class StoryService(
     fun storyExists(story: Story): Boolean {
         return !storyRepository.findById(story.id!!).isEmpty
     }
+
+    fun toString(story: Story): String {
+        return (story.id.toString() + " " + story.name + " " + story.description + " " + story.price)
+    }
 }

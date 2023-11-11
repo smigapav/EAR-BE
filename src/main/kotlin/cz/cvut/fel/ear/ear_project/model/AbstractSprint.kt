@@ -19,14 +19,12 @@ abstract class AbstractSprint(
     open var state: SprintState = SprintState.WAITING,
     ) {
     fun addStory(story: Story) {
-        if(stories == null) {
-            stories = mutableListOf()
-        }
         if (stories.contains(story)) {
             throw ItemAlreadyPresentException("Story already present in sprint")
         }
-        stories?.add(story)
+        stories.add(story)
     }
+
 
     fun removeStory(story: Story) {
         if (stories == null) {
