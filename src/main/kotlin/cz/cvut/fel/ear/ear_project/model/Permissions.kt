@@ -34,4 +34,10 @@ data class Permissions(
     fun removeProject() {
         this.project = null
     }
+
+    override fun toString(): String {
+        return "Permissions(projectAdmin=$projectAdmin, storiesAndTasksManager=$storiesAndTasksManager, canManageSprints=$canManageSprints)"
+    }
+
+
 }

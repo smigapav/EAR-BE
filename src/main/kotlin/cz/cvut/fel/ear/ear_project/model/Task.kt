@@ -8,7 +8,7 @@ import jakarta.persistence.Table
 @Entity
 @Table(name = "tasks")
 class Task(
-    var taskState: TaskState = TaskState.WAITING,
+    var state: TaskState = TaskState.WAITING,
     var timeSpent: Int = 0,
     @Basic(optional = false)
     var name: String? = null,
@@ -18,4 +18,9 @@ class Task(
     var story: Story? = null,
     @ManyToOne(optional = true)
     var user: User? = null,
-) : AbstractEntity()
+) : AbstractEntity() {
+
+//    override fun toString(): String {
+//        return "Task(state=$state, timeSpent=$timeSpent, name=$name, description=$description, story=$story, user=$user)"
+//    }
+}

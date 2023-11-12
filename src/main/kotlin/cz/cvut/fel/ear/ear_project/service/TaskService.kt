@@ -1,8 +1,8 @@
 package cz.cvut.fel.ear.ear_project.service
 
 import cz.cvut.fel.ear.ear_project.dao.TaskRepository
-import cz.cvut.fel.ear.ear_project.model.Task
 import cz.cvut.fel.ear.ear_project.model.TaskState
+import cz.cvut.fel.ear.ear_project.model.Task
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -11,48 +11,40 @@ class TaskService(
     @Autowired
     private val taskRepository: TaskRepository,
 ) {
-    fun changeState(
-        task: Task,
-        taskState: TaskState,
-    ) {
+    fun changeState(task: Task, taskState: TaskState): Task {
         if (!taskExists(task)) {
             throw IllegalArgumentException("Task does not exist")
         }
-        task.taskState = taskState
+        task.state = taskState
         taskRepository.save(task)
+        return task
     }
 
-    fun setTimeSpent(
-        task: Task,
-        timeSpent: Int,
-    ) {
+    fun setTimeSpent(task: Task, timeSpent: Int): Task {
         if (!taskExists(task)) {
             throw IllegalArgumentException("Task does not exist")
         }
         task.timeSpent = timeSpent
         taskRepository.save(task)
+        return task
     }
 
-    fun changeName(
-        task: Task,
-        name: String,
-    ) {
+    fun changeName(task: Task, name: String): Task {
         if (!taskExists(task)) {
             throw IllegalArgumentException("Task does not exist")
         }
         task.name = name
         taskRepository.save(task)
+        return task
     }
 
-    fun changeDescription(
-        task: Task,
-        description: String,
-    ) {
+    fun changeDescription(task: Task, description: String): Task {
         if (!taskExists(task)) {
             throw IllegalArgumentException("Task does not exist")
         }
         task.description = description
         taskRepository.save(task)
+        return task
     }
 
     fun findAllTasks(): List<Task> {
@@ -64,6 +56,6 @@ class TaskService(
     }
 
     fun taskExists(task: Task): Boolean {
-        return !taskRepository.findById(task.id!!).isEmpty
+        return task.id != null && !taskRepository.findById(task.id!!).isEmpty
     }
 }

@@ -20,58 +20,50 @@ class StoryService(
         storyRepository.saveAndFlush(story)
     }
 
-    fun changePrice(
-        story: Story,
-        price: Int,
-    ) {
+    fun changePrice(story: Story, price: Int) {
         if (!storyExists(story)) {
             throw IllegalArgumentException("Story does not exist")
         }
         story.price = price
         storyRepository.save(story)
+        return story
     }
 
-    fun changeName(
-        story: Story,
-        name: String,
-    ) {
+    fun changeName(story: Story, name: String): Story {
         if (!storyExists(story)) {
             throw IllegalArgumentException("Story does not exist")
         }
         story.name = name
         storyRepository.save(story)
+        return story
     }
 
-    fun changeDescription(
-        story: Story,
-        description: String,
-    ) {
+    fun changeDescription(story: Story, description: String): Story {
         if (!storyExists(story)) {
             throw IllegalArgumentException("Story does not exist")
         }
         story.description = description
         storyRepository.save(story)
+        return story
     }
 
     @Transactional
-    fun createTask(
-        task: Task,
-        story: Story,
-    ) {
+    fun createTask(name: String, description: String, story: Story): Task {
+        val task = Task()
+        task.name = name
+        task.description = description
         if (!storyExists(story)) {
             throw IllegalArgumentException("Story does not exist")
         }
         task.story = story
+        taskRepository.save(task)
         story.addTask(task)
         storyRepository.save(story)
-        taskRepository.save(task)
+        return task
     }
 
     @Transactional
-    fun removeTask(
-        task: Task,
-        story: Story,
-    ) {
+    fun removeTask(task: Task, story: Story) {
         if (!taskExists(task) || !storyExists(story)) {
             throw IllegalArgumentException("Task or Story does not exist")
         }
@@ -80,12 +72,20 @@ class StoryService(
         taskRepository.delete(task)
     }
 
+    fun findAllStories(): List<Story> {
+        return storyRepository.findAll()
+    }
+
+    fun findStoryById(id: Long): Story? {
+        return storyRepository.findById(id).orElse(null)
+    }
+
     fun taskExists(task: Task): Boolean {
-        return !taskRepository.findById(task.id!!).isEmpty
+        return task.id != null && !taskRepository.findById(task.id!!).isEmpty
     }
 
     fun storyExists(story: Story): Boolean {
-        return !storyRepository.findById(story.id!!).isEmpty
+        return story.id != null && !storyRepository.findById(story.id!!).isEmpty
     }
 
     fun toString(story: Story): String {
