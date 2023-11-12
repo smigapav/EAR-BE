@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 @SpringBootTest(classes = [EarProjectApplication::class])
 class KanbanSprintServiceTest(
     @Autowired
-    @Qualifier("kanbanAbstractSprintService")
+    @Qualifier("kanbanSprintService")
     private var abstractSprintService: AbstractSprintService,
     @Autowired
     private var storyService: StoryService,

@@ -20,7 +20,7 @@ class StoryService(
         storyRepository.saveAndFlush(story)
     }
 
-    fun changePrice(story: Story, price: Int) {
+    fun changePrice(story: Story, price: Int): Story {
         if (!storyExists(story)) {
             throw IllegalArgumentException("Story does not exist")
         }
