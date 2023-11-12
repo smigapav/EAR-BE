@@ -17,9 +17,8 @@ import org.springframework.transaction.annotation.Transactional
 @AutoConfigureTestEntityManager
 class KanbanSprintServiceTest(
     @Autowired
+    @Qualifier("kanbanSprintService")
     private var abstractSprintService: AbstractSprintService,
-    @Autowired
-    private var projectService: ProjectService,
     @Autowired
     private val em: TestEntityManager,
 ) {
@@ -43,8 +42,8 @@ class KanbanSprintServiceTest(
         project = Project()
         project.name = "test"
         em.persist(project)
-        projectService.createProject(user, project)
-        projectService.createSprint(sprint, project)
+        project.sprints.add(sprint)
+        sprint.project = project
     }
 
     fun setUpStory() {
@@ -70,28 +69,26 @@ class KanbanSprintServiceTest(
 
     @Test
     fun findSprintById_fountSprint() {
-        abstractSprintService.changeSprintName(sprint, "New Name")
         val result = abstractSprintService.findSprintById(sprint.id!!) as AbstractSprint
-        assertEquals("New Name", result.name)
+        assertEquals("Sprint 1", result.name)
     }
 
     @Test
     fun addStoryToSprint_storyInSprint() {
         setUpStory()
-        projectService.createStory(story, project)
 
         abstractSprintService.addStoryToSprint(sprint, story)
-        val result = abstractSprintService.findSprintById(sprint.id!!) as AbstractSprint
+        val result = em.find(KanbanSprint::class.java, sprint.id!!)
         assertTrue(result.stories.contains(story))
     }
 
     @Test
     fun removeStoryFromSprint_noStoryInSprint() {
         setUpStory()
-        abstractSprintService.addStoryToSprint(sprint, story)
+        sprint.addStory(story)
 
         assertNotNull(abstractSprintService.removeStoryFromSprint(sprint, story))
-        val result = abstractSprintService.findSprintById(sprint.id!!) as AbstractSprint
+        val result = em.find(KanbanSprint::class.java, sprint.id!!)
         assertTrue(!result.stories.contains(story))
     }
 }
