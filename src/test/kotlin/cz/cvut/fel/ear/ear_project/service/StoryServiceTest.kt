@@ -4,7 +4,6 @@ import cz.cvut.fel.ear.ear_project.EarProjectApplication
 import cz.cvut.fel.ear.ear_project.model.Story
 import cz.cvut.fel.ear.ear_project.model.Task
 import jakarta.transaction.Transactional
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -20,7 +19,7 @@ class StoryServiceTest(
     @Autowired
     private val storyService: StoryService,
     @Autowired
-    private val em: TestEntityManager
+    private val em: TestEntityManager,
 ) {
     @Test
     fun changePriceTest() {

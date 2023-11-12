@@ -19,9 +19,8 @@ class TaskServiceTest(
     @Autowired
     private val taskService: TaskService,
     @Autowired
-    private val em: TestEntityManager
+    private val em: TestEntityManager,
 ) {
-
     @Test
     fun changeStateTest() {
         val task = Task()

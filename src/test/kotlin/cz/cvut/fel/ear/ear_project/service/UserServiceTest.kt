@@ -71,7 +71,6 @@ class UserServiceTest(
         task.name = "test"
         task.description = "test"
 
-
         assertThrows<IllegalArgumentException> {
             userService.addTask(user, task)
         }

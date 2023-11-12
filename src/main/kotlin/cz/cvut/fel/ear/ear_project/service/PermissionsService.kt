@@ -1,11 +1,8 @@
 package cz.cvut.fel.ear.ear_project.service
 
 import cz.cvut.fel.ear.ear_project.dao.PermissionsRepository
-import cz.cvut.fel.ear.ear_project.dao.ProjectRepository
-import cz.cvut.fel.ear.ear_project.dao.UserRepository
 import cz.cvut.fel.ear.ear_project.model.Permissions
 import cz.cvut.fel.ear.ear_project.model.Project
-import cz.cvut.fel.ear.ear_project.model.Task
 import cz.cvut.fel.ear.ear_project.model.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -15,7 +12,11 @@ class PermissionsService(
     @Autowired
     private val permissionsRepository: PermissionsRepository,
 ) {
-    fun changeProjectAdminUserPermissions(user: User, project: Project, perm: Boolean): Permissions? {
+    fun changeProjectAdminUserPermissions(
+        user: User,
+        project: Project,
+        perm: Boolean,
+    ): Permissions? {
         val permissions = project.permissions.find { it.user == user }
         if (permissions == null) {
             throw IllegalArgumentException("User does not have permissions for this project")
@@ -25,7 +26,11 @@ class PermissionsService(
         return permissions
     }
 
-    fun changeStoriesAndTasksManagerUserPermissions(user: User, project: Project, perm: Boolean): Permissions? {
+    fun changeStoriesAndTasksManagerUserPermissions(
+        user: User,
+        project: Project,
+        perm: Boolean,
+    ): Permissions? {
         val permissions = project.permissions.find { it.user == user }
         if (permissions == null) {
             throw IllegalArgumentException("User does not have permissions for this project")
@@ -35,7 +40,11 @@ class PermissionsService(
         return permissions
     }
 
-    fun changeSprintManagerAdminUserPermissions(user: User, project: Project, perm: Boolean): Permissions? {
+    fun changeSprintManagerAdminUserPermissions(
+        user: User,
+        project: Project,
+        perm: Boolean,
+    ): Permissions? {
         val permissions = project.permissions.find { it.user == user }
         if (permissions == null) {
             throw IllegalArgumentException("User does not have permissions for this project")

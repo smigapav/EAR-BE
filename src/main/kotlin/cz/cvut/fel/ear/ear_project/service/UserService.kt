@@ -30,7 +30,10 @@ class UserService(
     }
 
     @Transactional
-    fun addTask(user: User, task: Task): User {
+    fun addTask(
+        user: User,
+        task: Task,
+    ): User {
         if (!userExists(user) || !taskExists(task)) {
             throw IllegalArgumentException("User or task does not exist")
         }
@@ -42,7 +45,10 @@ class UserService(
     }
 
     @Transactional
-    fun removeTask(user: User, task: Task) {
+    fun removeTask(
+        user: User,
+        task: Task,
+    ) {
         if (!userExists(user) || !taskExists(task)) {
             throw IllegalArgumentException("User or task does not exist")
         }
@@ -52,7 +58,10 @@ class UserService(
         taskRepository.save(task)
     }
 
-    fun changeUsername(user: User, username: String): User {
+    fun changeUsername(
+        user: User,
+        username: String,
+    ): User {
         if (!userExists(user)) {
             throw IllegalArgumentException("User does not exist")
         }

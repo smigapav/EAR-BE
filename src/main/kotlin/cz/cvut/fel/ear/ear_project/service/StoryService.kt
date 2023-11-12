@@ -15,7 +15,10 @@ class StoryService(
     @Autowired
     private val taskRepository: TaskRepository,
 ) {
-    fun changePrice(story: Story, price: Int): Story {
+    fun changePrice(
+        story: Story,
+        price: Int,
+    ): Story {
         if (!storyExists(story)) {
             throw IllegalArgumentException("Story does not exist")
         }
@@ -24,7 +27,10 @@ class StoryService(
         return story
     }
 
-    fun changeName(story: Story, name: String): Story {
+    fun changeName(
+        story: Story,
+        name: String,
+    ): Story {
         if (!storyExists(story)) {
             throw IllegalArgumentException("Story does not exist")
         }
@@ -33,7 +39,10 @@ class StoryService(
         return story
     }
 
-    fun changeDescription(story: Story, description: String): Story {
+    fun changeDescription(
+        story: Story,
+        description: String,
+    ): Story {
         if (!storyExists(story)) {
             throw IllegalArgumentException("Story does not exist")
         }
@@ -43,7 +52,11 @@ class StoryService(
     }
 
     @Transactional
-    fun createTask(name: String, description: String, story: Story): Task {
+    fun createTask(
+        name: String,
+        description: String,
+        story: Story,
+    ): Task {
         val task = Task()
         task.name = name
         task.description = description
@@ -58,7 +71,10 @@ class StoryService(
     }
 
     @Transactional
-    fun removeTask(task: Task, story: Story) {
+    fun removeTask(
+        task: Task,
+        story: Story,
+    ) {
         if (!taskExists(task) || !storyExists(story)) {
             throw IllegalArgumentException("Task or Story does not exist")
         }

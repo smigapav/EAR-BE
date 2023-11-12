@@ -5,7 +5,6 @@ import cz.cvut.fel.ear.ear_project.model.Permissions
 import cz.cvut.fel.ear.ear_project.model.Project
 import cz.cvut.fel.ear.ear_project.model.User
 import jakarta.transaction.Transactional
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -21,9 +20,13 @@ class PermissionsServiceTest(
     @Autowired
     private val permissionsService: PermissionsService,
     @Autowired
-    private val em: TestEntityManager
+    private val em: TestEntityManager,
 ) {
-    fun setUp(user: User, project: Project, permissions: Permissions) {
+    fun setUp(
+        user: User,
+        project: Project,
+        permissions: Permissions,
+    ) {
         user.username = "test"
         project.name = "test"
         em.persist(user)

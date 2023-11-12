@@ -15,7 +15,6 @@ class ScrumSprintService(
     @Autowired
     storyRepository: StoryRepository,
 ) : AbstractSprintService(sprintRepository, storyRepository) {
-
     @Transactional
     fun startSprint(sprint: ScrumSprint) {
         validateSprintExists(sprint)

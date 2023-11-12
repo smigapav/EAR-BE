@@ -15,7 +15,6 @@ abstract class AbstractSprintService(
     @Autowired
     protected val storyRepository: StoryRepository,
 ) {
-
     @Transactional
     fun removeSprint(sprint: AbstractSprint) {
         validateSprintExists(sprint)

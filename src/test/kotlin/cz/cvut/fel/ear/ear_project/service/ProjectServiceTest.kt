@@ -3,11 +3,9 @@ package cz.cvut.fel.ear.ear_project.service
 import cz.cvut.fel.ear.ear_project.EarProjectApplication
 import cz.cvut.fel.ear.ear_project.model.*
 import jakarta.transaction.Transactional
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
@@ -20,10 +18,14 @@ class ProjectServiceTest(
     @Autowired
     private val projectService: ProjectService,
     @Autowired
-    private val em: TestEntityManager
+    private val em: TestEntityManager,
 ) {
-
-    fun setUp(project: Project, backlog: Backlog, user: User, permissions: Permissions) {
+    fun setUp(
+        project: Project,
+        backlog: Backlog,
+        user: User,
+        permissions: Permissions,
+    ) {
         project.name = "test"
         user.username = "test"
         em.persist(project)
@@ -43,6 +45,7 @@ class ProjectServiceTest(
         em.persist(user)
         em.persist(permissions)
     }
+
     @Test
     fun createProjectTest() {
         val user = User()
@@ -114,11 +117,13 @@ class ProjectServiceTest(
         val backlog = Backlog()
         setUp(project, backlog, user, permissions)
 
-        val story = projectService.createStory(
-            "test",
-            "test",
-            1,
-            project)
+        val story =
+            projectService.createStory(
+                "test",
+                "test",
+                1,
+                project,
+            )
 
         val foundStory = em.find(Story::class.java, story.id)
 
@@ -161,10 +166,12 @@ class ProjectServiceTest(
         val backlog = Backlog()
         setUp(project, backlog, user, permissions)
 
-        val sprint = projectService.createSprint(
-            "test",
-            true,
-            project)
+        val sprint =
+            projectService.createSprint(
+                "test",
+                true,
+                project,
+            )
 
         val foundSprint = em.find(AbstractSprint::class.java, sprint.id)
 
@@ -181,10 +188,12 @@ class ProjectServiceTest(
         val backlog = Backlog()
         setUp(project, backlog, user, permissions)
 
-        val sprint = projectService.createSprint(
-            "test",
-            false,
-            project)
+        val sprint =
+            projectService.createSprint(
+                "test",
+                false,
+                project,
+            )
 
         val foundSprint = em.find(AbstractSprint::class.java, sprint.id)
 

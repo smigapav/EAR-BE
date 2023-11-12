@@ -1,10 +1,10 @@
+package cz.cvut.fel.ear.ear_project.service
+
 import cz.cvut.fel.ear.ear_project.EarProjectApplication
 import cz.cvut.fel.ear.ear_project.model.*
-import cz.cvut.fel.ear.ear_project.service.AbstractSprintService
-import cz.cvut.fel.ear.ear_project.service.ProjectService
-import cz.cvut.fel.ear.ear_project.service.StoryService
-import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager
