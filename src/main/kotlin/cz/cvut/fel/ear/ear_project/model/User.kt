@@ -1,81 +1,82 @@
 package cz.cvut.fel.ear.ear_project.model
 
 import cz.cvut.fel.ear.ear_project.exceptions.ItemAlreadyPresentException
-import cz.cvut.fel.ear.ear_project.exceptions.ItemNotFound
+import cz.cvut.fel.ear.ear_project.exceptions.ItemNotFoundException
 import jakarta.persistence.*
 import java.util.*
 
 @Entity
 @Table(name = "users")
-class User : AbstractEntity() {
+class User(
     @Basic(optional = false)
-    var username: String? = null
+    var username: String? = null,
     @Basic(optional = false)
-    val webApiKey: String = generateUniqueWebApiKey()
+    val webApiKey: String = generateUniqueWebApiKey(),
     @OneToMany(mappedBy = "user")
-    var tasks: MutableList<Task> = mutableListOf()
+    var tasks: MutableList<Task> = mutableListOf(),
     @ManyToMany(mappedBy = "users")
-    var projects: MutableList<Project> = mutableListOf()
+    var projects: MutableList<Project> = mutableListOf(),
     @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE])
-    var permissions: MutableList<Permissions> = mutableListOf()
+    var permissions: MutableList<Permissions> = mutableListOf(),
+) : AbstractEntity() {
     fun addTask(task: Task) {
         if (tasks == null) {
             tasks = mutableListOf()
         }
-        if (tasks!!.contains(task)) {
+        if (tasks.contains(task)) {
             throw ItemAlreadyPresentException("Task already present in user")
         }
-        tasks!!.add(task)
+        tasks.add(task)
     }
 
     fun addProject(project: Project) {
         if (projects == null) {
             projects = mutableListOf()
         }
-        if (projects!!.contains(project)) {
+        if (projects.contains(project)) {
             throw ItemAlreadyPresentException("Project already present in user")
         }
-        projects!!.add(project)
+        projects.add(project)
     }
 
     fun addPermission(permission: Permissions) {
         if (permissions == null) {
             permissions = mutableListOf()
         }
-        if (permissions!!.contains(permission)) {
+        if (permissions.contains(permission)) {
             throw ItemAlreadyPresentException("Permission already present in user")
         }
-        permissions!!.add(permission)
+        permissions.add(permission)
     }
 
     fun removeTask(task: Task) {
         if (tasks == null) {
             return
         }
-        if (!tasks!!.contains(task)) {
-            throw ItemNotFound("Task not found in user")
+        if (!tasks.contains(task)) {
+            throw ItemNotFoundException("Task not found in user")
         }
-        tasks!!.remove(task)
+        tasks.remove(task)
     }
 
     fun removeProject(project: Project) {
         if (projects == null) {
             return
         }
-        if (!projects!!.contains(project)) {
-            throw ItemNotFound("Project not found in user")
+        if (!projects.contains(project)) {
+            throw ItemNotFoundException("Project not found in user")
         }
-        projects!!.remove(project)
+        projects.remove(project)
     }
 
     fun removePermission(permission: Permissions) {
         if (permissions == null) {
             return
         }
-        if (!permissions!!.contains(permission)) {
-            throw ItemNotFound("Permission not found in user")
+        if (!permissions.contains(permission)) {
+            throw ItemNotFoundException("Permission not found in user")
         }
-        permissions!!.remove(permission)
+        permissions.remove(permission)
     }
 
     override fun toString(): String {
