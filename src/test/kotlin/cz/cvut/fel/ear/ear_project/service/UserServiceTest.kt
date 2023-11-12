@@ -16,7 +16,7 @@ class UserServiceTest(
     @Autowired
     private val userService: UserService,
     @Autowired
-    private val em: TestEntityManager
+    private val em: TestEntityManager,
 ) {
     @Test
     fun insertUserAddsUserIntoDB() {

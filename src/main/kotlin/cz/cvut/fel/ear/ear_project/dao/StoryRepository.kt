@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface StoryRepository : JpaRepository<Story, Long> {
     fun findByName(name: String): Story?
+
     fun findByBacklog(backlog: Backlog): List<Story>
 }

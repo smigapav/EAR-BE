@@ -22,20 +22,25 @@ class ProjectService(
     private val sprintRepository: SprintRepository,
 ) {
     @Transactional
-    fun createProject(user: User, project: Project) {
+    fun createProject(
+        user: User,
+        project: Project,
+    ) {
         if (!userExists(user)) {
             throw IllegalArgumentException("User does not exist")
         }
-        val permissions = Permissions(
-            true,
-            true,
-            true,
-            user,
-            project
-        )
-        val backlog = Backlog(
-            project
-        )
+        val permissions =
+            Permissions(
+                true,
+                true,
+                true,
+                user,
+                project,
+            )
+        val backlog =
+            Backlog(
+                project,
+            )
         project.addUser(user)
         project.addPermission(permissions)
         user.addProject(project)
@@ -47,7 +52,10 @@ class ProjectService(
         userRepository.save(user)
     }
 
-    fun changeProjectName(name: String, project: Project) {
+    fun changeProjectName(
+        name: String,
+        project: Project,
+    ) {
         if (!projectExists(project)) {
             throw IllegalArgumentException("Project does not exist")
         }
@@ -56,7 +64,10 @@ class ProjectService(
     }
 
     @Transactional
-    fun addExistingUser(user: User, project: Project) {
+    fun addExistingUser(
+        user: User,
+        project: Project,
+    ) {
         if (!userExists(user) || !projectExists(project)) {
             throw IllegalArgumentException("User or Project does not exist")
         }
@@ -73,7 +84,10 @@ class ProjectService(
     }
 
     @Transactional
-    fun removeUser(user: User, project: Project) {
+    fun removeUser(
+        user: User,
+        project: Project,
+    ) {
         if (!userExists(user) || !projectExists(project)) {
             throw IllegalArgumentException("User or Project does not exist")
         }
@@ -88,7 +102,10 @@ class ProjectService(
     }
 
     @Transactional
-    fun createStory(story: Story, project: Project) {
+    fun createStory(
+        story: Story,
+        project: Project,
+    ) {
         if (!projectExists(project)) {
             throw IllegalArgumentException("Project does not exist")
         }
@@ -103,7 +120,10 @@ class ProjectService(
     }
 
     @Transactional
-    fun removeStory(story: Story, project: Project) {
+    fun removeStory(
+        story: Story,
+        project: Project,
+    ) {
         if (!storyExists(story) || !projectExists(project)) {
             throw IllegalArgumentException("Story or Project does not exist")
         }
@@ -115,7 +135,10 @@ class ProjectService(
     }
 
     @Transactional
-    fun createSprint(sprint: AbstractSprint, project: Project) {
+    fun createSprint(
+        sprint: AbstractSprint,
+        project: Project,
+    ) {
         if (!projectExists(project)) {
             throw IllegalArgumentException("Project does not exist")
         }
@@ -126,7 +149,10 @@ class ProjectService(
     }
 
     @Transactional
-    fun removeSprint(sprint: AbstractSprint, project: Project) {
+    fun removeSprint(
+        sprint: AbstractSprint,
+        project: Project,
+    ) {
         if (!sprintExists(sprint) || !projectExists(project)) {
             throw IllegalArgumentException("Sprint or project does not exist")
         }

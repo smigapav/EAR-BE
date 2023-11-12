@@ -2,7 +2,6 @@ package cz.cvut.fel.ear.ear_project.service
 
 import cz.cvut.fel.ear.ear_project.dao.StoryRepository
 import cz.cvut.fel.ear.ear_project.dao.TaskRepository
-import cz.cvut.fel.ear.ear_project.model.ScrumSprint
 import cz.cvut.fel.ear.ear_project.model.Story
 import cz.cvut.fel.ear.ear_project.model.Task
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,13 +15,15 @@ class StoryService(
     @Autowired
     private val taskRepository: TaskRepository,
 ) {
-
     @Transactional
-    fun createStory (story: Story) {
+    fun createStory(story: Story) {
         storyRepository.saveAndFlush(story)
     }
 
-    fun changePrice(story: Story, price: Int) {
+    fun changePrice(
+        story: Story,
+        price: Int,
+    ) {
         if (!storyExists(story)) {
             throw IllegalArgumentException("Story does not exist")
         }
@@ -30,7 +31,10 @@ class StoryService(
         storyRepository.save(story)
     }
 
-    fun changeName(story: Story, name: String) {
+    fun changeName(
+        story: Story,
+        name: String,
+    ) {
         if (!storyExists(story)) {
             throw IllegalArgumentException("Story does not exist")
         }
@@ -38,7 +42,10 @@ class StoryService(
         storyRepository.save(story)
     }
 
-    fun changeDescription(story: Story, description: String) {
+    fun changeDescription(
+        story: Story,
+        description: String,
+    ) {
         if (!storyExists(story)) {
             throw IllegalArgumentException("Story does not exist")
         }
@@ -47,7 +54,10 @@ class StoryService(
     }
 
     @Transactional
-    fun createTask(task: Task, story: Story) {
+    fun createTask(
+        task: Task,
+        story: Story,
+    ) {
         if (!storyExists(story)) {
             throw IllegalArgumentException("Story does not exist")
         }
@@ -58,7 +68,10 @@ class StoryService(
     }
 
     @Transactional
-    fun removeTask(task: Task, story: Story) {
+    fun removeTask(
+        task: Task,
+        story: Story,
+    ) {
         if (!taskExists(task) || !storyExists(story)) {
             throw IllegalArgumentException("Task or Story does not exist")
         }

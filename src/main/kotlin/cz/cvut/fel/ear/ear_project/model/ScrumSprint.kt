@@ -10,14 +10,14 @@ import java.time.LocalDateTime
 class ScrumSprint(
     var start: LocalDateTime? = null,
     var finish: LocalDateTime? = null,
-): AbstractSprint() {
+) : AbstractSprint() {
     fun start() {
         if (state != SprintState.WAITING) {
             throw WrongStateChangeException("Sprint is already running or finished")
         }
         start = LocalDateTime.now()
         state = SprintState.RUNNING
-        }
+    }
 
     fun finish() {
         if (state != SprintState.RUNNING) {

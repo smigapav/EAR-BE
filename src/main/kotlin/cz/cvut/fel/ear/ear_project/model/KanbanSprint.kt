@@ -5,7 +5,7 @@ import jakarta.persistence.Entity
 
 @Entity
 @DiscriminatorValue("KANBAN")
-class KanbanSprint: AbstractSprint() {
+class KanbanSprint : AbstractSprint() {
     override var state: SprintState = SprintState.WAITING
         get() {
             if (field == SprintState.WAITING) {

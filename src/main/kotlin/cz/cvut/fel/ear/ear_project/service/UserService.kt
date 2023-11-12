@@ -27,7 +27,10 @@ class UserService(
     }
 
     @Transactional
-    fun addTask(user: User, task: Task) {
+    fun addTask(
+        user: User,
+        task: Task,
+    ) {
         user.addTask(task)
         userRepository.save(user)
         task.user = user
@@ -35,14 +38,20 @@ class UserService(
     }
 
     @Transactional
-    fun removeTask(user: User, task: Task) {
+    fun removeTask(
+        user: User,
+        task: Task,
+    ) {
         user.tasks.remove(task)
         userRepository.save(user)
         task.user = null
         taskRepository.save(task)
     }
 
-    fun changeUsername(user: User, username: String) {
+    fun changeUsername(
+        user: User,
+        username: String,
+    ) {
         if (!userExists(user)) {
             throw IllegalArgumentException("User does not exist")
         }

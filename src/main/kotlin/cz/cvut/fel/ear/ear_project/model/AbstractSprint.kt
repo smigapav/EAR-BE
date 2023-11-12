@@ -17,15 +17,13 @@ abstract class AbstractSprint(
     @OneToMany(mappedBy = "sprint")
     open var stories: MutableList<Story> = mutableListOf(),
     open var state: SprintState = SprintState.WAITING,
-    ) {
-
+) {
     fun addStory(story: Story) {
         if (stories.contains(story)) {
             throw ItemAlreadyPresentException("Story already present in sprint")
         }
         stories.add(story)
     }
-
 
     fun removeStory(story: Story) {
         if (stories == null) {
@@ -40,7 +38,4 @@ abstract class AbstractSprint(
     override fun toString(): String {
         return "Sprint(id=$id, name=$name, project=$project, stories=$stories)"
     }
-
-
 }
-

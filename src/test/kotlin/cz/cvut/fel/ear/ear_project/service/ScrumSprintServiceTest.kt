@@ -1,42 +1,46 @@
 import cz.cvut.fel.ear.ear_project.EarProjectApplication
+import cz.cvut.fel.ear.ear_project.model.AbstractSprint
 import cz.cvut.fel.ear.ear_project.model.ScrumSprint
 import cz.cvut.fel.ear.ear_project.model.Story
+import cz.cvut.fel.ear.ear_project.service.AbstractSprintService
 import cz.cvut.fel.ear.ear_project.service.ScrumSprintService
 import cz.cvut.fel.ear.ear_project.service.StoryService
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @SpringBootTest(classes = [EarProjectApplication::class])
-class ScrumSprintServiceTest (
+class ScrumSprintServiceTest(
     @Autowired
-    private var scrumSprintService: ScrumSprintService,
+    @Qualifier("scrumAbstractSprintService")
+    private var abstractSprintService: AbstractSprintService,
     @Autowired
     private var storyService: StoryService,
+    @Autowired
+    private var scrumSprintService: ScrumSprintService,
 ) {
-
-    private val sprint = ScrumSprint()
+    private lateinit var sprint: ScrumSprint
 
     @BeforeEach
     fun init() {
-        sprint.name = "Sprint 1"
-        scrumSprintService.createSprint(sprint)
+        sprint = abstractSprintService.createSprint("Scrum", "Sprint 1") as ScrumSprint
     }
 
     @Test
-    fun getSprintStatus_StatusIsWaiting() {
-        val result = scrumSprintService.getSprintStatus(sprint)
+    fun getSprintState_StateIsWaiting() {
+        val result = abstractSprintService.getSprintStatus(sprint)
         assertEquals("WAITING", result)
     }
 
     @Test
     fun changeSprintName_SprintsNameIsNewName() {
-        scrumSprintService.changeSprintName(sprint, "New Name")
+        abstractSprintService.changeSprintName(sprint, "New Name")
         assertEquals("New Name", sprint.name)
-        val result = scrumSprintService.findScrumSprintById(sprint.id!!) as ScrumSprint
+        val result = abstractSprintService.findSprintById(sprint.id!!) as AbstractSprint
         assertEquals("New Name", result.name)
     }
 
@@ -47,8 +51,8 @@ class ScrumSprintServiceTest (
         story.description = "Description 1"
         story.price = 1
         storyService.createStory(story)
-        scrumSprintService.addStoryToSprint(sprint, story)
-        val result = scrumSprintService.findScrumSprintById(sprint.id!!) as ScrumSprint
+        abstractSprintService.addStoryToSprint(sprint, story)
+        val result = abstractSprintService.findSprintById(sprint.id!!) as AbstractSprint
         assertTrue(result.stories.contains(story))
     }
 
@@ -59,16 +63,16 @@ class ScrumSprintServiceTest (
         story.description = "Description 1"
         story.price = 1
         storyService.createStory(story)
-        scrumSprintService.addStoryToSprint(sprint, story)
-        scrumSprintService.removeStoryFromSprint(sprint, story)
-        val result = scrumSprintService.findScrumSprintById(sprint.id!!) as ScrumSprint
+        abstractSprintService.addStoryToSprint(sprint, story)
+        abstractSprintService.removeStoryFromSprint(sprint, story)
+        val result = abstractSprintService.findSprintById(sprint.id!!) as AbstractSprint
         assertTrue(!result.stories.contains(story))
     }
 
     @Test
     fun startSprint_SprintIsStarted() {
         scrumSprintService.startSprint(sprint)
-        val result = scrumSprintService.findScrumSprintById(sprint.id!!) as ScrumSprint
+        val result = abstractSprintService.findSprintById(sprint.id!!) as ScrumSprint
         assertEquals("RUNNING", result.state.toString())
     }
 
@@ -76,7 +80,7 @@ class ScrumSprintServiceTest (
     fun finishSprint_SprintIsFinished() {
         scrumSprintService.startSprint(sprint)
         scrumSprintService.finishSprint(sprint)
-        val result = scrumSprintService.findScrumSprintById(sprint.id!!) as ScrumSprint
+        val result = abstractSprintService.findSprintById(sprint.id!!) as ScrumSprint
         assertEquals("FINISHED", result.state.toString())
     }
 
@@ -105,6 +109,6 @@ class ScrumSprintServiceTest (
 
     @AfterEach
     fun clear() {
-        if (scrumSprintService.scrumSprintExists(sprint)) scrumSprintService.removeSprint(sprint)
+        if (abstractSprintService.sprintExists(sprint)) abstractSprintService.removeSprint(sprint)
     }
 }
