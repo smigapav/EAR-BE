@@ -15,11 +15,6 @@ class StoryService(
     @Autowired
     private val taskRepository: TaskRepository,
 ) {
-    @Transactional
-    fun createStory(story: Story) {
-        storyRepository.saveAndFlush(story)
-    }
-
     fun changePrice(story: Story, price: Int): Story {
         if (!storyExists(story)) {
             throw IllegalArgumentException("Story does not exist")

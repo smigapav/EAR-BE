@@ -23,12 +23,15 @@ class ProjectService(
 ) {
     @Transactional
     fun createProject(
+        name: String,
         user: User,
-        project: Project,
-    ) {
+    ): Project {
         if (!userExists(user)) {
             throw IllegalArgumentException("User does not exist")
         }
+        val project = Project()
+        project.name = name
+        projectRepository.save(project)
         val permissions =
             Permissions(
                 true,
@@ -45,11 +48,12 @@ class ProjectService(
         project.addPermission(permissions)
         user.addProject(project)
         user.addPermission(permissions)
+        backlogRepository.save(backlog)
         project.backlog = backlog
         permissionsRepository.save(permissions)
         projectRepository.save(project)
-        backlogRepository.save(backlog)
         userRepository.save(user)
+        return project
     }
 
     fun changeProjectName(
@@ -74,11 +78,11 @@ class ProjectService(
         val permissions = Permissions()
         permissions.user = user
         permissions.project = project
+        permissionsRepository.save(permissions)
         project.addUser(user)
         project.addPermission(permissions)
         user.addProject(project)
         user.addPermission(permissions)
-        permissionsRepository.save(permissions)
         projectRepository.save(project)
         userRepository.save(user)
     }
@@ -96,19 +100,26 @@ class ProjectService(
         project.removePermission(permissions!!)
         user.removeProject(project)
         user.removePermission(permissions)
-        permissionsRepository.delete(permissions)
         projectRepository.save(project)
         userRepository.save(user)
+        permissionsRepository.delete(permissions)
     }
 
     @Transactional
     fun createStory(
-        story: Story,
+        name: String,
+        description: String,
+        price: Int,
         project: Project,
-    ) {
+    ): Story {
         if (!projectExists(project)) {
             throw IllegalArgumentException("Project does not exist")
         }
+        val story = Story()
+        story.name = name
+        story.description = description
+        story.price = price
+        storyRepository.save(story)
         val backlog = project.backlog
         backlog!!.addStory(story)
         project.addStory(story)
@@ -117,6 +128,7 @@ class ProjectService(
         projectRepository.save(project)
         storyRepository.save(story)
         backlogRepository.save(backlog)
+        return story
     }
 
     @Transactional
@@ -136,11 +148,18 @@ class ProjectService(
 
     @Transactional
     fun createSprint(
-        sprint: AbstractSprint,
+        name: String,
+        createScrumSprint: Boolean,
         project: Project,
     ) {
         if (!projectExists(project)) {
             throw IllegalArgumentException("Project does not exist")
+        }
+        val sprint: AbstractSprint
+        if (createScrumSprint) {
+            sprint = ScrumSprint()
+        } else {
+            sprint = KanbanSprint()
         }
         project.addSprint(sprint)
         sprint.project = project
@@ -162,18 +181,18 @@ class ProjectService(
     }
 
     fun storyExists(story: Story): Boolean {
-        return !storyRepository.findById(story.id!!).isEmpty
+        return storyRepository != null && !storyRepository.findById(story.id!!).isEmpty
     }
 
     fun projectExists(project: Project): Boolean {
-        return !projectRepository.findById(project.id!!).isEmpty
+        return projectRepository != null && !projectRepository.findById(project.id!!).isEmpty
     }
 
     fun userExists(user: User): Boolean {
-        return !userRepository.findById(user.id!!).isEmpty
+        return userRepository != null && !userRepository.findById(user.id!!).isEmpty
     }
 
     fun sprintExists(sprint: AbstractSprint): Boolean {
-        return !sprintRepository.findById(sprint.id!!).isEmpty
+        return sprintRepository != null && !sprintRepository.findById(sprint.id!!).isEmpty
     }
 }

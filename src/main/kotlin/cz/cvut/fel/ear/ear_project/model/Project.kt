@@ -12,11 +12,11 @@ data class Project(
     var name: String? = null,
     @ManyToMany
     var users: MutableList<User> = mutableListOf(),
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = [CascadeType.REMOVE], orphanRemoval = true)
     var permissions: MutableList<Permissions> = mutableListOf(),
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = [CascadeType.REMOVE], orphanRemoval = true)
     var stories: MutableList<Story> = mutableListOf(),
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = [CascadeType.REMOVE], orphanRemoval = true)
     var sprints: MutableList<AbstractSprint> = mutableListOf(),
     @OneToOne
     var backlog: Backlog? = null,
