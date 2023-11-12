@@ -13,7 +13,7 @@ class KanbanSprint: AbstractSprint() {
             }
             for (story in stories) {
                 for (task in story.tasks) {
-                    if (task.taskState != TaskState.DONE || task.taskState != TaskState.REJECTED) {
+                    if (task.state != TaskState.DONE || task.state != TaskState.REJECTED) {
                         return SprintState.RUNNING
                     }
                 }

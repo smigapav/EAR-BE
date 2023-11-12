@@ -41,4 +41,10 @@ class Story(
         }
         tasks.remove(task)
     }
+
+    override fun toString(): String {
+        return "Story(price=$price, name=$name, description=$description, project=$project, tasks=$tasks, sprint=$sprint, backlog=$backlog)"
+    }
+
+
 }

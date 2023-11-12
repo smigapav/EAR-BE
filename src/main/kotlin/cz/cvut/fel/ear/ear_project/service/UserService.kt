@@ -15,8 +15,11 @@ class UserService(
     @Autowired
     private val taskRepository: TaskRepository,
 ) {
-    fun insertUser(user: User) {
+    fun createUser(name: String): User {
+        val user = User()
+        user.username = name
         userRepository.save(user)
+        return user
     }
 
     fun removeUser(user: User) {
@@ -27,27 +30,35 @@ class UserService(
     }
 
     @Transactional
-    fun addTask(user: User, task: Task) {
+    fun addTask(user: User, task: Task): User {
+        if (!userExists(user) || !taskExists(task)) {
+            throw IllegalArgumentException("User or task does not exist")
+        }
         user.addTask(task)
-        userRepository.save(user)
         task.user = user
+        userRepository.save(user)
         taskRepository.save(task)
+        return user
     }
 
     @Transactional
     fun removeTask(user: User, task: Task) {
-        user.tasks.remove(task)
+        if (!userExists(user) || !taskExists(task)) {
+            throw IllegalArgumentException("User or task does not exist")
+        }
+        user.removeTask(task)
         userRepository.save(user)
         task.user = null
         taskRepository.save(task)
     }
 
-    fun changeUsername(user: User, username: String) {
+    fun changeUsername(user: User, username: String): User {
         if (!userExists(user)) {
             throw IllegalArgumentException("User does not exist")
         }
         user.username = username
         userRepository.save(user)
+        return user
     }
 
     fun findAllUsers(): List<User> {
@@ -59,6 +70,10 @@ class UserService(
     }
 
     fun userExists(user: User): Boolean {
-        return !userRepository.findById(user.id!!).isEmpty
+        return user.id != null && !userRepository.findById(user.id!!).isEmpty
+    }
+
+    fun taskExists(task: Task): Boolean {
+        return task.id != null && !taskRepository.findById(task.id!!).isEmpty
     }
 }
