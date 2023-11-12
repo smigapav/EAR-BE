@@ -84,13 +84,14 @@ class PermissionsServiceTest(
 
     @Test
     fun changeProjectAdminPermissionThrowsExceptionWhenUserDoesNotHavePermissions() {
-        val otherUser = User().apply { username = "other" }
+        val user = User()
+        user.username = "test"
         val project = Project()
-        val permissions = Permissions()
-        setUp(otherUser, project, permissions)
-        em.persist(otherUser)
+        project.name = "test"
+        em.persist(user)
+        em.persist(project)
         assertThrows<IllegalArgumentException> {
-            permissionsService.changeProjectAdminUserPermissions(otherUser, project, true)
+            permissionsService.changeProjectAdminUserPermissions(user, project, true)
         }
     }
 }

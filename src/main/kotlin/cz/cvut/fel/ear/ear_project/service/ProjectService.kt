@@ -151,7 +151,7 @@ class ProjectService(
         name: String,
         createScrumSprint: Boolean,
         project: Project,
-    ) {
+    ): AbstractSprint {
         if (!projectExists(project)) {
             throw IllegalArgumentException("Project does not exist")
         }
@@ -161,10 +161,12 @@ class ProjectService(
         } else {
             sprint = KanbanSprint()
         }
+        sprint.name = name
         project.addSprint(sprint)
         sprint.project = project
         projectRepository.save(project)
         sprintRepository.save(sprint)
+        return sprint
     }
 
     @Transactional

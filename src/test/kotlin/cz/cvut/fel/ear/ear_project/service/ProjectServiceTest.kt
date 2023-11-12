@@ -141,5 +141,78 @@ class ProjectServiceTest(
         em.persist(story)
         project.addStory(story)
         backlog.addStory(story)
+        em.persist(project)
+        em.persist(backlog)
+
+        projectService.removeStory(story, project)
+
+        val foundProject = em.find(Project::class.java, project.id)
+        val foundStory = em.find(Story::class.java, story.id)
+
+        assertEquals(0, foundProject.stories.size)
+        assertEquals(null, foundStory)
+    }
+
+    @Test
+    fun createScrumSprintTest() {
+        val user = User()
+        val project = Project()
+        val permissions = Permissions()
+        val backlog = Backlog()
+        setUp(project, backlog, user, permissions)
+
+        val sprint = projectService.createSprint(
+            "test",
+            true,
+            project)
+
+        val foundSprint = em.find(AbstractSprint::class.java, sprint.id)
+
+        assertEquals(sprint, foundSprint)
+        assertEquals(foundSprint.project, project)
+        assertTrue(foundSprint is ScrumSprint)
+    }
+
+    @Test
+    fun createKanbanSprintTest() {
+        val user = User()
+        val project = Project()
+        val permissions = Permissions()
+        val backlog = Backlog()
+        setUp(project, backlog, user, permissions)
+
+        val sprint = projectService.createSprint(
+            "test",
+            false,
+            project)
+
+        val foundSprint = em.find(AbstractSprint::class.java, sprint.id)
+
+        assertEquals(sprint, foundSprint)
+        assertEquals(foundSprint.project, project)
+        assertTrue(foundSprint is KanbanSprint)
+    }
+
+    @Test
+    fun removeSprintTets() {
+        val user = User()
+        val project = Project()
+        val permissions = Permissions()
+        val backlog = Backlog()
+        setUp(project, backlog, user, permissions)
+        val sprint = ScrumSprint()
+        sprint.name = "test"
+        sprint.project = project
+        em.persist(sprint)
+        project.addSprint(sprint)
+        em.persist(project)
+
+        projectService.removeSprint(sprint, project)
+
+        val foundProject = em.find(Project::class.java, project.id)
+        val foundSprint = em.find(AbstractSprint::class.java, sprint.id)
+
+        assertEquals(0, foundProject.sprints.size)
+        assertEquals(null, foundSprint)
     }
 }
