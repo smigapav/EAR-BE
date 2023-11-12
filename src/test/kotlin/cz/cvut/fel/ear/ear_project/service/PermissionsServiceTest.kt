@@ -81,4 +81,16 @@ class PermissionsServiceTest(
 
         assertEquals(true, foundPermissions.canManageSprints)
     }
+
+    @Test
+    fun changeProjectAdminPermissionThrowsExceptionWhenUserDoesNotHavePermissions() {
+        val otherUser = User().apply { username = "other" }
+        val project = Project()
+        val permissions = Permissions()
+        setUp(otherUser, project, permissions)
+        em.persist(otherUser)
+        assertThrows<IllegalArgumentException> {
+            permissionsService.changeProjectAdminUserPermissions(otherUser, project, true)
+        }
+    }
 }

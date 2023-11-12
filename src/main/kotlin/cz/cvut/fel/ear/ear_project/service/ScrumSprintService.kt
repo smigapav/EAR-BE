@@ -15,13 +15,6 @@ class ScrumSprintService(
     @Autowired
     storyRepository: StoryRepository,
 ) : AbstractSprintService(sprintRepository, storyRepository) {
-    @Transactional
-    override fun createSprint(sprintType: String, name: String): ScrumSprint {
-        val sprint = ScrumSprint()
-        sprint.name = name
-        sprintRepository.saveAndFlush(sprint)
-        return sprint
-    }
 
     @Transactional
     fun startSprint(sprint: ScrumSprint) {

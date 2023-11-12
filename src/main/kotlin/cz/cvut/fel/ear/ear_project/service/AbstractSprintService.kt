@@ -15,12 +15,6 @@ abstract class AbstractSprintService(
     @Autowired
     protected val storyRepository: StoryRepository,
 ) {
-    @Transactional
-    abstract fun createSprint(
-        sprintType: String,
-        name: String,
-    ): AbstractSprint
-
 
     @Transactional
     fun removeSprint(sprint: AbstractSprint) {

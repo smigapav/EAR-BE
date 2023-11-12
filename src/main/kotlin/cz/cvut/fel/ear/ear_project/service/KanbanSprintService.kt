@@ -14,14 +14,4 @@ class KanbanSprintService(
     @Autowired
     storyRepository: StoryRepository,
 ) : AbstractSprintService(sprintRepository, storyRepository) {
-    @Transactional
-    override fun createSprint(
-        sprintType: String,
-        name: String,
-    ): KanbanSprint {
-        val sprint = KanbanSprint()
-        sprint.name = name
-        sprintRepository.saveAndFlush(sprint)
-        return sprint
-    }
 }
