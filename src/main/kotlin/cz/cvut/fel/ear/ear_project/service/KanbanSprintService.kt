@@ -17,8 +17,6 @@ class KanbanSprintService (
     private val sprintRepository: SprintRepository,
     @Autowired
     private val storyRepository: StoryRepository,
-    @PersistenceContext
-    private val em: EntityManager
 ){
     @Transactional
     fun createSprint(sprint: KanbanSprint) {
@@ -35,8 +33,7 @@ class KanbanSprintService (
         if (sprint.id == null) {
             return null
         }
-        val loadedSprint = sprintRepository.findById(sprint.id!!).orElse(null) ?: return null
-        return loadedSprint.state.toString()
+        return (sprintRepository.findById(sprint.id!!).orElse(null) ?: return null).state.toString()
     }
 
     @Transactional
@@ -49,7 +46,9 @@ class KanbanSprintService (
     @Transactional
     fun addStoryToSprint(sprint: KanbanSprint, story: Story) {
         validateSprintExists(sprint)
+        validateStoryExists(story)
         sprint.addStory(story)
+        sprintRepository.save(sprint)
         story.sprint = sprint
         storyRepository.save(story)
     }
@@ -57,7 +56,9 @@ class KanbanSprintService (
     @Transactional
     fun removeStoryFromSprint(sprint: KanbanSprint, story: Story) {
         validateSprintExists(sprint)
+        validateStoryExists(story)
         sprint.removeStory(story)
+        sprintRepository.save(sprint)
     }
 
     fun kanbanSprintExists(sprint: KanbanSprint): Boolean {
@@ -73,5 +74,9 @@ class KanbanSprintService (
 
     private fun validateSprintExists(sprint: KanbanSprint) {
         require(kanbanSprintExists(sprint)) { throw IllegalArgumentException("Sprint does not exist") }
+    }
+
+    private fun validateStoryExists(story: Story) {
+        require(if (story.id == null) { false } else { storyRepository.findById(story.id!!).isPresent}) { throw IllegalArgumentException("Story does not exist") }
     }
 }

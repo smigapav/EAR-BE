@@ -2,6 +2,7 @@ package cz.cvut.fel.ear.ear_project.service
 
 import cz.cvut.fel.ear.ear_project.dao.StoryRepository
 import cz.cvut.fel.ear.ear_project.dao.TaskRepository
+import cz.cvut.fel.ear.ear_project.model.ScrumSprint
 import cz.cvut.fel.ear.ear_project.model.Story
 import cz.cvut.fel.ear.ear_project.model.Task
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,6 +16,12 @@ class StoryService(
     @Autowired
     private val taskRepository: TaskRepository,
 ) {
+
+    @Transactional
+    fun createStory (story: Story) {
+        storyRepository.saveAndFlush(story)
+    }
+
     fun changePrice(story: Story, price: Int) {
         if (!storyExists(story)) {
             throw IllegalArgumentException("Story does not exist")

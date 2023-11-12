@@ -26,7 +26,7 @@ class KanbanSprintServiceTest (
     @Autowired
     private var kanbanSprintService: KanbanSprintService,
     @Autowired
-    private var storyService: StoryService
+    private var storyService: StoryService,
 ) {
 
     private val sprint = KanbanSprint()
@@ -67,6 +67,7 @@ class KanbanSprintServiceTest (
         story.name = "Story 1"
         story.description = "Description 1"
         story.price = 1
+        storyService.createStory(story)
 
         // Act
         kanbanSprintService.addStoryToSprint(sprint, story)
@@ -86,6 +87,8 @@ class KanbanSprintServiceTest (
         story.name = "Story 1"
         story.description = "Description 1"
         story.price = 1
+        storyService.createStory(story)
+
         kanbanSprintService.addStoryToSprint(sprint, story)
 
         val result = kanbanSprintService.findKanbanSprintById(sprint.id!!) as KanbanSprint

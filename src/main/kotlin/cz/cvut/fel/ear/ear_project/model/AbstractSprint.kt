@@ -18,6 +18,7 @@ abstract class AbstractSprint(
     open var stories: MutableList<Story> = mutableListOf(),
     open var state: SprintState = SprintState.WAITING,
     ) {
+
     fun addStory(story: Story) {
         if (stories.contains(story)) {
             throw ItemAlreadyPresentException("Story already present in sprint")
