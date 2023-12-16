@@ -13,8 +13,6 @@ class ProjectService(
     @Autowired
     private val userRepository: UserRepository,
     @Autowired
-    private val backlogRepository: BacklogRepository,
-    @Autowired
     private val permissionsRepository: PermissionsRepository,
     @Autowired
     private val storyRepository: StoryRepository,
@@ -40,16 +38,10 @@ class ProjectService(
                 user,
                 project,
             )
-        val backlog =
-            Backlog(
-                project,
-            )
         project.addUser(user)
         project.addPermission(permissions)
         user.addProject(project)
         user.addPermission(permissions)
-        backlogRepository.save(backlog)
-        project.backlog = backlog
         permissionsRepository.save(permissions)
         projectRepository.save(project)
         userRepository.save(user)
@@ -120,14 +112,10 @@ class ProjectService(
         story.description = description
         story.storyPoints = storyPoints
         storyRepository.save(story)
-        val backlog = project.backlog
-        backlog!!.addStory(story)
         project.addStory(story)
         story.project = project
-        story.backlog = backlog
         projectRepository.save(project)
         storyRepository.save(story)
-        backlogRepository.save(backlog)
         return story
     }
 
@@ -139,9 +127,7 @@ class ProjectService(
         if (!storyExists(story) || !projectExists(project)) {
             throw IllegalArgumentException("Story or Project does not exist")
         }
-        val backlog = project.backlog
         project.removeStory(story)
-        backlog!!.removeStory(story)
         projectRepository.save(project)
         storyRepository.delete(story)
     }

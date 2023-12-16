@@ -22,26 +22,21 @@ class ProjectServiceTest(
 ) {
     fun setUp(
         project: Project,
-        backlog: Backlog,
         user: User,
         permissions: Permissions,
     ) {
         project.name = "test"
         user.username = "test"
         em.persist(project)
-        em.persist(backlog)
         em.persist(user)
         em.persist(permissions)
-        project.backlog = backlog
         project.addUser(user)
         project.addPermission(permissions)
-        backlog.project = project
         user.addProject(project)
         user.addPermission(permissions)
         permissions.project = project
         permissions.user = user
         em.persist(project)
-        em.persist(backlog)
         em.persist(user)
         em.persist(permissions)
     }
@@ -67,8 +62,7 @@ class ProjectServiceTest(
         val user = User()
         val project = Project()
         val permissions = Permissions()
-        val backlog = Backlog()
-        setUp(project, backlog, user, permissions)
+        setUp(project, user, permissions)
 
         projectService.changeProjectName("newName", project)
 
@@ -98,8 +92,7 @@ class ProjectServiceTest(
         val user = User()
         val project = Project()
         val permissions = Permissions()
-        val backlog = Backlog()
-        setUp(project, backlog, user, permissions)
+        setUp(project, user, permissions)
 
         projectService.removeUser(user, project)
 
@@ -114,8 +107,7 @@ class ProjectServiceTest(
         val user = User()
         val project = Project()
         val permissions = Permissions()
-        val backlog = Backlog()
-        setUp(project, backlog, user, permissions)
+        setUp(project, user, permissions)
 
         val story =
             projectService.createStory(
@@ -129,7 +121,6 @@ class ProjectServiceTest(
 
         assertEquals(story, foundStory)
         assertEquals(foundStory.project, project)
-        assertEquals(foundStory.backlog, backlog)
     }
 
     @Test
@@ -137,17 +128,14 @@ class ProjectServiceTest(
         val user = User()
         val project = Project()
         val permissions = Permissions()
-        val backlog = Backlog()
-        setUp(project, backlog, user, permissions)
+        setUp(project, user, permissions)
         val story = Story()
         story.name = "test"
         story.description = "test"
         story.storyPoints = 1
         em.persist(story)
         project.addStory(story)
-        backlog.addStory(story)
         em.persist(project)
-        em.persist(backlog)
 
         projectService.removeStory(story, project)
 
@@ -163,8 +151,7 @@ class ProjectServiceTest(
         val user = User()
         val project = Project()
         val permissions = Permissions()
-        val backlog = Backlog()
-        setUp(project, backlog, user, permissions)
+        setUp(project, user, permissions)
 
         val sprint =
             projectService.createSprint(
@@ -185,8 +172,7 @@ class ProjectServiceTest(
         val user = User()
         val project = Project()
         val permissions = Permissions()
-        val backlog = Backlog()
-        setUp(project, backlog, user, permissions)
+        setUp(project, user, permissions)
 
         val sprint =
             projectService.createSprint(
@@ -207,8 +193,7 @@ class ProjectServiceTest(
         val user = User()
         val project = Project()
         val permissions = Permissions()
-        val backlog = Backlog()
-        setUp(project, backlog, user, permissions)
+        setUp(project, user, permissions)
         val sprint = ScrumSprint()
         sprint.name = "test"
         sprint.project = project

@@ -18,8 +18,6 @@ data class Project(
     var stories: MutableList<Story> = mutableListOf(),
     @OneToMany(mappedBy = "project", cascade = [CascadeType.REMOVE], orphanRemoval = true)
     var sprints: MutableList<AbstractSprint> = mutableListOf(),
-    @OneToOne
-    var backlog: Backlog? = null,
 ) : AbstractEntity() {
     fun addUser(user: User) {
         if (users.contains(user)) {

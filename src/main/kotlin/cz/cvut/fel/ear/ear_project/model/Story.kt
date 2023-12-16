@@ -19,8 +19,6 @@ class Story(
     var tasks: MutableList<Task> = mutableListOf(),
     @ManyToOne
     var sprint: AbstractSprint? = null,
-    @ManyToOne
-    var backlog: Backlog? = null,
 ) : AbstractEntity() {
     fun addTask(task: Task) {
         if (tasks == null) {
@@ -43,6 +41,6 @@ class Story(
     }
 
     override fun toString(): String {
-        return "Story(sotoryPoints=$storyPoints, name=$name, description=$description, project=$project, tasks=$tasks, sprint=$sprint, backlog=$backlog)"
+        return "Story(sotoryPoints=$storyPoints, name=$name, description=$description, project=$project, tasks=$tasks, sprint=$sprint)"
     }
 }
