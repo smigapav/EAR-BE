@@ -15,14 +15,14 @@ class StoryService(
     @Autowired
     private val taskRepository: TaskRepository,
 ) {
-    fun changePrice(
+    fun changeStoryPoints(
         story: Story,
-        price: Int,
+        storyPoints: Int,
     ): Story {
         if (!storyExists(story)) {
             throw IllegalArgumentException("Story does not exist")
         }
-        story.price = price
+        story.storyPoints = storyPoints
         storyRepository.save(story)
         return story
     }
@@ -100,6 +100,6 @@ class StoryService(
     }
 
     fun toString(story: Story): String {
-        return (story.id.toString() + " " + story.name + " " + story.description + " " + story.price)
+        return (story.id.toString() + " " + story.name + " " + story.description + " " + story.storyPoints)
     }
 }

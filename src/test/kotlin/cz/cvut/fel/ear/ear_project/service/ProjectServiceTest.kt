@@ -142,7 +142,7 @@ class ProjectServiceTest(
         val story = Story()
         story.name = "test"
         story.description = "test"
-        story.price = 1
+        story.storyPoints = 1
         em.persist(story)
         project.addStory(story)
         backlog.addStory(story)

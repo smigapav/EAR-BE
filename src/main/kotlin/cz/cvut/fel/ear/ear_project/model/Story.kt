@@ -8,7 +8,7 @@ import jakarta.persistence.*
 @Table(name = "stories")
 class Story(
     @Basic(optional = false)
-    var price: Int? = null,
+    var storyPoints: Int? = null,
     @Basic(optional = false)
     var name: String? = null,
     @Basic(optional = false)
@@ -43,6 +43,6 @@ class Story(
     }
 
     override fun toString(): String {
-        return "Story(price=$price, name=$name, description=$description, project=$project, tasks=$tasks, sprint=$sprint, backlog=$backlog)"
+        return "Story(sotoryPoints=$storyPoints, name=$name, description=$description, project=$project, tasks=$tasks, sprint=$sprint, backlog=$backlog)"
     }
 }

@@ -51,7 +51,7 @@ class KanbanSprintServiceTest(
         story = Story()
         story.name = "Story 1"
         story.description = "Description 1"
-        story.price = 1
+        story.storyPoints = 1
         em.persist(story)
     }
 

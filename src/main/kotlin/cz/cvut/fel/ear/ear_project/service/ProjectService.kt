@@ -109,7 +109,7 @@ class ProjectService(
     fun createStory(
         name: String,
         description: String,
-        price: Int,
+        storyPoints: Int,
         project: Project,
     ): Story {
         if (!projectExists(project)) {
@@ -118,7 +118,7 @@ class ProjectService(
         val story = Story()
         story.name = name
         story.description = description
-        story.price = price
+        story.storyPoints = storyPoints
         storyRepository.save(story)
         val backlog = project.backlog
         backlog!!.addStory(story)

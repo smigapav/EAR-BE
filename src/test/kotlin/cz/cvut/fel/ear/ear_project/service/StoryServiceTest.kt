@@ -22,18 +22,18 @@ class StoryServiceTest(
     private val em: TestEntityManager,
 ) {
     @Test
-    fun changePriceTest() {
+    fun changeStoryPointsTest() {
         val story = Story()
         story.name = "test"
         story.description = "test"
-        story.price = 10
+        story.storyPoints = 10
         em.persist(story)
 
-        storyService.changePrice(story, 20)
+        storyService.changeStoryPoints(story, 20)
 
         val foundStory = em.find(Story::class.java, story.id)
 
-        assertEquals(20, foundStory.price)
+        assertEquals(20, foundStory.storyPoints)
     }
 
     @Test
@@ -41,7 +41,7 @@ class StoryServiceTest(
         val story = Story()
         story.name = "test"
         story.description = "test"
-        story.price = 10
+        story.storyPoints = 10
         em.persist(story)
 
         storyService.changeName(story, "test2")
@@ -56,7 +56,7 @@ class StoryServiceTest(
         val story = Story()
         story.name = "test"
         story.description = "test"
-        story.price = 10
+        story.storyPoints = 10
         em.persist(story)
 
         storyService.changeDescription(story, "test2")
@@ -71,7 +71,7 @@ class StoryServiceTest(
         val story = Story()
         story.name = "test"
         story.description = "test"
-        story.price = 10
+        story.storyPoints = 10
         em.persist(story)
 
         val task = storyService.createTask("test", "test", story)
@@ -87,7 +87,7 @@ class StoryServiceTest(
         val story = Story()
         story.name = "test"
         story.description = "test"
-        story.price = 10
+        story.storyPoints = 10
         em.persist(story)
         val task = Task()
         task.story = story
