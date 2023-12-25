@@ -10,10 +10,11 @@ class Story(
     @Basic(optional = false)
     var storyPoints: Int? = null,
     @Basic(optional = false)
+    @Column(unique = true)
     var name: String? = null,
     @Basic(optional = false)
     var description: String? = null,
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     var project: Project? = null,
     @OneToMany(mappedBy = "story", cascade = [CascadeType.REMOVE])
     var tasks: MutableList<Task> = mutableListOf(),

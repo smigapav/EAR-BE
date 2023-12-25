@@ -1,25 +1,20 @@
-package cz.cvut.kbss.ear.eshop.config
+package cz.cvut.fel.ear.ear_project.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import cz.cvut.fel.ear.ear_project.dao.UserRepository
-import cz.cvut.kbss.ear.eshop.security.AuthenticationFailure
-import cz.cvut.kbss.ear.eshop.security.AuthenticationSuccess
-import org.springframework.beans.factory.annotation.Autowired
+import cz.cvut.fel.ear.ear_project.security.AuthenticationFailure
+import cz.cvut.fel.ear.ear_project.security.AuthenticationSuccess
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
-import org.springframework.security.config.Customizer
-import org.springframework.security.config.annotation.web.invoke
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configurers.*
-import org.springframework.security.config.web.server.ServerHttpSecurity.http
+import org.springframework.security.config.annotation.web.invoke
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.HttpStatusEntryPoint
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
@@ -28,16 +23,18 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @EnableWebSecurity // Allows Spring Security
 @EnableMethodSecurity // Allow methods to be secured using annotation @PreAuthorize and @PostAuthorize
 @Profile("!test")
-class SecurityConfig() {
-
-    private val objectMapper = ObjectMapper()
+class SecurityConfig(
+    private val objectMapper: ObjectMapper,
+) {
     @Bean
     @Throws(Exception::class)
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         val authSuccess = authenticationSuccess()
         http {
-            authorizeRequests {
-                authorize(anyRequest, permitAll)
+            authorizeHttpRequests {
+                authorize("/login", permitAll)
+                authorize("/user/register", permitAll)
+                authorize(anyRequest, authenticated)
             }
             exceptionHandling {
                 authenticationEntryPoint = HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)
@@ -55,6 +52,7 @@ class SecurityConfig() {
         }
         return http.build()
     }
+
     private fun authenticationFailureHandler(): AuthenticationFailure {
         return AuthenticationFailure(objectMapper)
     }

@@ -4,7 +4,9 @@ import cz.cvut.fel.ear.ear_project.dao.TaskRepository
 import cz.cvut.fel.ear.ear_project.dao.UserRepository
 import cz.cvut.fel.ear.ear_project.model.Task
 import cz.cvut.fel.ear.ear_project.model.User
+import cz.cvut.fel.ear.ear_project.security.SecurityUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -14,10 +16,19 @@ class UserService(
     private val userRepository: UserRepository,
     @Autowired
     private val taskRepository: TaskRepository,
+    @Autowired
+    private val passwordEncoder: PasswordEncoder,
+    @Autowired
+    private val securityUtils: SecurityUtils,
 ) {
-    fun createUser(name: String): User {
+    fun createUser(
+        name: String,
+        password: String,
+    ): User {
         val user = User()
         user.username = name
+        user.password = password
+        user.encodePassword(passwordEncoder)
         userRepository.save(user)
         return user
     }
@@ -58,14 +69,23 @@ class UserService(
         taskRepository.save(task)
     }
 
-    fun changeUsername(
-        user: User,
-        username: String,
-    ): User {
+    fun changeUsername(username: String): User {
+        val user = securityUtils.currentUser!!
         if (!userExists(user)) {
             throw IllegalArgumentException("User does not exist")
         }
         user.username = username
+        userRepository.save(user)
+        return user
+    }
+
+    fun changePassword(password: String): User {
+        val user = securityUtils.currentUser!!
+        if (!userExists(user)) {
+            throw IllegalArgumentException("User does not exist")
+        }
+        user.password = password
+        user.encodePassword(passwordEncoder)
         userRepository.save(user)
         return user
     }

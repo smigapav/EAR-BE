@@ -27,6 +27,7 @@ class ProjectServiceTest(
     ) {
         project.name = "test"
         user.username = "test"
+        user.password = "test"
         em.persist(project)
         em.persist(user)
         em.persist(permissions)
@@ -45,9 +46,10 @@ class ProjectServiceTest(
     fun createProjectTest() {
         val user = User()
         user.username = "test"
+        user.password = "test"
         em.persist(user)
 
-        val project = projectService.createProject("test", user)
+        val project = projectService.createProject("test")
 
         val foundProject = em.find(Project::class.java, project.id)
 
@@ -75,6 +77,7 @@ class ProjectServiceTest(
     fun addExistingUserTest() {
         val user = User()
         user.username = "test"
+        user.password = "test"
         em.persist(user)
         val project = Project()
         project.name = "test"

@@ -3,20 +3,21 @@ package cz.cvut.fel.ear.ear_project.model
 import cz.cvut.fel.ear.ear_project.exceptions.ItemAlreadyPresentException
 import cz.cvut.fel.ear.ear_project.exceptions.ItemNotFoundException
 import jakarta.persistence.*
-import java.util.*
+import org.springframework.security.crypto.password.PasswordEncoder
 
 @Entity
 @Table(name = "users")
 class User(
     @Basic(optional = false)
+    @Column(unique = true)
     var username: String? = null,
     @Basic(optional = false)
-    val webApiKey: String = generateUniqueWebApiKey(),
+    var password: String? = null,
     @OneToMany(mappedBy = "user")
     var tasks: MutableList<Task> = mutableListOf(),
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     var projects: MutableList<Project> = mutableListOf(),
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE])
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.EAGER)
     var permissions: MutableList<Permissions> = mutableListOf(),
 ) : AbstractEntity() {
     fun addTask(task: Task) {
@@ -79,23 +80,11 @@ class User(
         permissions.remove(permission)
     }
 
-    override fun toString(): String {
-        return "User(id='$id', username='$username', webApiKey='$webApiKey', tasks=$tasks, projects=$projects, permissions=$permissions)"
+    fun encodePassword(encoder: PasswordEncoder) {
+        password = encoder.encode(password)
     }
 
-    companion object {
-        fun generateUniqueWebApiKey(): String {
-            // Generate a random UUID and convert it to a string
-            val uuid = UUID.randomUUID().toString()
-
-            // Create a random string to add uniqueness
-            val randomString =
-                (1..6)
-                    .map { ('a'..'z').random() } // Use lowercase letters for randomness
-                    .joinToString("")
-
-            // Combine the UUID and random string to create the unique API key
-            return "$uuid-$randomString"
-        }
+    override fun toString(): String {
+        return "User(id='$id', username='$username', password='$password', tasks=$tasks, projects=$projects, permissions=$permissions)"
     }
 }

@@ -1,7 +1,9 @@
 package cz.cvut.fel.ear.ear_project.service
 
 import cz.cvut.fel.ear.ear_project.dao.*
+import cz.cvut.fel.ear.ear_project.exceptions.EntityNotFound
 import cz.cvut.fel.ear.ear_project.model.*
+import cz.cvut.fel.ear.ear_project.security.SecurityUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -18,12 +20,12 @@ class ProjectService(
     private val storyRepository: StoryRepository,
     @Autowired
     private val sprintRepository: SprintRepository,
+    @Autowired
+    private val securityUtils: SecurityUtils,
 ) {
     @Transactional
-    fun createProject(
-        name: String,
-        user: User,
-    ): Project {
+    fun createProject(name: String): Project {
+        val user = securityUtils.currentUser!!
         if (!userExists(user)) {
             throw IllegalArgumentException("User does not exist")
         }
@@ -50,9 +52,10 @@ class ProjectService(
 
     fun changeProjectName(
         name: String,
-        project: Project,
+        projectName: String,
     ) {
-        if (!projectExists(project)) {
+        val project = projectRepository.findByName(projectName)
+        if (!projectExists(project!!)) {
             throw IllegalArgumentException("Project does not exist")
         }
         project.name = name
@@ -61,10 +64,12 @@ class ProjectService(
 
     @Transactional
     fun addExistingUser(
-        user: User,
-        project: Project,
+        username: String,
+        projectName: String,
     ) {
-        if (!userExists(user) || !projectExists(project)) {
+        val project = projectRepository.findByName(projectName)
+        val user = userRepository.findByUsername(username)
+        if (!userExists(user!!) || !projectExists(project!!)) {
             throw IllegalArgumentException("User or Project does not exist")
         }
         val permissions = Permissions()
@@ -81,10 +86,12 @@ class ProjectService(
 
     @Transactional
     fun removeUser(
-        user: User,
-        project: Project,
+        username: String,
+        projectName: String,
     ) {
-        if (!userExists(user) || !projectExists(project)) {
+        val user = userRepository.findByUsername(username)
+        val project = projectRepository.findByName(projectName)
+        if (!userExists(user!!) || !projectExists(project!!)) {
             throw IllegalArgumentException("User or Project does not exist")
         }
         val permissions = project.permissions.find { it.user == user }
@@ -102,9 +109,10 @@ class ProjectService(
         name: String,
         description: String,
         storyPoints: Int,
-        project: Project,
+        projectName: String,
     ): Story {
-        if (!projectExists(project)) {
+        val project = projectRepository.findByName(projectName)
+        if (!projectExists(project!!)) {
             throw IllegalArgumentException("Project does not exist")
         }
         val story = Story()
@@ -121,10 +129,12 @@ class ProjectService(
 
     @Transactional
     fun removeStory(
-        story: Story,
-        project: Project,
+        storyName: String,
+        projectName: String,
     ) {
-        if (!storyExists(story) || !projectExists(project)) {
+        val story = storyRepository.findByName(storyName)
+        val project = projectRepository.findByName(projectName)
+        if (!storyExists(story!!) || !projectExists(project!!)) {
             throw IllegalArgumentException("Story or Project does not exist")
         }
         project.removeStory(story)
@@ -136,9 +146,10 @@ class ProjectService(
     fun createSprint(
         name: String,
         createScrumSprint: Boolean,
-        project: Project,
+        projectName: String,
     ): AbstractSprint {
-        if (!projectExists(project)) {
+        val project = projectRepository.findByName(projectName)
+        if (!projectExists(project!!)) {
             throw IllegalArgumentException("Project does not exist")
         }
         val sprint: AbstractSprint
@@ -157,15 +168,21 @@ class ProjectService(
 
     @Transactional
     fun removeSprint(
-        sprint: AbstractSprint,
-        project: Project,
+        sprintId: Long,
+        projectName: String,
     ) {
-        if (!sprintExists(sprint) || !projectExists(project)) {
+        val sprint = sprintRepository.findById(sprintId).orElse(null)
+        val project = projectRepository.findByName(projectName)
+        if (!sprintExists(sprint) || !projectExists(project!!)) {
             throw IllegalArgumentException("Sprint or project does not exist")
         }
         project.removeSprint(sprint)
         projectRepository.save(project)
         sprintRepository.delete(sprint)
+    }
+
+    fun findProjectByName(name: String): Project {
+        return projectRepository.findByName(name)
     }
 
     fun storyExists(story: Story): Boolean {

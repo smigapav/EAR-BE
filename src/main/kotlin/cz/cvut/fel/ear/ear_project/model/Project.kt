@@ -9,6 +9,7 @@ import jakarta.persistence.*
 @Table(name = "projects")
 data class Project(
     @Basic(optional = false)
+    @Column(unique = true)
     var name: String? = null,
     @ManyToMany
     var users: MutableList<User> = mutableListOf(),

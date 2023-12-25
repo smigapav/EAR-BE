@@ -1,4 +1,4 @@
-package cz.cvut.kbss.ear.eshop.security.model
+package cz.cvut.fel.ear.ear_project.security
 
 class LoginStatus {
     var isLoggedIn = false

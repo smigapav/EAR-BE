@@ -11,6 +11,7 @@ abstract class AbstractSprint(
     @GeneratedValue(strategy = GenerationType.AUTO)
     open var id: Long? = null,
     @Basic(optional = false)
+    @Column(unique = true)
     open var name: String? = null,
     @ManyToOne
     open var project: Project? = null,

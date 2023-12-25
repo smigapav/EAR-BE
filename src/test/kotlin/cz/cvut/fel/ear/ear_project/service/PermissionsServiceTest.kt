@@ -28,6 +28,7 @@ class PermissionsServiceTest(
         permissions: Permissions,
     ) {
         user.username = "test"
+        user.password = "test"
         project.name = "test"
         em.persist(user)
         em.persist(project)
@@ -89,6 +90,7 @@ class PermissionsServiceTest(
     fun changeProjectAdminPermissionThrowsExceptionWhenUserDoesNotHavePermissions() {
         val user = User()
         user.username = "test"
+        user.password = "test"
         val project = Project()
         project.name = "test"
         em.persist(user)

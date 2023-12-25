@@ -17,10 +17,9 @@ class PermissionsService(
         project: Project,
         perm: Boolean,
     ): Permissions? {
-        val permissions = project.permissions.find { it.user == user }
-        if (permissions == null) {
-            throw IllegalArgumentException("User does not have permissions for this project")
-        }
+        val permissions =
+            project.permissions.find { it.user == user }
+                ?: throw IllegalArgumentException("User does not have permissions for this project")
         permissions!!.projectAdmin = perm
         permissionsRepository.save(permissions)
         return permissions
@@ -31,10 +30,9 @@ class PermissionsService(
         project: Project,
         perm: Boolean,
     ): Permissions? {
-        val permissions = project.permissions.find { it.user == user }
-        if (permissions == null) {
-            throw IllegalArgumentException("User does not have permissions for this project")
-        }
+        val permissions =
+            project.permissions.find { it.user == user }
+                ?: throw IllegalArgumentException("User does not have permissions for this project")
         permissions!!.storiesAndTasksManager = perm
         permissionsRepository.save(permissions)
         return permissions
@@ -45,10 +43,9 @@ class PermissionsService(
         project: Project,
         perm: Boolean,
     ): Permissions? {
-        val permissions = project.permissions.find { it.user == user }
-        if (permissions == null) {
-            throw IllegalArgumentException("User does not have permissions for this project")
-        }
+        val permissions =
+            project.permissions.find { it.user == user }
+                ?: throw IllegalArgumentException("User does not have permissions for this project")
         permissions!!.canManageSprints = perm
         permissionsRepository.save(permissions)
         return permissions

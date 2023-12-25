@@ -24,7 +24,7 @@ class UserServiceTest(
 ) {
     @Test
     fun insertUserIntoDB() {
-        val user = userService.createUser("test")
+        val user = userService.createUser("test", "test")
 
         val foundUser = em.find(User::class.java, user.id)
 
@@ -35,6 +35,7 @@ class UserServiceTest(
     fun removeUserFromDB() {
         val user = User()
         user.username = "test"
+        user.password = "test"
         em.persist(user)
 
         userService.removeUser(user)
@@ -48,6 +49,7 @@ class UserServiceTest(
     fun addTaskToUser() {
         val user = User()
         user.username = "test"
+        user.password = "test"
         em.persist(user)
         val task = Task()
         task.name = "test"
@@ -66,6 +68,7 @@ class UserServiceTest(
     fun addTaskToUserShouldThrowError() {
         val user = User()
         user.username = "test"
+        user.password = "test"
         em.persist(user)
         val task = Task()
         task.name = "test"
@@ -80,6 +83,7 @@ class UserServiceTest(
     fun removeTaskFromUser() {
         val user = User()
         user.username = "test"
+        user.password = "test"
         val task = Task()
         task.name = "test"
         task.description = "test"
@@ -100,6 +104,7 @@ class UserServiceTest(
     fun changeUsernameTest() {
         val user = User()
         user.username = "test"
+        user.password = "test"
         em.persist(user)
 
         userService.changeUsername(user, "test2")
@@ -107,5 +112,19 @@ class UserServiceTest(
         val foundUser = em.find(User::class.java, user.id)
 
         assertEquals("test2", foundUser.username)
+    }
+
+    @Test
+    fun changePasswordTest() {
+        val user = User()
+        user.username = "test"
+        user.password = "test"
+        em.persist(user)
+
+        userService.changePassword(user, "test2")
+
+        val foundUser = em.find(User::class.java, user.id)
+
+        assertEquals("test2", foundUser.password)
     }
 }

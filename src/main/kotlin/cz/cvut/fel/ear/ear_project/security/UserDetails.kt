@@ -1,4 +1,4 @@
-package cz.cvut.kbss.ear.eshop.security.model
+package cz.cvut.fel.ear.ear_project.security
 
 import cz.cvut.fel.ear.ear_project.model.User
 import org.springframework.security.core.GrantedAuthority
@@ -27,21 +27,18 @@ class UserDetails : UserDetails {
     }
 
     private fun addUserRoles() {
-        user.projects.forEach { project ->
-            val permission = project.permissions.find { it.user == user }
-            if (permission != null) {
-                if (permission.projectAdmin) {
-                    val authority = "${project.id}admin"
-                    authorities.add(SimpleGrantedAuthority(authority))
-                }
-                if (permission.storiesAndTasksManager) {
-                    val authority = "${project.id}manager"
-                    authorities.add(SimpleGrantedAuthority(authority))
-                }
-                if (permission.canManageSprints) {
-                    val authority = "${project.id}sprints"
-                    authorities.add(SimpleGrantedAuthority(authority))
-                }
+        user.permissions.forEach { permissions ->
+            if (permissions.projectAdmin) {
+                val authority = "${permissions.project?.id!!}admin"
+                authorities.add(SimpleGrantedAuthority(authority))
+            }
+            if (permissions.storiesAndTasksManager) {
+                val authority = "${permissions.project?.id!!}manager"
+                authorities.add(SimpleGrantedAuthority(authority))
+            }
+            if (permissions.canManageSprints) {
+                val authority = "${permissions.project?.id!!}sprints"
+                authorities.add(SimpleGrantedAuthority(authority))
             }
         }
     }
@@ -51,7 +48,8 @@ class UserDetails : UserDetails {
     }
 
     override fun getPassword(): String {
-        return ""
+        println(user.password!!)
+        return user.password!!
     }
 
     override fun getUsername(): String {

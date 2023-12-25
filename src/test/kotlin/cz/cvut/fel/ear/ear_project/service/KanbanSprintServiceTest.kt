@@ -36,6 +36,7 @@ class KanbanSprintServiceTest(
         // User constructor
         val user = User()
         user.username = "test"
+        user.password = "test"
         em.persist(user)
 
         // Project constructor

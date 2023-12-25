@@ -2,6 +2,7 @@ package cz.cvut.fel.ear.ear_project.service
 
 import cz.cvut.fel.ear.ear_project.dao.StoryRepository
 import cz.cvut.fel.ear.ear_project.dao.TaskRepository
+import cz.cvut.fel.ear.ear_project.exceptions.EntityNotFound
 import cz.cvut.fel.ear.ear_project.model.Story
 import cz.cvut.fel.ear.ear_project.model.Task
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,10 +17,11 @@ class StoryService(
     private val taskRepository: TaskRepository,
 ) {
     fun changeStoryPoints(
-        story: Story,
+        storyName: String,
         storyPoints: Int,
     ): Story {
-        if (!storyExists(story)) {
+        val story = storyRepository.findByName(storyName)
+        if (!storyExists(story!!)) {
             throw IllegalArgumentException("Story does not exist")
         }
         story.storyPoints = storyPoints
@@ -28,22 +30,24 @@ class StoryService(
     }
 
     fun changeName(
-        story: Story,
-        name: String,
+        storyName: String,
+        newName: String,
     ): Story {
-        if (!storyExists(story)) {
+        val story = storyRepository.findByName(storyName)
+        if (!storyExists(story!!)) {
             throw IllegalArgumentException("Story does not exist")
         }
-        story.name = name
+        story.name = newName
         storyRepository.save(story)
         return story
     }
 
     fun changeDescription(
-        story: Story,
+        storyName: String,
         description: String,
     ): Story {
-        if (!storyExists(story)) {
+        val story = storyRepository.findByName(storyName)
+        if (!storyExists(story!!)) {
             throw IllegalArgumentException("Story does not exist")
         }
         story.description = description
@@ -55,12 +59,13 @@ class StoryService(
     fun createTask(
         name: String,
         description: String,
-        story: Story,
+        storyName: String,
     ): Task {
+        val story = storyRepository.findByName(storyName)
         val task = Task()
         task.name = name
         task.description = description
-        if (!storyExists(story)) {
+        if (!storyExists(story!!)) {
             throw IllegalArgumentException("Story does not exist")
         }
         task.story = story
@@ -73,9 +78,10 @@ class StoryService(
     @Transactional
     fun removeTask(
         task: Task,
-        story: Story,
+        storyName: String,
     ) {
-        if (!taskExists(task) || !storyExists(story)) {
+        val story = storyRepository.findByName(storyName)
+        if (!taskExists(task) || !storyExists(story!!)) {
             throw IllegalArgumentException("Task or Story does not exist")
         }
         story.removeTask(task)
@@ -89,6 +95,10 @@ class StoryService(
 
     fun findStoryById(id: Long): Story? {
         return storyRepository.findById(id).orElse(null)
+    }
+
+    fun findStoryByName(name: String): Story {
+        return storyRepository.findByName(name)
     }
 
     fun taskExists(task: Task): Boolean {
