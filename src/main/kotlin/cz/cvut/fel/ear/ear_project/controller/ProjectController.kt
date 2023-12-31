@@ -34,7 +34,7 @@ class ProjectController(
     }
 
     @PostMapping("/addUser")
-    @PreAuthorize("hasRoleByProjectName(projectName, 'admin')")
+    @PreAuthorize("hasRoleByProjectName(#projectName, 'admin')")
     fun addUser(
         @RequestParam("username", required = true) username: String,
         @RequestParam("projectName", required = true) projectName: String,
@@ -44,7 +44,7 @@ class ProjectController(
     }
 
     @PostMapping("/removeUser")
-    @PreAuthorize("hasRoleByProjectName(projectName, 'admin')")
+    @PreAuthorize("hasRoleByProjectName(#projectName, 'admin')")
     fun removeUser(
         @RequestParam("username", required = true) username: String,
         @RequestParam("projectName", required = true) projectName: String,
@@ -54,7 +54,7 @@ class ProjectController(
     }
 
     @PostMapping("/createStory")
-    @PreAuthorize("hasRoleByProjectName(projectName, 'manager')")
+    @PreAuthorize("hasRoleByProjectName(#projectName, 'manager')")
     fun createStory(
         @RequestParam("storyName", required = true) storyName: String,
         @RequestParam("description", required = true) description: String,
@@ -70,7 +70,7 @@ class ProjectController(
     }
 
     @PostMapping("/removeStory")
-    @PreAuthorize("hasRoleByProjectName(projectName, 'manager')")
+    @PreAuthorize("hasRoleByProjectName(#projectName, 'manager')")
     fun removeStory(
         @RequestParam("storyName", required = true) storyName: String,
         @RequestParam("projectName", required = true) projectName: String,
