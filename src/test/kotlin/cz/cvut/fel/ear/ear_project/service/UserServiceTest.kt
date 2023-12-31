@@ -3,15 +3,20 @@ package cz.cvut.fel.ear.ear_project.service
 import cz.cvut.fel.ear.ear_project.EarProjectApplication
 import cz.cvut.fel.ear.ear_project.model.Task
 import cz.cvut.fel.ear.ear_project.model.User
+import cz.cvut.fel.ear.ear_project.security.SecurityUtils
 import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.test.util.ReflectionTestUtils
 
 @Transactional
 @AutoConfigureTestEntityManager
@@ -107,7 +112,13 @@ class UserServiceTest(
         user.password = "test"
         em.persist(user)
 
-        userService.changeUsername(user, "test2")
+        val securityUtils = mock(SecurityUtils::class.java)
+        `when`(securityUtils.currentUser).thenReturn(user)
+
+        // Use reflection to set the private securityUtils field in UserService
+        ReflectionTestUtils.setField(userService, "securityUtils", securityUtils)
+
+        userService.changeUsername("test2")
 
         val foundUser = em.find(User::class.java, user.id)
 
@@ -121,10 +132,19 @@ class UserServiceTest(
         user.password = "test"
         em.persist(user)
 
-        userService.changePassword(user, "test2")
+        // Mock SecurityUtils and its currentUser method
+        val securityUtils = mock(SecurityUtils::class.java)
+        `when`(securityUtils.currentUser).thenReturn(user)
+
+        // Use reflection to set the private securityUtils field in UserService
+        ReflectionTestUtils.setField(userService, "securityUtils", securityUtils)
+
+        userService.changePassword("test2")
 
         val foundUser = em.find(User::class.java, user.id)
 
-        assertEquals("test2", foundUser.password)
+        val passwordEncoder = ReflectionTestUtils.getField(userService, "passwordEncoder") as PasswordEncoder
+
+        assertEquals(true, passwordEncoder.matches("test2", foundUser.password))
     }
 }

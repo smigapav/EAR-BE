@@ -29,7 +29,7 @@ class StoryServiceTest(
         story.storyPoints = 10
         em.persist(story)
 
-        storyService.changeStoryPoints(story, 20)
+        storyService.changeStoryPoints(story.name.toString(), 20)
 
         val foundStory = em.find(Story::class.java, story.id)
 
@@ -44,7 +44,7 @@ class StoryServiceTest(
         story.storyPoints = 10
         em.persist(story)
 
-        storyService.changeName(story, "test2")
+        storyService.changeName(story.name.toString(), "test2")
 
         val foundStory = em.find(Story::class.java, story.id)
 
@@ -59,7 +59,7 @@ class StoryServiceTest(
         story.storyPoints = 10
         em.persist(story)
 
-        storyService.changeDescription(story, "test2")
+        storyService.changeDescription(story.name.toString(), "test2")
 
         val foundStory = em.find(Story::class.java, story.id)
 
@@ -74,7 +74,7 @@ class StoryServiceTest(
         story.storyPoints = 10
         em.persist(story)
 
-        val task = storyService.createTask("test", "test", story)
+        val task = storyService.createTask("test", "test", story.name.toString())
 
         val foundStory = em.find(Story::class.java, story.id)
 
@@ -97,7 +97,7 @@ class StoryServiceTest(
         story.addTask(task)
         em.persist(story)
 
-        storyService.removeTask(task, story)
+        storyService.removeTask(task, story.name.toString())
 
         val foundStory = em.find(Story::class.java, story.id)
         val foundTask = em.find(Task::class.java, task.id)

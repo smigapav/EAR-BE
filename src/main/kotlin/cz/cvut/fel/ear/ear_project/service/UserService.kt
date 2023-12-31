@@ -19,7 +19,7 @@ class UserService(
     @Autowired
     private val passwordEncoder: PasswordEncoder,
     @Autowired
-    private val securityUtils: SecurityUtils,
+    private var securityUtils: SecurityUtils,
 ) {
     fun createUser(
         name: String,

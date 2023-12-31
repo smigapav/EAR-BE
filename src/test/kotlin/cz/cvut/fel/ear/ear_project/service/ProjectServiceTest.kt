@@ -2,14 +2,17 @@ package cz.cvut.fel.ear.ear_project.service
 
 import cz.cvut.fel.ear.ear_project.EarProjectApplication
 import cz.cvut.fel.ear.ear_project.model.*
+import cz.cvut.fel.ear.ear_project.security.SecurityUtils
 import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.util.ReflectionTestUtils
 
 @Transactional
 @AutoConfigureTestEntityManager
@@ -49,6 +52,12 @@ class ProjectServiceTest(
         user.password = "test"
         em.persist(user)
 
+        val securityUtils = Mockito.mock(SecurityUtils::class.java)
+        Mockito.`when`(securityUtils.currentUser).thenReturn(user)
+
+        // Use reflection to set the private securityUtils field in UserService
+        ReflectionTestUtils.setField(projectService, "securityUtils", securityUtils)
+
         val project = projectService.createProject("test")
 
         val foundProject = em.find(Project::class.java, project.id)
@@ -66,7 +75,7 @@ class ProjectServiceTest(
         val permissions = Permissions()
         setUp(project, user, permissions)
 
-        projectService.changeProjectName("newName", project)
+        projectService.changeProjectName("newName",project.name.toString())
 
         val foundProject = em.find(Project::class.java, project.id)
 
@@ -83,7 +92,7 @@ class ProjectServiceTest(
         project.name = "test"
         em.persist(project)
 
-        projectService.addExistingUser(user, project)
+        projectService.addExistingUser(user.username.toString(), project.name.toString())
 
         val foundProject = em.find(Project::class.java, project.id)
 
@@ -97,7 +106,7 @@ class ProjectServiceTest(
         val permissions = Permissions()
         setUp(project, user, permissions)
 
-        projectService.removeUser(user, project)
+        projectService.removeUser(user.username.toString(), project.name.toString())
 
         val foundProject = em.find(Project::class.java, project.id)
 
@@ -117,7 +126,7 @@ class ProjectServiceTest(
                 "test",
                 "test",
                 1,
-                project,
+                project.name.toString()
             )
 
         val foundStory = em.find(Story::class.java, story.id)
@@ -140,7 +149,7 @@ class ProjectServiceTest(
         project.addStory(story)
         em.persist(project)
 
-        projectService.removeStory(story, project)
+        projectService.removeStory(story.name.toString(), project.name.toString())
 
         val foundProject = em.find(Project::class.java, project.id)
         val foundStory = em.find(Story::class.java, story.id)
@@ -160,7 +169,7 @@ class ProjectServiceTest(
             projectService.createSprint(
                 "test",
                 true,
-                project,
+                project.name.toString(),
             )
 
         val foundSprint = em.find(AbstractSprint::class.java, sprint.id)
@@ -181,7 +190,7 @@ class ProjectServiceTest(
             projectService.createSprint(
                 "test",
                 false,
-                project,
+                project.name.toString(),
             )
 
         val foundSprint = em.find(AbstractSprint::class.java, sprint.id)
@@ -204,7 +213,7 @@ class ProjectServiceTest(
         project.addSprint(sprint)
         em.persist(project)
 
-        projectService.removeSprint(sprint, project)
+        projectService.removeSprint(sprint.id!!.toLong(), project.name.toString())
 
         val foundProject = em.find(Project::class.java, project.id)
         val foundSprint = em.find(AbstractSprint::class.java, sprint.id)
