@@ -1,6 +1,7 @@
 package cz.cvut.fel.ear.ear_project.controller
 
 import cz.cvut.fel.ear.ear_project.service.ProjectService
+import cz.cvut.fel.ear.ear_project.service.SecurityService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController
 class ProjectController(
     @Autowired
     private val projectService: ProjectService,
+    @Autowired
+    private val securityService: SecurityService,
 ) {
     @PostMapping("/createProject")
     fun registerUser(
@@ -39,6 +42,9 @@ class ProjectController(
         @RequestParam("username", required = true) username: String,
         @RequestParam("projectName", required = true) projectName: String,
     ): ResponseEntity<String> {
+        if (!securityService.hasRoleByProjectName(projectName, "admin")) {
+            return ResponseEntity("User is not an admin", HttpStatusCode.valueOf(401))
+        }
         projectService.addExistingUser(username, projectName)
         return ResponseEntity("User added", HttpStatusCode.valueOf(200))
     }
@@ -54,7 +60,7 @@ class ProjectController(
     }
 
     @PostMapping("/createStory")
-    @PreAuthorize("hasRoleByProjectName(#projectName, 'manager')")
+    @PreAuthorize("hasRoleByProjectName(authentication, #projectName, 'manager')")
     fun createStory(
         @RequestParam("storyName", required = true) storyName: String,
         @RequestParam("description", required = true) description: String,

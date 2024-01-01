@@ -75,7 +75,7 @@ class ProjectServiceTest(
         val permissions = Permissions()
         setUp(project, user, permissions)
 
-        projectService.changeProjectName("newName",project.name.toString())
+        projectService.changeProjectName("newName", project.name.toString())
 
         val foundProject = em.find(Project::class.java, project.id)
 
@@ -126,7 +126,7 @@ class ProjectServiceTest(
                 "test",
                 "test",
                 1,
-                project.name.toString()
+                project.name.toString(),
             )
 
         val foundStory = em.find(Story::class.java, story.id)

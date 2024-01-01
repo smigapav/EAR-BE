@@ -1,7 +1,6 @@
 package cz.cvut.fel.ear.ear_project.service
 
 import cz.cvut.fel.ear.ear_project.dao.*
-import cz.cvut.fel.ear.ear_project.exceptions.EntityNotFound
 import cz.cvut.fel.ear.ear_project.model.*
 import cz.cvut.fel.ear.ear_project.security.SecurityUtils
 import org.springframework.beans.factory.annotation.Autowired

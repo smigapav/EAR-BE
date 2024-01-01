@@ -1,30 +1,45 @@
 package cz.cvut.fel.ear.ear_project.config
 
+import CustomMethodSecurityExpressionRoot
+import CustomPermissionEvaluator
 import com.fasterxml.jackson.databind.ObjectMapper
 import cz.cvut.fel.ear.ear_project.security.AuthenticationFailure
 import cz.cvut.fel.ear.ear_project.security.AuthenticationSuccess
+import cz.cvut.fel.ear.ear_project.service.ProjectService
+import cz.cvut.fel.ear.ear_project.service.StoryService
+import org.aopalliance.intercept.MethodInvocation
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler
+import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configurers.*
 import org.springframework.security.config.annotation.web.invoke
+import org.springframework.security.core.Authentication
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.HttpStatusEntryPoint
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
+
 @Configuration
-@EnableWebSecurity // Allows Spring Security
-@EnableMethodSecurity // Allow methods to be secured using annotation @PreAuthorize and @PostAuthorize
+@EnableWebSecurity
+@EnableMethodSecurity
 @Profile("!test")
 class SecurityConfig(
     private val objectMapper: ObjectMapper,
+    @Autowired
+    private val projectService: ProjectService,
+    @Autowired
+    private val storyService: StoryService,
 ) {
     @Bean
     @Throws(Exception::class)
@@ -49,8 +64,19 @@ class SecurityConfig(
             logout {
                 logoutSuccessHandler = authSuccess
             }
+            createExpressionHandler()
         }
         return http.build()
+    }
+
+    private fun createExpressionHandler(): MethodSecurityExpressionHandler {
+        return object : DefaultMethodSecurityExpressionHandler() {
+            override fun createSecurityExpressionRoot(authentication: Authentication, invocation: MethodInvocation): MethodSecurityExpressionOperations {
+                val root = CustomMethodSecurityExpressionRoot(authentication, projectService, storyService)
+                root.setPermissionEvaluator(CustomPermissionEvaluator(projectService, storyService))
+                return root
+            }
+        }
     }
 
     private fun authenticationFailureHandler(): AuthenticationFailure {
@@ -76,3 +102,4 @@ class SecurityConfig(
         return source
     }
 }
+

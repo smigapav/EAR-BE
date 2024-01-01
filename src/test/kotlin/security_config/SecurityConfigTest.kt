@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @SpringBootTest(classes = arrayOf(EarProjectApplication::class))
 @AutoConfigureMockMvc
 class SecurityConfigTest {
-
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -32,7 +31,7 @@ class SecurityConfigTest {
     @WithMockUser
     fun testCallHello_successWith200() {
         mockMvc.perform(get("/hello"))
-                .andExpect(status().isOk)
+            .andExpect(status().isOk)
     }
 
     @Test
@@ -43,10 +42,12 @@ class SecurityConfigTest {
         // Mock the createUser method in UserService
         `when`(userService.createUser(name, password)).thenReturn(User())
 
-        mockMvc.perform(post("/user/register")
-            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .param("name", name)
-            .param("password", password))
+        mockMvc.perform(
+            post("/user/register")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("name", name)
+                .param("password", password),
+        )
             .andExpect(status().isOk)
     }
 }

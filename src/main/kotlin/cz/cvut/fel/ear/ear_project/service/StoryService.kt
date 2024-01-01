@@ -2,7 +2,6 @@ package cz.cvut.fel.ear.ear_project.service
 
 import cz.cvut.fel.ear.ear_project.dao.StoryRepository
 import cz.cvut.fel.ear.ear_project.dao.TaskRepository
-import cz.cvut.fel.ear.ear_project.exceptions.EntityNotFound
 import cz.cvut.fel.ear.ear_project.model.Story
 import cz.cvut.fel.ear.ear_project.model.Task
 import org.springframework.beans.factory.annotation.Autowired
