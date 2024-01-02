@@ -20,7 +20,6 @@ class CustomPermissionEvaluator(
         return false
     }
 
-
     override fun hasPermission(authentication: Authentication, targetId: Serializable?, targetType: String?, permission: Any?): Boolean {
         // Implement your custom permission logic here
         if (targetType is String && permission is String) {
