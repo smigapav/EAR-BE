@@ -1,5 +1,6 @@
 package cz.cvut.fel.ear.ear_project.controller
 
+import CustomPermissionEvaluator
 import cz.cvut.fel.ear.ear_project.service.ProjectService
 import cz.cvut.fel.ear.ear_project.service.SecurityService
 import org.springframework.beans.factory.annotation.Autowired
@@ -60,18 +61,18 @@ class ProjectController(
     }
 
     @PostMapping("/createStory")
-    @PreAuthorize("hasRoleByProjectName(authentication, #projectName, 'manager')")
+    @PreAuthorize("hasPermission(#projectName, 'manager')")
     fun createStory(
         @RequestParam("storyName", required = true) storyName: String,
         @RequestParam("description", required = true) description: String,
         @RequestParam("storyPoints", required = true) storyPoints: Int,
         @RequestParam("projectName", required = true) projectName: String,
     ): ResponseEntity<String> {
-//        try {
-//            projectService.createStory(storyName, description, storyPoints, projectName)
-//        } catch (e: IllegalArgumentException) {
-//            return ResponseEntity(e.message, HttpStatusCode.valueOf(400))
-//        }
+        try {
+            projectService.createStory(storyName, description, storyPoints, projectName)
+        } catch (e: IllegalArgumentException) {
+            return ResponseEntity(e.message, HttpStatusCode.valueOf(400))
+        }
         return ResponseEntity("Story created", HttpStatusCode.valueOf(200))
     }
 

@@ -8,16 +8,22 @@ import cz.cvut.fel.ear.ear_project.security.AuthenticationSuccess
 import cz.cvut.fel.ear.ear_project.service.ProjectService
 import cz.cvut.fel.ear.ear_project.service.StoryService
 import org.aopalliance.intercept.MethodInvocation
+import org.springframework.aop.Advisor
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.config.BeanDefinition
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
+import org.springframework.context.annotation.Role
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler
 import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations
+import org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
+import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configurers.*
@@ -31,20 +37,19 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 
 @Configuration
-@EnableWebSecurity
-@EnableMethodSecurity
-@Profile("!test")
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 class SecurityConfig(
     private val objectMapper: ObjectMapper,
     @Autowired
     private val projectService: ProjectService,
     @Autowired
     private val storyService: StoryService,
-) {
+) : GlobalMethodSecurityConfiguration() {
     @Bean
     @Throws(Exception::class)
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         val authSuccess = authenticationSuccess()
+
         http {
             authorizeHttpRequests {
                 authorize("/login", permitAll)
@@ -64,20 +69,11 @@ class SecurityConfig(
             logout {
                 logoutSuccessHandler = authSuccess
             }
-            createExpressionHandler()
         }
         return http.build()
     }
 
-    private fun createExpressionHandler(): MethodSecurityExpressionHandler {
-        return object : DefaultMethodSecurityExpressionHandler() {
-            override fun createSecurityExpressionRoot(authentication: Authentication, invocation: MethodInvocation): MethodSecurityExpressionOperations {
-                val root = CustomMethodSecurityExpressionRoot(authentication, projectService, storyService)
-                root.setPermissionEvaluator(CustomPermissionEvaluator(projectService, storyService))
-                return root
-            }
-        }
-    }
+
 
     private fun authenticationFailureHandler(): AuthenticationFailure {
         return AuthenticationFailure(objectMapper)
@@ -100,6 +96,12 @@ class SecurityConfig(
         val source = UrlBasedCorsConfigurationSource()
         source.registerCorsConfiguration("/**", configuration)
         return source
+    }
+
+    override fun createExpressionHandler(): MethodSecurityExpressionHandler {
+        val expressionHandler = DefaultMethodSecurityExpressionHandler()
+        expressionHandler.setPermissionEvaluator(CustomPermissionEvaluator(projectService, storyService))
+        return expressionHandler
     }
 }
 
