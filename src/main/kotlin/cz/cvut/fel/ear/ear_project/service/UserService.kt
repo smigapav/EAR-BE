@@ -90,6 +90,17 @@ class UserService(
         return user
     }
 
+    fun getAllPermissions(): List<String> {
+        val user = securityUtils.currentUser!!
+        if (!userExists(user)) {
+            throw IllegalArgumentException("User does not exist")
+        }
+        val output = mutableListOf<String>()
+        output.add("test ")
+        user.permissions.forEach { output.add(it.toString()) }
+        return output
+    }
+
     fun findAllUsers(): List<User> {
         return userRepository.findAll()
     }

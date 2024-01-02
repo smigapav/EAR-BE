@@ -53,7 +53,7 @@ class ProjectService(
         name: String,
         projectName: String,
     ) {
-        val project = projectRepository.findByName(projectName)
+        val project = findProjectByName(projectName)
         if (!projectExists(project!!)) {
             throw IllegalArgumentException("Project does not exist")
         }
@@ -66,7 +66,7 @@ class ProjectService(
         username: String,
         projectName: String,
     ) {
-        val project = projectRepository.findByName(projectName)
+        val project = findProjectByName(projectName)
         val user = userRepository.findByUsername(username)
         if (!userExists(user!!) || !projectExists(project!!)) {
             throw IllegalArgumentException("User or Project does not exist")
@@ -89,7 +89,7 @@ class ProjectService(
         projectName: String,
     ) {
         val user = userRepository.findByUsername(username)
-        val project = projectRepository.findByName(projectName)
+        val project = findProjectByName(projectName)
         if (!userExists(user!!) || !projectExists(project!!)) {
             throw IllegalArgumentException("User or Project does not exist")
         }
@@ -110,7 +110,7 @@ class ProjectService(
         storyPoints: Int,
         projectName: String,
     ): Story {
-        val project = projectRepository.findByName(projectName)
+        val project = findProjectByName(projectName)
         if (!projectExists(project!!)) {
             throw IllegalArgumentException("Project does not exist")
         }
@@ -132,7 +132,7 @@ class ProjectService(
         projectName: String,
     ) {
         val story = storyRepository.findByName(storyName)
-        val project = projectRepository.findByName(projectName)
+        val project = findProjectByName(projectName)
         if (!storyExists(story!!) || !projectExists(project!!)) {
             throw IllegalArgumentException("Story or Project does not exist")
         }
@@ -147,7 +147,7 @@ class ProjectService(
         createScrumSprint: Boolean,
         projectName: String,
     ): AbstractSprint {
-        val project = projectRepository.findByName(projectName)
+        val project = findProjectByName(projectName)
         if (!projectExists(project!!)) {
             throw IllegalArgumentException("Project does not exist")
         }
@@ -171,7 +171,7 @@ class ProjectService(
         projectName: String,
     ) {
         val sprint = sprintRepository.findById(sprintId).orElse(null)
-        val project = projectRepository.findByName(projectName)
+        val project = findProjectByName(projectName)
         if (!sprintExists(sprint) || !projectExists(project!!)) {
             throw IllegalArgumentException("Sprint or project does not exist")
         }
@@ -181,22 +181,22 @@ class ProjectService(
     }
 
     fun findProjectByName(name: String): Project {
-        return projectRepository.findByName(name)
+        return projectRepository.findByName(name) ?: throw NoSuchElementException("Project with name $name not found")
     }
 
     fun storyExists(story: Story): Boolean {
-        return storyRepository != null && !storyRepository.findById(story.id!!).isEmpty
+        return !storyRepository.findById(story.id!!).isEmpty
     }
 
     fun projectExists(project: Project): Boolean {
-        return projectRepository != null && !projectRepository.findById(project.id!!).isEmpty
+        return !projectRepository.findById(project.id!!).isEmpty
     }
 
     fun userExists(user: User): Boolean {
-        return userRepository != null && !userRepository.findById(user.id!!).isEmpty
+        return !userRepository.findById(user.id!!).isEmpty
     }
 
     fun sprintExists(sprint: AbstractSprint): Boolean {
-        return sprintRepository != null && !sprintRepository.findById(sprint.id!!).isEmpty
+        return !sprintRepository.findById(sprint.id!!).isEmpty
     }
 }

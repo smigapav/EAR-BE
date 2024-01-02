@@ -37,6 +37,6 @@ data class Permissions(
     }
 
     override fun toString(): String {
-        return "Permissions(projectAdmin=$projectAdmin, storiesAndTasksManager=$storiesAndTasksManager, canManageSprints=$canManageSprints)"
+        return "Permissions(project=${project?.name}, projectAdmin=$projectAdmin, storiesAndTasksManager=$storiesAndTasksManager, canManageSprints=$canManageSprints)"
     }
 }

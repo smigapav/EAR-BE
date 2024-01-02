@@ -97,7 +97,7 @@ class StoryService(
     }
 
     fun findStoryByName(name: String): Story {
-        return storyRepository.findByName(name)
+        return storyRepository.findByName(name)!!
     }
 
     fun taskExists(task: Task): Boolean {

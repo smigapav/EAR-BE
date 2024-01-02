@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ProjectRepository : JpaRepository<Project, Long> {
-    fun findByName(name: String): Project
+    fun findByName(name: String): Project?
 }

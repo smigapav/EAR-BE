@@ -3,6 +3,7 @@ package cz.cvut.fel.ear.ear_project.controller
 import CustomPermissionEvaluator
 import cz.cvut.fel.ear.ear_project.service.ProjectService
 import cz.cvut.fel.ear.ear_project.service.SecurityService
+import cz.cvut.fel.ear.ear_project.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
@@ -19,12 +20,15 @@ class ProjectController(
     private val projectService: ProjectService,
     @Autowired
     private val securityService: SecurityService,
+    @Autowired
+    private val userService: UserService,
 ) {
     @PostMapping("/createProject")
     fun registerUser(
         @RequestParam("name", required = true) name: String,
     ): ResponseEntity<String> {
         projectService.createProject(name)
+        println(userService.getAllPermissions())
         return ResponseEntity("Project $name created", HttpStatusCode.valueOf(200))
     }
 
