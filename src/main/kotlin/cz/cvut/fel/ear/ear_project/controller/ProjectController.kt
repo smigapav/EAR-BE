@@ -1,6 +1,6 @@
 package cz.cvut.fel.ear.ear_project.controller
 
-import CustomPermissionEvaluator
+import cz.cvut.fel.ear.ear_project.security.UserDetails
 import cz.cvut.fel.ear.ear_project.service.ProjectService
 import cz.cvut.fel.ear.ear_project.service.SecurityService
 import cz.cvut.fel.ear.ear_project.service.UserService
