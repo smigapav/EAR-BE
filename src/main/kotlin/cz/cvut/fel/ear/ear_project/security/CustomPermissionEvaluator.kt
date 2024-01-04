@@ -33,11 +33,4 @@ class CustomPermissionEvaluator(
         val requiredAuthority = SimpleGrantedAuthority("$projectId$role")
         return authentication.authorities.contains(requiredAuthority)
     }
-
-    fun hasRoleByStoryName(authentication: Authentication, storyName: String, role: String): Boolean {
-        val story = storyService.findStoryByName(storyName)
-        val projectId = story.project?.id.toString()
-        val requiredAuthority = SimpleGrantedAuthority("$projectId$role")
-        return authentication.authorities.contains(requiredAuthority)
-    }
 }
