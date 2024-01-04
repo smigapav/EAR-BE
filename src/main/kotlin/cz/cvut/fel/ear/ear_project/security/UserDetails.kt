@@ -1,8 +1,8 @@
 package cz.cvut.fel.ear.ear_project.security
 
 import cz.cvut.fel.ear.ear_project.model.User
+import cz.cvut.fel.ear.ear_project.security.PermissionsUtils.Companion.addUserRoles
 import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.util.*
 
@@ -14,7 +14,7 @@ class UserDetails : UserDetails {
         Objects.requireNonNull(user)
         this.user = user
         authorities = HashSet()
-        addUserRoles()
+        addUserRoles(user, this.authorities)
     }
 
     constructor(user: User, authorities: Collection<GrantedAuthority>) {
@@ -22,25 +22,8 @@ class UserDetails : UserDetails {
         Objects.requireNonNull(authorities)
         this.user = user
         this.authorities = HashSet()
-        addUserRoles()
+        addUserRoles(user, this.authorities)
         this.authorities.addAll(authorities)
-    }
-
-    private fun addUserRoles() {
-        user.permissions.forEach { permissions ->
-            if (permissions.projectAdmin) {
-                val authority = "${permissions.project?.id!!}admin"
-                authorities.add(SimpleGrantedAuthority(authority))
-            }
-            if (permissions.storiesAndTasksManager) {
-                val authority = "${permissions.project?.id!!}manager"
-                authorities.add(SimpleGrantedAuthority(authority))
-            }
-            if (permissions.canManageSprints) {
-                val authority = "${permissions.project?.id!!}sprints"
-                authorities.add(SimpleGrantedAuthority(authority))
-            }
-        }
     }
 
     override fun getAuthorities(): Collection<GrantedAuthority> {
@@ -48,7 +31,6 @@ class UserDetails : UserDetails {
     }
 
     override fun getPassword(): String {
-        println(user.password!!)
         return user.password!!
     }
 
