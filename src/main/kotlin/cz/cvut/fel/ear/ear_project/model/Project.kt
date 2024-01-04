@@ -41,12 +41,6 @@ data class Project(
         stories.add(story)
     }
 
-    fun changeName(name: String) {
-        if (name.isEmpty()) {
-            throw EmptyNameException("Name cannot be empty")
-        }
-        this.name = name
-    }
 
     fun addSprint(sprint: AbstractSprint) {
         if (sprints.contains(sprint)) {
