@@ -17,42 +17,46 @@ class StoryController(
     private val storyService: StoryService,
 ) {
     @PostMapping("/changeStoryPoints")
-    @PreAuthorize("hasRoleByStoryName(storyName, 'manager')")
+    @PreAuthorize("hasPermission(#projectName, 'manager')")
     fun changeStoryPoints(
         @RequestParam("storyName", required = true) storyName: String,
         @RequestParam("storyPoints", required = true) storyPoints: Int,
-    ): ResponseEntity<String> {
+        @RequestParam("projectName", required = true) projectName: String,
+        ): ResponseEntity<String> {
         storyService.changeStoryPoints(storyName, storyPoints)
         return ResponseEntity("Story points changed", HttpStatusCode.valueOf(200))
     }
 
     @PostMapping("/changeStoryName")
-    @PreAuthorize("hasRoleByStoryName(storyName, 'manager')")
+    @PreAuthorize("hasPermission(#projectName, 'manager')")
     fun changeName(
         @RequestParam("storyName", required = true) storyName: String,
         @RequestParam("newName", required = true) newName: String,
-    ): ResponseEntity<String> {
+        @RequestParam("projectName", required = true) projectName: String,
+        ): ResponseEntity<String> {
         storyService.changeName(storyName, newName)
         return ResponseEntity("Story name changed", HttpStatusCode.valueOf(200))
     }
 
     @PostMapping("/changeStoryDescription")
-    @PreAuthorize("hasRoleByStoryName(storyName, 'manager')")
+    @PreAuthorize("hasPermission(#projectName, 'manager')")
     fun changeDescription(
         @RequestParam("storyName", required = true) storyName: String,
         @RequestParam("description", required = true) description: String,
-    ): ResponseEntity<String> {
+        @RequestParam("projectName", required = true) projectName: String,
+        ): ResponseEntity<String> {
         storyService.changeDescription(storyName, description)
         return ResponseEntity("Story description changed", HttpStatusCode.valueOf(200))
     }
 
     @PostMapping("/createTask")
-    @PreAuthorize("hasRoleByStoryName(storyName, 'manager')")
+    @PreAuthorize("hasPermission(#projectName, 'manager')")
     fun createTask(
         @RequestParam("name", required = true) name: String,
         @RequestParam("description", required = true) description: String,
         @RequestParam("storyName", required = true) storyName: String,
-    ): ResponseEntity<String> {
+        @RequestParam("projectName", required = true) projectName: String,
+        ): ResponseEntity<String> {
         storyService.createTask(name, description, storyName)
         return ResponseEntity("Task created", HttpStatusCode.valueOf(200))
     }

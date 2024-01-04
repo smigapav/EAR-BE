@@ -28,7 +28,6 @@ class ProjectController(
         @RequestParam("name", required = true) name: String,
     ): ResponseEntity<String> {
         projectService.createProject(name)
-        println(userService.getAllPermissions())
         return ResponseEntity("Project $name created", HttpStatusCode.valueOf(200))
     }
 
@@ -42,7 +41,7 @@ class ProjectController(
     }
 
     @PostMapping("/addUser")
-    @PreAuthorize("hasRoleByProjectName(#projectName, 'admin')")
+    @PreAuthorize("hasPermission(#projectName, 'admin')")
     fun addUser(
         @RequestParam("username", required = true) username: String,
         @RequestParam("projectName", required = true) projectName: String,
@@ -55,7 +54,7 @@ class ProjectController(
     }
 
     @PostMapping("/removeUser")
-    @PreAuthorize("hasRoleByProjectName(#projectName, 'admin')")
+    @PreAuthorize("hasPermission(#projectName, 'admin')")
     fun removeUser(
         @RequestParam("username", required = true) username: String,
         @RequestParam("projectName", required = true) projectName: String,
@@ -81,7 +80,7 @@ class ProjectController(
     }
 
     @PostMapping("/removeStory")
-    @PreAuthorize("hasRoleByProjectName(#projectName, 'manager')")
+    @PreAuthorize("hasPermission(#projectName, 'manager')")
     fun removeStory(
         @RequestParam("storyName", required = true) storyName: String,
         @RequestParam("projectName", required = true) projectName: String,
