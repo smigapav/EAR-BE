@@ -71,11 +71,7 @@ class ProjectController(
         @RequestParam("storyPoints", required = true) storyPoints: Int,
         @RequestParam("projectName", required = true) projectName: String,
     ): ResponseEntity<String> {
-        try {
-            projectService.createStory(storyName, description, storyPoints, projectName)
-        } catch (e: IllegalArgumentException) {
-            return ResponseEntity(e.message, HttpStatusCode.valueOf(400))
-        }
+        projectService.createStory(storyName, description, storyPoints, projectName)
         return ResponseEntity("Story created", HttpStatusCode.valueOf(200))
     }
 

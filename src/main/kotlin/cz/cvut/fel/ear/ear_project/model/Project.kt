@@ -1,6 +1,5 @@
 package cz.cvut.fel.ear.ear_project.model
 
-import cz.cvut.fel.ear.ear_project.exceptions.EmptyNameException
 import cz.cvut.fel.ear.ear_project.exceptions.ItemAlreadyPresentException
 import cz.cvut.fel.ear.ear_project.exceptions.ItemNotFoundException
 import jakarta.persistence.*
