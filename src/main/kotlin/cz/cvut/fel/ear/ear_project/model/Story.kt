@@ -22,9 +22,6 @@ class Story(
     var sprint: AbstractSprint? = null,
 ) : AbstractEntity() {
     fun addTask(task: Task) {
-        if (tasks == null) {
-            tasks = mutableListOf()
-        }
         if (tasks.contains(task)) {
             throw ItemAlreadyPresentException("Task already present in story")
         }
@@ -32,9 +29,6 @@ class Story(
     }
 
     fun removeTask(task: Task) {
-        if (tasks == null) {
-            return
-        }
         if (!tasks.contains(task)) {
             throw ItemNotFoundException("Task not found in story")
         }

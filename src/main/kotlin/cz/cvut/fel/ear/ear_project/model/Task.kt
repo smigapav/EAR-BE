@@ -17,7 +17,4 @@ class Task(
     @ManyToOne(optional = true)
     var user: User? = null,
 ) : AbstractEntity() {
-    //    override fun toString(): String {
-//        return "Task(state=$state, timeSpent=$timeSpent, name=$name, description=$description, story=$story, user=$user)"
-//    }
 }

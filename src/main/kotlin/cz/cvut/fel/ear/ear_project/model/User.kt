@@ -21,9 +21,6 @@ class User(
     var permissions: MutableList<Permissions> = mutableListOf(),
 ) : AbstractEntity() {
     fun addTask(task: Task) {
-        if (tasks == null) {
-            tasks = mutableListOf()
-        }
         if (tasks.contains(task)) {
             throw ItemAlreadyPresentException("Task already present in user")
         }
@@ -31,9 +28,6 @@ class User(
     }
 
     fun addProject(project: Project) {
-        if (projects == null) {
-            projects = mutableListOf()
-        }
         if (projects.contains(project)) {
             throw ItemAlreadyPresentException("Project already present in user")
         }
@@ -41,9 +35,6 @@ class User(
     }
 
     fun addPermission(permission: Permissions) {
-        if (permissions == null) {
-            permissions = mutableListOf()
-        }
         if (permissions.contains(permission)) {
             throw ItemAlreadyPresentException("Permission already present in user")
         }
@@ -51,9 +42,6 @@ class User(
     }
 
     fun removeTask(task: Task) {
-        if (tasks == null) {
-            return
-        }
         if (!tasks.contains(task)) {
             throw ItemNotFoundException("Task not found in user")
         }
@@ -61,9 +49,6 @@ class User(
     }
 
     fun removeProject(project: Project) {
-        if (projects == null) {
-            return
-        }
         if (!projects.contains(project)) {
             throw ItemNotFoundException("Project not found in user")
         }
@@ -71,9 +56,6 @@ class User(
     }
 
     fun removePermission(permission: Permissions) {
-        if (permissions == null) {
-            return
-        }
         if (!permissions.contains(permission)) {
             throw ItemNotFoundException("Permission not found in user")
         }
