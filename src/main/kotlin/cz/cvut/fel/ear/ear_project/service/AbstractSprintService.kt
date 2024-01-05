@@ -16,7 +16,8 @@ abstract class AbstractSprintService(
     protected val storyRepository: StoryRepository,
 ) {
     @Transactional
-    fun removeSprint(sprint: AbstractSprint) {
+    fun removeSprint(sprintName: String) {
+        val sprint = findSprintByName(sprintName)
         validateSprintExists(sprint)
         sprintRepository.delete(sprint)
     }
@@ -56,9 +57,11 @@ abstract class AbstractSprintService(
 
     @Transactional
     fun removeStoryFromSprint(
-        sprint: AbstractSprint,
-        story: Story,
+        sprintName: String,
+        storyName: String,
     ) {
+        val sprint = findSprintByName(sprintName)
+        val story = findStoryByName(storyName)
         validateSprintExists(sprint)
         validateStoryExists(story)
         sprint.removeStory(story)
@@ -90,7 +93,7 @@ abstract class AbstractSprintService(
         ) { throw IllegalArgumentException("Story does not exist") }
     }
 
-    private fun findSprintByName(name: String): AbstractSprint {
+    fun findSprintByName(name: String): AbstractSprint {
         return sprintRepository.findByName(name) ?: throw NoSuchElementException("Sprint with name $name not found")
     }
 

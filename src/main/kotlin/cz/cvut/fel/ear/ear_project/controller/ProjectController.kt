@@ -1,5 +1,6 @@
 package cz.cvut.fel.ear.ear_project.controller
 
+import cz.cvut.fel.ear.ear_project.model.Project
 import cz.cvut.fel.ear.ear_project.security.UserDetails
 import cz.cvut.fel.ear.ear_project.service.ProjectService
 import cz.cvut.fel.ear.ear_project.service.SecurityService
@@ -83,5 +84,14 @@ class ProjectController(
     ): ResponseEntity<String> {
         projectService.removeStory(storyName, projectName)
         return ResponseEntity("Story removed", HttpStatusCode.valueOf(200))
+    }
+
+    @PostMapping("/getProject")
+    @PreAuthorize("hasPermission(#projectName, 'manager')")
+    fun getProject(
+        @RequestParam("projectName", required = true) projectName: String,
+    ): ResponseEntity<Project> {
+        val project = projectService.findProjectByName(projectName)
+        return ResponseEntity(project, HttpStatusCode.valueOf(200))
     }
 }
