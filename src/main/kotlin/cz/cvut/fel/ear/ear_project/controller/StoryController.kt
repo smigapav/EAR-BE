@@ -75,7 +75,7 @@ class StoryController(
 
     @PostMapping("/getStory")
     @PreAuthorize("hasPermission(#projectName, 'manager')")
-    fun getTask(
+    fun getStory(
         @RequestParam("storyName", required = true) storyName: String,
         @RequestParam("projectName", required = true) projectName: String,
     ): ResponseEntity<Story> {

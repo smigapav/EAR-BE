@@ -1,5 +1,7 @@
 package cz.cvut.fel.ear.ear_project.controller
 
+import cz.cvut.fel.ear.ear_project.model.Story
+import cz.cvut.fel.ear.ear_project.model.Task
 import cz.cvut.fel.ear.ear_project.model.TaskState
 import cz.cvut.fel.ear.ear_project.service.TaskService
 import org.springframework.beans.factory.annotation.Autowired
@@ -59,5 +61,15 @@ class TaskController(
     ): ResponseEntity<String> {
         taskService.changeDescription(taskName, description)
         return ResponseEntity("Task description changed", HttpStatusCode.valueOf(200))
+    }
+
+    @PostMapping("/getTask")
+    @PreAuthorize("hasPermission(#projectName, 'manager')")
+    fun getTask(
+        @RequestParam("taskName", required = true) taskName: String,
+        @RequestParam("projectName", required = true) projectName: String,
+    ): ResponseEntity<Task> {
+        val task = taskService.findByName(taskName)
+        return ResponseEntity(task, HttpStatusCode.valueOf(200))
     }
 }
