@@ -12,59 +12,47 @@ class TaskService(
     private val taskRepository: TaskRepository,
 ) {
     fun changeState(
-        task: Task,
+        taskName: String,
         taskState: TaskState,
     ): Task {
-        if (!taskExists(task)) {
-            throw IllegalArgumentException("Task does not exist")
-        }
+        val task = findByName(taskName)
         task.state = taskState
         taskRepository.save(task)
         return task
     }
 
     fun setTimeSpent(
-        task: Task,
+        taskName: String,
         timeSpent: Int,
     ): Task {
-        if (!taskExists(task)) {
-            throw IllegalArgumentException("Task does not exist")
-        }
+        val task = findByName(taskName)
         task.timeSpent = timeSpent
         taskRepository.save(task)
         return task
     }
 
     fun changeName(
-        task: Task,
+        taskName: String,
         name: String,
     ): Task {
-        if (!taskExists(task)) {
-            throw IllegalArgumentException("Task does not exist")
-        }
+        val task = findByName(taskName)
         task.name = name
         taskRepository.save(task)
         return task
     }
 
     fun changeDescription(
-        task: Task,
+        taskName: String,
         description: String,
     ): Task {
-        if (!taskExists(task)) {
-            throw IllegalArgumentException("Task does not exist")
-        }
+        val task = findByName(taskName)
         task.description = description
         taskRepository.save(task)
         return task
     }
 
-    fun findAllTasks(): List<Task> {
-        return taskRepository.findAll()
-    }
-
-    fun findTaskById(id: Long): Task? {
-        return taskRepository.findById(id).orElse(null)
+    fun findByName(name: String): Task {
+        return taskRepository.findByName(name) ?: throw NoSuchElementException("Task with name $name not found")
     }
 
     fun taskExists(task: Task): Boolean {

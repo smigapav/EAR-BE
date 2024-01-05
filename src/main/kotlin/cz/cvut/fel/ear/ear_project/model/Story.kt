@@ -1,5 +1,7 @@
 package cz.cvut.fel.ear.ear_project.model
 
+import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import cz.cvut.fel.ear.ear_project.exceptions.ItemAlreadyPresentException
 import cz.cvut.fel.ear.ear_project.exceptions.ItemNotFoundException
 import jakarta.persistence.*
@@ -14,10 +16,13 @@ class Story(
     var name: String? = null,
     @Basic(optional = false)
     var description: String? = null,
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     var project: Project? = null,
+    @JsonManagedReference
     @OneToMany(mappedBy = "story", cascade = [CascadeType.REMOVE])
     var tasks: MutableList<Task> = mutableListOf(),
+    @JsonBackReference
     @ManyToOne
     var sprint: AbstractSprint? = null,
 ) : AbstractEntity() {
@@ -36,6 +41,6 @@ class Story(
     }
 
     override fun toString(): String {
-        return "Story(sotoryPoints=$storyPoints, name=$name, description=$description, project=$project, tasks=$tasks, sprint=$sprint)"
+        return "Story(sotoryPoints=$storyPoints, name=$name, description=$description, projectName=${project?.name}, tasks=$tasks, sprintName=${sprint?.name})"
     }
 }

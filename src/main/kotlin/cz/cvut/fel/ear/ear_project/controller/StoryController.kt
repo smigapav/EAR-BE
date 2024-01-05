@@ -1,5 +1,6 @@
 package cz.cvut.fel.ear.ear_project.controller
 
+import cz.cvut.fel.ear.ear_project.model.Story
 import cz.cvut.fel.ear.ear_project.service.StoryService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatusCode
@@ -59,5 +60,26 @@ class StoryController(
         ): ResponseEntity<String> {
         storyService.createTask(name, description, storyName)
         return ResponseEntity("Task created", HttpStatusCode.valueOf(200))
+    }
+
+    @PostMapping("/removeTask")
+    @PreAuthorize("hasPermission(#projectName, 'manager')")
+    fun removeTask(
+        @RequestParam("taskName", required = true) taskName: String,
+        @RequestParam("storyName", required = true) storyName: String,
+        @RequestParam("projectName", required = true) projectName: String,
+    ): ResponseEntity<String> {
+        storyService.removeTask(taskName, storyName)
+        return ResponseEntity("Task removed", HttpStatusCode.valueOf(200))
+    }
+
+    @PostMapping("/getStory")
+    @PreAuthorize("hasPermission(#projectName, 'manager')")
+    fun getTask(
+        @RequestParam("storyName", required = true) storyName: String,
+        @RequestParam("projectName", required = true) projectName: String,
+    ): ResponseEntity<Story> {
+        val story = storyService.findStoryByName(storyName)
+        return ResponseEntity(story, HttpStatusCode.valueOf(200))
     }
 }

@@ -1,5 +1,7 @@
 package cz.cvut.fel.ear.ear_project.model
 
+import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import cz.cvut.fel.ear.ear_project.exceptions.ItemAlreadyPresentException
 import cz.cvut.fel.ear.ear_project.exceptions.ItemNotFoundException
 import jakarta.persistence.*
@@ -13,10 +15,13 @@ class User(
     var username: String? = null,
     @Basic(optional = false)
     var password: String? = null,
+    @JsonManagedReference
     @OneToMany(mappedBy = "user")
     var tasks: MutableList<Task> = mutableListOf(),
+    @JsonBackReference
     @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     var projects: MutableList<Project> = mutableListOf(),
+    @JsonManagedReference
     @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.EAGER)
     var permissions: MutableList<Permissions> = mutableListOf(),
 ) : AbstractEntity() {
@@ -67,6 +72,6 @@ class User(
     }
 
     override fun toString(): String {
-        return "User(id='$id', username='$username', password='$password', tasks=$tasks, projects=$projects, permissions=$permissions)"
+        return "User(id='$id', username='$username', password='$password')"
     }
 }

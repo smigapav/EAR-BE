@@ -1,5 +1,6 @@
 package cz.cvut.fel.ear.ear_project.model
 
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import cz.cvut.fel.ear.ear_project.exceptions.ItemAlreadyPresentException
 import cz.cvut.fel.ear.ear_project.exceptions.ItemNotFoundException
 import jakarta.persistence.*
@@ -10,12 +11,16 @@ data class Project(
     @Basic(optional = false)
     @Column(unique = true)
     var name: String? = null,
+    @JsonManagedReference
     @ManyToMany
     var users: MutableList<User> = mutableListOf(),
+    @JsonManagedReference
     @OneToMany(mappedBy = "project", cascade = [CascadeType.REMOVE], orphanRemoval = true)
     var permissions: MutableList<Permissions> = mutableListOf(),
+    @JsonManagedReference
     @OneToMany(mappedBy = "project", cascade = [CascadeType.REMOVE], orphanRemoval = true)
     var stories: MutableList<Story> = mutableListOf(),
+    @JsonManagedReference
     @OneToMany(mappedBy = "project", cascade = [CascadeType.REMOVE], orphanRemoval = true)
     var sprints: MutableList<AbstractSprint> = mutableListOf(),
 ) : AbstractEntity() {
@@ -74,5 +79,9 @@ data class Project(
             throw ItemNotFoundException("Permission not found in project")
         }
         permissions.remove(permission)
+    }
+
+    override fun toString(): String {
+        return "Project(name=$name,  permissions=$permissions, stories=$stories, sprints=$sprints)"
     }
 }
