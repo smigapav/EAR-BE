@@ -2,6 +2,7 @@ package cz.cvut.fel.ear.ear_project.service
 
 import cz.cvut.fel.ear.ear_project.dao.SprintRepository
 import cz.cvut.fel.ear.ear_project.dao.StoryRepository
+import cz.cvut.fel.ear.ear_project.model.KanbanSprint
 import cz.cvut.fel.ear.ear_project.model.ScrumSprint
 import cz.cvut.fel.ear.ear_project.model.SprintState
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,7 +17,11 @@ class ScrumSprintService(
     storyRepository: StoryRepository,
 ) : AbstractSprintService(sprintRepository, storyRepository) {
     @Transactional
-    fun startSprint(sprint: ScrumSprint) {
+    fun startSprint(sprintName: String) {
+        val sprint = findSprintByName(sprintName)
+        if (sprint !is ScrumSprint) {
+            throw IllegalArgumentException("Sprint is not scrum sprint")
+        }
         validateSprintExists(sprint)
         require(sprint.state == SprintState.WAITING) { throw IllegalStateException("Sprint is not waiting") }
         sprint.start()
@@ -24,24 +29,40 @@ class ScrumSprintService(
     }
 
     @Transactional
-    fun finishSprint(sprint: ScrumSprint) {
+    fun finishSprint(sprintName: String) {
+        val sprint = findSprintByName(sprintName)
+        if (sprint !is ScrumSprint) {
+            throw IllegalArgumentException("Sprint is not scrum sprint")
+        }
         validateSprintExists(sprint)
         require(sprint.state == SprintState.RUNNING) { throw IllegalStateException("Sprint is not active") }
         sprint.finish()
         sprintRepository.save(sprint)
     }
 
-    fun getSprintStart(sprint: ScrumSprint): String {
+    fun getSprintStart(sprintName: String): String {
+        val sprint = findSprintByName(sprintName)
+        if (sprint !is ScrumSprint) {
+            throw IllegalArgumentException("Sprint is not scrum sprint")
+        }
         validateSprintExists(sprint)
         return sprint.start.toString()
     }
 
-    fun getSprintFinish(sprint: ScrumSprint): String {
+    fun getSprintFinish(sprintName: String): String {
+        val sprint = findSprintByName(sprintName)
+        if (sprint !is ScrumSprint) {
+            throw IllegalArgumentException("Sprint is not scrum sprint")
+        }
         validateSprintExists(sprint)
         return sprint.finish.toString()
     }
 
-    fun getSprintDuration(sprint: ScrumSprint): String {
+    fun getSprintDuration(sprintName: String): String {
+        val sprint = findSprintByName(sprintName)
+        if (sprint !is ScrumSprint) {
+            throw IllegalArgumentException("Sprint is not scrum sprint")
+        }
         validateSprintExists(sprint)
         return if (sprint.start == null || sprint.finish == null) {
             "Sprint is not finished yet"
