@@ -86,6 +86,27 @@ class ProjectController(
         return ResponseEntity("Story removed", HttpStatusCode.valueOf(200))
     }
 
+    @PostMapping("/createSprint")
+    @PreAuthorize("hasPermission(#projectName, 'sprints')")
+    fun createSprint(
+        @RequestParam("sprintName", required = true) sprintName: String,
+        @RequestParam("scrumSprint", required = true) scrumSprint: Boolean,
+        @RequestParam("projectName", required = true) projectName: String,
+    ): ResponseEntity<String> {
+        projectService.createSprint(sprintName, scrumSprint, projectName)
+        return ResponseEntity("Sprint $sprintName created", HttpStatusCode.valueOf(200))
+    }
+
+    @PostMapping("/removeSprint")
+    @PreAuthorize("hasPermission(#projectName, 'sprints')")
+    fun removeSprint(
+        @RequestParam("sprintName", required = true) sprintName: String,
+        @RequestParam("projectName", required = true) projectName: String,
+    ): ResponseEntity<String> {
+        projectService.removeSprint(sprintName, projectName)
+        return ResponseEntity("Sprint $sprintName removed", HttpStatusCode.valueOf(200))
+    }
+
     @PostMapping("/getProject")
     @PreAuthorize("hasPermission(#projectName, 'manager')")
     fun getProject(

@@ -21,30 +21,7 @@ class SprintController(
     private val kanbanSprintService: KanbanSprintService,
     @Autowired
     private val scrumSprintService: ScrumSprintService,
-    @Autowired
-    private val sprintFactory: SprintFactory,
 ) {
-    @PostMapping("/createSprint")
-    @PreAuthorize("hasPermission(#projectName, 'sprints')")
-    fun createSprint(
-        @RequestParam("sprintType", required = true) sprintType: String,
-        @RequestParam("sprintName", required = true) sprintName: String,
-        @RequestParam("projectName", required = true) projectName: String,
-    ): ResponseEntity<String> {
-        sprintFactory.createSprint(sprintType, sprintName)
-        return ResponseEntity("$sprintType sprint $sprintName created", HttpStatusCode.valueOf(200))
-    }
-
-    @PostMapping("/removeSprint")
-    @PreAuthorize("hasPermission(#projectName, 'sprints')")
-    fun removeSprint(
-        @RequestParam("sprintName", required = true) sprintName: String,
-        @RequestParam("projectName", required = true) projectName: String,
-    ): ResponseEntity<String> {
-        abstractSprintService.removeSprint(sprintName)
-        return ResponseEntity("Sprint $sprintName removed", HttpStatusCode.valueOf(200))
-    }
-
     @PostMapping("/changeName")
     @PreAuthorize("hasPermission(#projectName, 'sprints')")
     fun changeName(

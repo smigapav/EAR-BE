@@ -25,9 +25,9 @@ class ProjectService(
 ) {
     @Transactional
     fun createProject(name: String): Project {
-        var user = securityUtils.currentUser!!
+        val user = securityUtils.currentUser!!
         if (!userExists(user)) {
-            throw IllegalArgumentException("User does not exist")
+            throw IllegalArgumentException("User isn't logged in")
         }
         val project = Project()
         project.name = name
@@ -58,7 +58,7 @@ class ProjectService(
         projectName: String,
     ) {
         val project = findProjectByName(projectName)
-        if (!projectExists(project!!)) {
+        if (!projectExists(project)) {
             throw IllegalArgumentException("Project does not exist")
         }
         project.name = name
@@ -71,8 +71,8 @@ class ProjectService(
         projectName: String,
     ) {
         val project = findProjectByName(projectName)
-        val user = userRepository.findByUsername(username)
-        if (!userExists(user!!) || !projectExists(project!!)) {
+        val user = findUserByName(username)
+        if (!userExists(user) || !projectExists(project)) {
             throw IllegalArgumentException("User or Project does not exist")
         }
         val permissions = Permissions()
@@ -92,9 +92,9 @@ class ProjectService(
         username: String,
         projectName: String,
     ) {
-        val user = userRepository.findByUsername(username)
+        val user = findUserByName(username)
         val project = findProjectByName(projectName)
-        if (!userExists(user!!) || !projectExists(project!!)) {
+        if (!userExists(user) || !projectExists(project)) {
             throw IllegalArgumentException("User or Project does not exist")
         }
         val permissions = project.permissions.find { it.user == user }
@@ -115,7 +115,7 @@ class ProjectService(
         projectName: String,
     ): Story {
         val project = findProjectByName(projectName)
-        if (!projectExists(project!!)) {
+        if (!projectExists(project)) {
             throw IllegalArgumentException("Project does not exist")
         }
         val story = Story()
@@ -135,9 +135,9 @@ class ProjectService(
         storyName: String,
         projectName: String,
     ) {
-        val story = storyRepository.findByName(storyName)
+        val story = findStoryByName(storyName)
         val project = findProjectByName(projectName)
-        if (!storyExists(story!!) || !projectExists(project!!)) {
+        if (!storyExists(story) || !projectExists(project)) {
             throw IllegalArgumentException("Story or Project does not exist")
         }
         project.removeStory(story)
@@ -152,14 +152,13 @@ class ProjectService(
         projectName: String,
     ): AbstractSprint {
         val project = findProjectByName(projectName)
-        if (!projectExists(project!!)) {
+        if (!projectExists(project)) {
             throw IllegalArgumentException("Project does not exist")
         }
-        val sprint: AbstractSprint
-        if (createScrumSprint) {
-            sprint = ScrumSprint()
+        val sprint: AbstractSprint = if (createScrumSprint) {
+            ScrumSprint()
         } else {
-            sprint = KanbanSprint()
+            KanbanSprint()
         }
         sprint.name = name
         project.addSprint(sprint)
@@ -171,12 +170,12 @@ class ProjectService(
 
     @Transactional
     fun removeSprint(
-        sprintId: Long,
+        sprintName: String,
         projectName: String,
     ) {
-        val sprint = sprintRepository.findById(sprintId).orElse(null)
+        val sprint = findSprintByName(sprintName)
         val project = findProjectByName(projectName)
-        if (!sprintExists(sprint) || !projectExists(project!!)) {
+        if (!sprintExists(sprint) || !projectExists(project)) {
             throw IllegalArgumentException("Sprint or project does not exist")
         }
         project.removeSprint(sprint)
@@ -186,6 +185,18 @@ class ProjectService(
 
     fun findProjectByName(name: String): Project {
         return projectRepository.findByName(name) ?: throw NoSuchElementException("Project with name $name not found")
+    }
+
+    fun findUserByName(name: String): User {
+        return userRepository.findByUsername(name) ?: throw NoSuchElementException("User with name $name not found")
+    }
+
+    fun findStoryByName(name: String): Story {
+        return storyRepository.findByName(name) ?: throw NoSuchElementException("Story with name $name not found")
+    }
+
+    fun findSprintByName(name: String): AbstractSprint {
+        return sprintRepository.findByName(name) ?: throw NoSuchElementException("Sprint with name $name not found")
     }
 
     fun storyExists(story: Story): Boolean {
