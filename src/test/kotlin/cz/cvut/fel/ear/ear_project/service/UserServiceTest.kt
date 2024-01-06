@@ -1,6 +1,7 @@
 package cz.cvut.fel.ear.ear_project.service
 
 import cz.cvut.fel.ear.ear_project.EarProjectApplication
+import cz.cvut.fel.ear.ear_project.model.Project
 import cz.cvut.fel.ear.ear_project.model.Task
 import cz.cvut.fel.ear.ear_project.model.User
 import cz.cvut.fel.ear.ear_project.security.SecurityUtils
@@ -187,5 +188,22 @@ class UserServiceTest(
         val passwordEncoder = ReflectionTestUtils.getField(userService, "passwordEncoder") as PasswordEncoder
 
         assertEquals(true, passwordEncoder.matches("test2", foundUser.password))
+    }
+
+    fun findAllUsersProjectsTest() {
+        val user = User()
+        user.username = "test"
+        user.password = "test"
+        em.persist(user)
+
+        val authentication: Authentication = Mockito.mock(Authentication::class.java)
+        val securityUtils = Mockito.mock(SecurityUtils::class.java)
+        Mockito.`when`(securityUtils.currentUser).thenReturn(user)
+        SecurityContextHolder.getContext().authentication = authentication
+
+        // Use reflection to set the private securityUtils field in UserService
+        ReflectionTestUtils.setField(userService, "securityUtils", securityUtils)
+
+
     }
 }

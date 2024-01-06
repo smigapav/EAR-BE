@@ -9,6 +9,9 @@ import org.springframework.security.crypto.password.PasswordEncoder
 
 @Entity
 @Table(name = "users")
+@NamedQueries(
+    NamedQuery(name = "User.findAllUsersProjects", query = "SELECT p FROM Project p JOIN p.users u WHERE u.id = :userId"),
+)
 class User(
     @Basic(optional = false)
     @Column(unique = true)
