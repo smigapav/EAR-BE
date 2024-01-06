@@ -6,6 +6,7 @@ import cz.cvut.fel.ear.ear_project.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -51,17 +52,21 @@ class UserController(
     }
 
     @PostMapping("/addTask")
+    @PreAuthorize("hasPermission(#projectName, 'manager')")
     fun addTask(
         @RequestParam("taskName", required = true) taskName: String,
-    ): ResponseEntity<String> {
+        @RequestParam("projectName", required = true) projectName: String,
+        ): ResponseEntity<String> {
         userService.addTask(taskName)
         return ResponseEntity("Task $taskName added to current user", HttpStatusCode.valueOf(200))
     }
 
     @PostMapping("/removeTask")
+    @PreAuthorize("hasPermission(#projectName, 'manager')")
     fun removeTask(
         @RequestParam("taskName", required = true) taskName: String,
-    ): ResponseEntity<String> {
+        @RequestParam("projectName", required = true) projectName: String,
+        ): ResponseEntity<String> {
         userService.removeTask(taskName)
         return ResponseEntity("Task $taskName removed from current user", HttpStatusCode.valueOf(200))
     }
