@@ -40,6 +40,7 @@ class ProjectService(
                 user,
                 project,
             )
+        permissionsRepository.save(permissions)
         project.addUser(user)
         project.addPermission(permissions)
         user.addProject(project)
