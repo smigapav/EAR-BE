@@ -28,7 +28,7 @@ class TaskServiceTest(
         task.description = "test"
         em.persist(task)
 
-        taskService.changeState(task, TaskState.IN_PROGRESS)
+        taskService.changeState(task.name.toString(), TaskState.IN_PROGRESS)
 
         val foundTask = em.find(Task::class.java, task.id)
 
@@ -42,7 +42,7 @@ class TaskServiceTest(
         task.description = "test"
         em.persist(task)
 
-        taskService.setTimeSpent(task, 10)
+        taskService.setTimeSpent(task.name.toString(), 10)
 
         val foundTask = em.find(Task::class.java, task.id)
 
@@ -56,7 +56,7 @@ class TaskServiceTest(
         task.description = "test"
         em.persist(task)
 
-        taskService.changeName(task, "test2")
+        taskService.changeName(task.name.toString(), "test2")
 
         val foundTask = em.find(Task::class.java, task.id)
 
@@ -70,7 +70,7 @@ class TaskServiceTest(
         task.description = "test"
         em.persist(task)
 
-        taskService.changeDescription(task, "test2")
+        taskService.changeDescription(task.description.toString(), "test2")
 
         val foundTask = em.find(Task::class.java, task.id)
 
@@ -83,8 +83,8 @@ class TaskServiceTest(
         task.name = "test"
         task.description = "test"
 
-        assertThrows<IllegalArgumentException> {
-            taskService.changeDescription(task, "test2")
+        assertThrows<NoSuchElementException> {
+            taskService.changeDescription(task.name.toString(), "test2")
         }
     }
 }

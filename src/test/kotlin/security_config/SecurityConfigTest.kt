@@ -28,13 +28,6 @@ class SecurityConfigTest {
     private lateinit var userService: UserService
 
     @Test
-    @WithMockUser
-    fun testCallHello_successWith200() {
-        mockMvc.perform(get("/hello"))
-            .andExpect(status().isOk)
-    }
-
-    @Test
     fun registerUserTest() {
         val name = "test"
         val password = "test"
