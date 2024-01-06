@@ -21,6 +21,7 @@ class Story(
     var project: Project? = null,
     @JsonManagedReference
     @OneToMany(mappedBy = "story", cascade = [CascadeType.REMOVE])
+    @OrderBy("id")
     var tasks: MutableList<Task> = mutableListOf(),
     @JsonBackReference
     @ManyToOne

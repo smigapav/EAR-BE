@@ -115,7 +115,7 @@ class UserService(
         return task.id != null && !taskRepository.findById(task.id!!).isEmpty
     }
 
-    fun findUserProjects(user: User): List<Project> {
+    fun findAllUsersProjects(user: User): List<Project> {
         return userRepository.findAllUsersProjects(user.id!!)
     }
 }

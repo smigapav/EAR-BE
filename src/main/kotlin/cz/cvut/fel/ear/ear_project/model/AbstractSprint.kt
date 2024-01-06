@@ -20,6 +20,7 @@ abstract class AbstractSprint(
     open var project: Project? = null,
     @JsonManagedReference
     @OneToMany(mappedBy = "sprint")
+    @OrderBy("id")
     open var stories: MutableList<Story> = mutableListOf(),
     open var state: SprintState = SprintState.WAITING,
 ) {

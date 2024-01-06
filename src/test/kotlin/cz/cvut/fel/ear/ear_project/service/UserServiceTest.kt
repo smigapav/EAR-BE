@@ -30,6 +30,8 @@ class UserServiceTest(
     @Autowired
     private val userService: UserService,
     @Autowired
+    private val projectService: ProjectService,
+    @Autowired
     private val em: TestEntityManager,
 ) {
     @Test
@@ -190,6 +192,7 @@ class UserServiceTest(
         assertEquals(true, passwordEncoder.matches("test2", foundUser.password))
     }
 
+    @Test
     fun findAllUsersProjectsTest() {
         val user = User()
         user.username = "test"
@@ -202,8 +205,16 @@ class UserServiceTest(
         SecurityContextHolder.getContext().authentication = authentication
 
         // Use reflection to set the private securityUtils field in UserService
-        ReflectionTestUtils.setField(userService, "securityUtils", securityUtils)
+        ReflectionTestUtils.setField(projectService, "securityUtils", securityUtils)
 
+        val project = projectService.createProject("test")
+        val project1 = projectService.createProject("test1")
+        val project2 = projectService.createProject("1")
 
+        val foundProjects = userService.findAllUsersProjects(user)
+
+        assertEquals(project2, foundProjects[0])
+        assertEquals(project, foundProjects[1])
+        assertEquals(project1, foundProjects[2])
     }
 }

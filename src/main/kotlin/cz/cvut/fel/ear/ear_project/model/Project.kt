@@ -13,15 +13,18 @@ data class Project(
     var name: String? = null,
     @JsonManagedReference
     @ManyToMany
+    @OrderBy("name")
     var users: MutableList<User> = mutableListOf(),
     @JsonManagedReference
     @OneToMany(mappedBy = "project", cascade = [CascadeType.REMOVE], orphanRemoval = true)
     var permissions: MutableList<Permissions> = mutableListOf(),
     @JsonManagedReference
     @OneToMany(mappedBy = "project", cascade = [CascadeType.REMOVE], orphanRemoval = true)
+    @OrderBy("id")
     var stories: MutableList<Story> = mutableListOf(),
     @JsonManagedReference
     @OneToMany(mappedBy = "project", cascade = [CascadeType.REMOVE], orphanRemoval = true)
+    @OrderBy("id")
     var sprints: MutableList<AbstractSprint> = mutableListOf(),
 ) : AbstractEntity() {
     fun addUser(user: User) {

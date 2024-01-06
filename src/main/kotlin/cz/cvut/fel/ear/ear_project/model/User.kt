@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 @Entity
 @Table(name = "users")
 @NamedQueries(
-    NamedQuery(name = "User.findAllUsersProjects", query = "SELECT p FROM Project p JOIN p.users u WHERE u.id = :userId"),
+    NamedQuery(name = "User.findAllUsersProjects", query = "SELECT p FROM Project p JOIN p.users u WHERE u.id = :userId ORDER BY p.name"),
 )
 class User(
     @Basic(optional = false)
@@ -20,9 +20,11 @@ class User(
     var password: String? = null,
     @JsonManagedReference
     @OneToMany(mappedBy = "user")
+    @OrderBy("state, id")
     var tasks: MutableList<Task> = mutableListOf(),
     @JsonBackReference
     @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
+    @OrderBy("name")
     var projects: MutableList<Project> = mutableListOf(),
     @JsonManagedReference
     @OneToMany(mappedBy = "user", cascade = [CascadeType.REMOVE], fetch = FetchType.EAGER)
