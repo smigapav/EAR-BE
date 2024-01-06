@@ -1,5 +1,4 @@
 import cz.cvut.fel.ear.ear_project.service.ProjectService
-import cz.cvut.fel.ear.ear_project.service.StoryService
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.access.PermissionEvaluator
 import org.springframework.security.core.Authentication
@@ -10,7 +9,6 @@ import java.io.Serializable
 @Component
 class CustomPermissionEvaluator(
     private val projectService: ProjectService,
-    private val storyService: StoryService,
 ) : PermissionEvaluator {
     val accessDeniedException = "Access is denied"
     override fun hasPermission(
