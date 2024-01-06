@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-abstract class AbstractSprintService(
+class SprintService(
     @Autowired
     protected val sprintRepository: SprintRepository,
     @Autowired

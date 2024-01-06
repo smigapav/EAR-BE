@@ -2,7 +2,6 @@ package cz.cvut.fel.ear.ear_project.service
 
 import cz.cvut.fel.ear.ear_project.dao.SprintRepository
 import cz.cvut.fel.ear.ear_project.dao.StoryRepository
-import cz.cvut.fel.ear.ear_project.model.KanbanSprint
 import cz.cvut.fel.ear.ear_project.model.ScrumSprint
 import cz.cvut.fel.ear.ear_project.model.SprintState
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,7 +14,7 @@ class ScrumSprintService(
     sprintRepository: SprintRepository,
     @Autowired
     storyRepository: StoryRepository,
-) : AbstractSprintService(sprintRepository, storyRepository) {
+) : SprintService(sprintRepository, storyRepository) {
     @Transactional
     fun startSprint(sprintName: String) {
         val sprint = findSprintByName(sprintName)

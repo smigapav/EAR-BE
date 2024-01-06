@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional
 class ScrumSprintServiceTest(
     @Autowired
     @Qualifier("scrumSprintService")
-    private var abstractSprintService: AbstractSprintService,
+    private var abstractSprintService: SprintService,
     @Autowired
     private val scrumSprintService: ScrumSprintService,
     @Autowired
@@ -66,7 +66,7 @@ class ScrumSprintServiceTest(
 
     @Test
     fun changeSprintName_SprintsNameIsNewName() {
-        abstractSprintService.changeSprintName(sprint, "New Name")
+        abstractSprintService.changeSprintName("Sprint 1", "New Name")
         assertEquals("New Name", sprint.name)
     }
 
@@ -80,7 +80,7 @@ class ScrumSprintServiceTest(
     fun addStoryToSprint_storyInSprint() {
         setUpStory()
 
-        abstractSprintService.addStoryToSprint(sprint, story)
+        abstractSprintService.addStoryToSprint("Sprint 1", "Story 1")
         val result = em.find(ScrumSprint::class.java, sprint.id!!)
         assertTrue(result.stories.contains(story))
     }
@@ -90,14 +90,14 @@ class ScrumSprintServiceTest(
         setUpStory()
         sprint.addStory(story)
 
-        abstractSprintService.removeStoryFromSprint(sprint, story)
+        abstractSprintService.removeStoryFromSprint("Sprint 1", "Story 1")
         val result = em.find(ScrumSprint::class.java, sprint.id!!)
         assertTrue(!result.stories.contains(story))
     }
 
     @Test
     fun startSprint_sprintIsStarted() {
-        scrumSprintService.startSprint(sprint)
+        scrumSprintService.startSprint("Sprint 1")
         val result = em.find(ScrumSprint::class.java, sprint.id!!)
         assertEquals("RUNNING", result.state.toString())
     }
@@ -105,15 +105,15 @@ class ScrumSprintServiceTest(
     @Test
     fun finishSprint_sprintIsFinished() {
         sprint.start()
-        scrumSprintService.finishSprint(sprint)
+        scrumSprintService.finishSprint("Sprint 1")
         val result = em.find(ScrumSprint::class.java, sprint.id!!)
         assertEquals("FINISHED", result.state.toString())
     }
 
     @Test
     fun getSprintStart_sprintHasStart() {
-        scrumSprintService.startSprint(sprint)
-        val result = scrumSprintService.getSprintStart(sprint)
+        scrumSprintService.startSprint("Sprint 1")
+        val result = scrumSprintService.getSprintStart("Sprint 1")
         assertNotNull(result)
     }
 
@@ -121,7 +121,7 @@ class ScrumSprintServiceTest(
     fun getSprintFinish_sprintHasFinish() {
         sprint.start()
         sprint.finish()
-        val result = scrumSprintService.getSprintFinish(sprint)
+        val result = scrumSprintService.getSprintFinish("Sprint 1")
         assertNotNull(result)
     }
 
@@ -129,7 +129,7 @@ class ScrumSprintServiceTest(
     fun getSprintDuration_sprintHasDuration() {
         sprint.start()
         sprint.finish()
-        val result = scrumSprintService.getSprintDuration(sprint)
+        val result = scrumSprintService.getSprintDuration("Sprint 1")
         assertNotNull(result)
     }
 }

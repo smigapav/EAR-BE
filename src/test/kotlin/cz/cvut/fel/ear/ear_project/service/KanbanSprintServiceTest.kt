@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional
 class KanbanSprintServiceTest(
     @Autowired
     @Qualifier("kanbanSprintService")
-    private var abstractSprintService: AbstractSprintService,
+    private var abstractSprintService: SprintService,
     @Autowired
     private val em: TestEntityManager,
 ) {
@@ -64,7 +64,7 @@ class KanbanSprintServiceTest(
 
     @Test
     fun changeSprintName_sprintsNameIsNewName() {
-        abstractSprintService.changeSprintName(sprint, "New Name")
+        abstractSprintService.changeSprintName("Sprint 1", "New Name")
         assertEquals("New Name", sprint.name)
     }
 
@@ -78,7 +78,7 @@ class KanbanSprintServiceTest(
     fun addStoryToSprint_storyInSprint() {
         setUpStory()
 
-        abstractSprintService.addStoryToSprint(sprint, story)
+        abstractSprintService.addStoryToSprint("Sprint 1", "Story 1")
         val result = em.find(KanbanSprint::class.java, sprint.id!!)
         assertTrue(result.stories.contains(story))
     }
@@ -88,7 +88,7 @@ class KanbanSprintServiceTest(
         setUpStory()
         sprint.addStory(story)
 
-        assertNotNull(abstractSprintService.removeStoryFromSprint(sprint, story))
+        assertNotNull(abstractSprintService.removeStoryFromSprint("Sprint 1", "Story 1"))
         val result = em.find(KanbanSprint::class.java, sprint.id!!)
         assertTrue(!result.stories.contains(story))
     }

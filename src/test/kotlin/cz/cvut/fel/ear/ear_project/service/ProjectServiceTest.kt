@@ -218,7 +218,7 @@ class ProjectServiceTest(
         project.addSprint(sprint)
         em.persist(project)
 
-        projectService.removeSprint(sprint.id!!.toLong(), project.name.toString())
+        projectService.removeSprint(sprint.name!!, project.name!!)
 
         val foundProject = em.find(Project::class.java, project.id)
         val foundSprint = em.find(AbstractSprint::class.java, sprint.id)

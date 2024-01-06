@@ -51,7 +51,7 @@ class PermissionsServiceTest(
         val permissions = Permissions()
         setUp(user, project, permissions)
 
-        permissionsService.changeProjectAdminUserPermissions(user, project, true)
+        permissionsService.changePermission("test", "test", true, Permissions::projectAdmin::set)
 
         val foundPermissions = em.find(Permissions::class.java, permissions.id)
 
@@ -65,7 +65,7 @@ class PermissionsServiceTest(
         val permissions = Permissions()
         setUp(user, project, permissions)
 
-        permissionsService.changeStoriesAndTasksManagerUserPermissions(user, project, true)
+        permissionsService.changePermission("test", "test", true, Permissions::storiesAndTasksManager::set)
 
         val foundPermissions = em.find(Permissions::class.java, permissions.id)
 
@@ -79,7 +79,7 @@ class PermissionsServiceTest(
         val permissions = Permissions()
         setUp(user, project, permissions)
 
-        permissionsService.changeSprintManagerAdminUserPermissions(user, project, true)
+        permissionsService.changePermission("test", "test", true, Permissions::canManageSprints::set)
 
         val foundPermissions = em.find(Permissions::class.java, permissions.id)
 
@@ -96,7 +96,7 @@ class PermissionsServiceTest(
         em.persist(user)
         em.persist(project)
         assertThrows<IllegalArgumentException> {
-            permissionsService.changeProjectAdminUserPermissions(user, project, true)
+            permissionsService.changePermission("test", "test", true, Permissions::projectAdmin::set)
         }
     }
 }

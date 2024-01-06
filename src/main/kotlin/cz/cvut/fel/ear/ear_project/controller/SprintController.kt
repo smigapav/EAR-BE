@@ -1,7 +1,6 @@
 package cz.cvut.fel.ear.ear_project.controller
 
 import cz.cvut.fel.ear.ear_project.model.AbstractSprint
-import cz.cvut.fel.ear.ear_project.model.Project
 import cz.cvut.fel.ear.ear_project.service.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatusCode
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/sprint")
 class SprintController(
     @Autowired
-    private val abstractSprintService: AbstractSprintService,
+    private val sprintService: SprintService,
     @Autowired
     private val kanbanSprintService: KanbanSprintService,
     @Autowired
@@ -29,7 +28,7 @@ class SprintController(
         @RequestParam("newName", required = true) newName: String,
         @RequestParam("projectName", required = true) projectName: String,
     ): ResponseEntity<String> {
-        abstractSprintService.changeSprintName(sprintName, newName)
+        sprintService.changeSprintName(sprintName, newName)
         return ResponseEntity("Sprint name changed to $newName", HttpStatusCode.valueOf(200))
     }
 
@@ -40,7 +39,7 @@ class SprintController(
         @RequestParam("storyName", required = true) storyName: String,
         @RequestParam("projectName", required = true) projectName: String,
     ): ResponseEntity<String> {
-        abstractSprintService.addStoryToSprint(sprintName, storyName)
+        sprintService.addStoryToSprint(sprintName, storyName)
         return ResponseEntity("Story $storyName added to sprint $sprintName", HttpStatusCode.valueOf(200))
     }
 
@@ -51,7 +50,7 @@ class SprintController(
         @RequestParam("storyName", required = true) storyName: String,
         @RequestParam("projectName", required = true) projectName: String,
     ): ResponseEntity<String> {
-        abstractSprintService.removeStoryFromSprint(sprintName, storyName)
+        sprintService.removeStoryFromSprint(sprintName, storyName)
         return ResponseEntity("Story $storyName removed from sprint $sprintName", HttpStatusCode.valueOf(200))
     }
 
@@ -61,7 +60,7 @@ class SprintController(
         @RequestParam("sprintName", required = true) sprintName: String,
         @RequestParam("projectName", required = true) projectName: String,
     ): ResponseEntity<AbstractSprint> {
-        val sprint = abstractSprintService.findSprintByName(sprintName)
+        val sprint = sprintService.findSprintByName(sprintName)
         return ResponseEntity(sprint, HttpStatusCode.valueOf(200))
     }
 
