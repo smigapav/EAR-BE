@@ -19,7 +19,7 @@ class User(
     @Basic(optional = false)
     var password: String? = null,
     @JsonManagedReference
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @OrderBy("state, id")
     var tasks: MutableList<Task> = mutableListOf(),
     @JsonBackReference
