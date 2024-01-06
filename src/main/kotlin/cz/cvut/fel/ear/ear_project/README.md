@@ -25,13 +25,13 @@ Aplikace je rozdělena do několika balíčků:
 
 ## Používání aplikace
 Aplikace nedisponuje uživatelským rozhraním, ale je možné s ní komunikovat pomocí nástroje http requestů (např. Postman).
-Sady kolecí pro Postman jsou k dispozici v adresáři `others/`. 
+Sady kolecí pro Postman jsou k dispozici v adresáři `others`. 
 
 ## Postman kolekce
-Kolekce obsahuje několik sad requestů pro testování aplikace. Kolekce je dostupná v adresáři `src/test/resources/requests`.
-první dělá blahblah
-první dělá blahblah
-první dělá blahblah
+Kolekce obsahuje několik sad requestů pro testování aplikace. Kolekce jsou dostupné v adresáři `others/Scenarion 1-3.postman_collection.json`.
+1. kolekce vytvoří uživatele, který se přihlásí. Tento uživatel pak vytvoří projekt, ve kterém story a úkol, který se přiřadí uživateli. Poté se vytvoří sprint, do kterého se přidá vytvořené story a sprint se zahájí. Změní se stav úkolu na IN_PROGRESS a poté se vypíše celý stav a struktura projektu.
+2. kolekce vytvoří dva nové uživatele a první se přihlásí. Tento uživatel pak vytvoří projekt, do kterého přidá druhého uživatele a nastaví mu role na `manager`. Poté se odhlásí a přihlásí se druhý uživatel, který v projektu vytvoří story a v něm úkol. Poté se vypíše celý stav a struktura projektu. 
+3. kolekce testuje oprávnění uživatelů. Vytvoří se dva uživatelé a jeden se přihlásí. Tento uživatel vytvoří projekt v něm sprint, story a úkol. Poté se odhlásí a přihlásí se druhý uživatel, který nemá oprávnění provádět změny ani vidět projekt. Vyzkouší vytvoření sprintu, story a úkolu pro tento projekt vše neúspěšně. Pokusí se také přidat story do sprintu, které vytvořil první uživatel, spustit sprint a změnit stav úkolu. Vše neúspěšně, stejně jako výpis projektu. Poté se přihlásí první úživatel a vypíš se projekt, na kterém nejsou žádné změny, které neprovedl on.
 
 
 ## Technologie
