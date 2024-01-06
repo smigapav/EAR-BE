@@ -156,11 +156,12 @@ class ProjectService(
         if (!projectExists(project)) {
             throw IllegalArgumentException("Project does not exist")
         }
-        val sprint: AbstractSprint = if (createScrumSprint) {
-            ScrumSprint()
-        } else {
-            KanbanSprint()
-        }
+        val sprint: AbstractSprint =
+            if (createScrumSprint) {
+                ScrumSprint()
+            } else {
+                KanbanSprint()
+            }
         sprint.name = name
         project.addSprint(sprint)
         sprint.project = project

@@ -1,7 +1,6 @@
 package cz.cvut.fel.ear.ear_project.controller
 
 import cz.cvut.fel.ear.ear_project.model.Project
-import cz.cvut.fel.ear.ear_project.security.UserDetails
 import cz.cvut.fel.ear.ear_project.service.ProjectService
 import cz.cvut.fel.ear.ear_project.service.SecurityService
 import cz.cvut.fel.ear.ear_project.service.UserService

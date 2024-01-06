@@ -6,7 +6,6 @@ import cz.cvut.fel.ear.ear_project.model.Project
 import cz.cvut.fel.ear.ear_project.model.Task
 import cz.cvut.fel.ear.ear_project.model.User
 import cz.cvut.fel.ear.ear_project.security.SecurityUtils
-import jakarta.persistence.OrderBy
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -44,9 +43,7 @@ class UserService(
     }
 
     @Transactional
-    fun addTask(
-        taskName: String,
-    ): User {
+    fun addTask(taskName: String): User {
         val task = findTaskByName(taskName)
         val user = securityUtils.currentUser!!
         if (!userExists(user) || !taskExists(task)) {
@@ -60,9 +57,7 @@ class UserService(
     }
 
     @Transactional
-    fun removeTask(
-        taskName: String,
-    ) {
+    fun removeTask(taskName: String) {
         val task = findTaskByName(taskName)
         val user = securityUtils.currentUser!!
         if (!userExists(user) || !taskExists(task)) {

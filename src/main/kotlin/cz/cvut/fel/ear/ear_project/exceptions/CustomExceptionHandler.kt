@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 
 @ControllerAdvice
 class CustomExceptionHandler {
-
     @ExceptionHandler(value = [ItemAlreadyPresentException::class])
     fun handleItemAlreadyPresentException(ex: ItemAlreadyPresentException): ResponseEntity<String> {
         return ResponseEntity(ex.message, HttpStatus.BAD_REQUEST)

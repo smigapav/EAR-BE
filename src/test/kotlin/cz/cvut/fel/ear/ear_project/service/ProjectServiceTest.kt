@@ -1,7 +1,6 @@
 package cz.cvut.fel.ear.ear_project.service
 
 import cz.cvut.fel.ear.ear_project.EarProjectApplication
-import cz.cvut.fel.ear.ear_project.dao.UserRepository
 import cz.cvut.fel.ear.ear_project.model.*
 import cz.cvut.fel.ear.ear_project.security.SecurityUtils
 import jakarta.transaction.Transactional
@@ -26,7 +25,6 @@ class ProjectServiceTest(
     @Autowired
     private val em: TestEntityManager,
 ) {
-
     fun setUp(
         project: Project,
         user: User,

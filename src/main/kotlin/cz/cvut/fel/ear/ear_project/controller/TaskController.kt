@@ -1,6 +1,5 @@
 package cz.cvut.fel.ear.ear_project.controller
 
-import cz.cvut.fel.ear.ear_project.model.Story
 import cz.cvut.fel.ear.ear_project.model.Task
 import cz.cvut.fel.ear.ear_project.model.TaskState
 import cz.cvut.fel.ear.ear_project.service.TaskService
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/task")
 class TaskController(
     @Autowired
-    private val taskService: TaskService
+    private val taskService: TaskService,
 ) {
     @PostMapping("/changeState")
     @PreAuthorize("hasPermission(#projectName, 'manager')")

@@ -9,10 +9,13 @@ import java.io.Serializable
 @Component
 class CustomPermissionEvaluator(
     private val projectService: ProjectService,
-    private val storyService: StoryService
+    private val storyService: StoryService,
 ) : PermissionEvaluator {
-
-    override fun hasPermission(authentication: Authentication, targetDomainObject: Any?, permission: Any?): Boolean {
+    override fun hasPermission(
+        authentication: Authentication,
+        targetDomainObject: Any?,
+        permission: Any?,
+    ): Boolean {
         // Implement your custom permission logic here
         if (targetDomainObject is String && permission is String) {
             return hasRoleByProjectName(authentication, targetDomainObject, permission)
@@ -20,7 +23,12 @@ class CustomPermissionEvaluator(
         return false
     }
 
-    override fun hasPermission(authentication: Authentication, targetId: Serializable?, targetType: String?, permission: Any?): Boolean {
+    override fun hasPermission(
+        authentication: Authentication,
+        targetId: Serializable?,
+        targetType: String?,
+        permission: Any?,
+    ): Boolean {
         // Implement your custom permission logic here
         if (targetType is String && permission is String) {
             return hasRoleByProjectName(authentication, targetType, permission)
@@ -28,7 +36,11 @@ class CustomPermissionEvaluator(
         return false
     }
 
-    private fun hasRoleByProjectName(authentication: Authentication, projectName: String, role: String): Boolean {
+    private fun hasRoleByProjectName(
+        authentication: Authentication,
+        projectName: String,
+        role: String,
+    ): Boolean {
         val projectId = projectService.findProjectByName(projectName).id.toString()
         val requiredAuthority = SimpleGrantedAuthority("$projectId$role")
         return authentication.authorities.contains(requiredAuthority)

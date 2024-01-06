@@ -22,12 +22,13 @@ class PermissionsService(
         username: String,
         projectName: String,
         perm: Boolean,
-        permissionSetter: Permissions.(Boolean) -> Unit
+        permissionSetter: Permissions.(Boolean) -> Unit,
     ): Permissions? {
         val user = findUserByName(username)
         val project = findProjectByName(projectName)
-        val permissions = project.permissions.find { it.user == user }
-            ?: throw IllegalArgumentException("User isn't part of this project")
+        val permissions =
+            project.permissions.find { it.user == user }
+                ?: throw IllegalArgumentException("User isn't part of this project")
         permissions.apply {
             permissionSetter(perm)
             permissionsRepository.save(this)
@@ -35,14 +36,23 @@ class PermissionsService(
         return permissions
     }
 
-    fun changeProjectAdminUserPermissions(username: String, projectName: String, perm: Boolean) =
-        changePermission(username, projectName, perm, Permissions::projectAdmin::set)
+    fun changeProjectAdminUserPermissions(
+        username: String,
+        projectName: String,
+        perm: Boolean,
+    ) = changePermission(username, projectName, perm, Permissions::projectAdmin::set)
 
-    fun changeStoriesAndTasksManagerUserPermissions(username: String, projectName: String, perm: Boolean) =
-        changePermission(username, projectName, perm, Permissions::storiesAndTasksManager::set)
+    fun changeStoriesAndTasksManagerUserPermissions(
+        username: String,
+        projectName: String,
+        perm: Boolean,
+    ) = changePermission(username, projectName, perm, Permissions::storiesAndTasksManager::set)
 
-    fun changeSprintManagerAdminUserPermissions(username: String, projectName: String, perm: Boolean) =
-        changePermission(username, projectName, perm, Permissions::canManageSprints::set)
+    fun changeSprintManagerAdminUserPermissions(
+        username: String,
+        projectName: String,
+        perm: Boolean,
+    ) = changePermission(username, projectName, perm, Permissions::canManageSprints::set)
 
     fun findAllPermissions(): List<Permissions> = permissionsRepository.findAll()
 
@@ -54,6 +64,5 @@ class PermissionsService(
     fun findUserByName(name: String): User =
         userRepository.findByUsername(name) ?: throw NoSuchElementException("User with name $name not found")
 
-    fun permissionsExists(permissions: Permissions): Boolean =
-        permissions.id?.let { permissionsRepository.findById(it).isPresent } ?: false
+    fun permissionsExists(permissions: Permissions): Boolean = permissions.id?.let { permissionsRepository.findById(it).isPresent } ?: false
 }
