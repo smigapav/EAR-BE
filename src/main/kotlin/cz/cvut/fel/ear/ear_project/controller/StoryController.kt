@@ -23,7 +23,7 @@ class StoryController(
         @RequestParam("storyName", required = true) storyName: String,
         @RequestParam("storyPoints", required = true) storyPoints: Int,
         @RequestParam("projectName", required = true) projectName: String,
-        ): ResponseEntity<String> {
+    ): ResponseEntity<String> {
         storyService.changeStoryPoints(storyName, storyPoints)
         return ResponseEntity("Story points changed", HttpStatusCode.valueOf(200))
     }
@@ -34,7 +34,7 @@ class StoryController(
         @RequestParam("storyName", required = true) storyName: String,
         @RequestParam("newName", required = true) newName: String,
         @RequestParam("projectName", required = true) projectName: String,
-        ): ResponseEntity<String> {
+    ): ResponseEntity<String> {
         storyService.changeName(storyName, newName)
         return ResponseEntity("Story name changed", HttpStatusCode.valueOf(200))
     }
@@ -45,7 +45,7 @@ class StoryController(
         @RequestParam("storyName", required = true) storyName: String,
         @RequestParam("description", required = true) description: String,
         @RequestParam("projectName", required = true) projectName: String,
-        ): ResponseEntity<String> {
+    ): ResponseEntity<String> {
         storyService.changeDescription(storyName, description)
         return ResponseEntity("Story description changed", HttpStatusCode.valueOf(200))
     }
@@ -57,7 +57,7 @@ class StoryController(
         @RequestParam("description", required = true) description: String,
         @RequestParam("storyName", required = true) storyName: String,
         @RequestParam("projectName", required = true) projectName: String,
-        ): ResponseEntity<String> {
+    ): ResponseEntity<String> {
         storyService.createTask(name, description, storyName)
         return ResponseEntity("Task created", HttpStatusCode.valueOf(200))
     }

@@ -56,7 +56,7 @@ class UserController(
     fun addTask(
         @RequestParam("taskName", required = true) taskName: String,
         @RequestParam("projectName", required = true) projectName: String,
-        ): ResponseEntity<String> {
+    ): ResponseEntity<String> {
         userService.addTask(taskName)
         return ResponseEntity("Task $taskName added to current user", HttpStatusCode.valueOf(200))
     }
@@ -66,7 +66,7 @@ class UserController(
     fun removeTask(
         @RequestParam("taskName", required = true) taskName: String,
         @RequestParam("projectName", required = true) projectName: String,
-        ): ResponseEntity<String> {
+    ): ResponseEntity<String> {
         userService.removeTask(taskName)
         return ResponseEntity("Task $taskName removed from current user", HttpStatusCode.valueOf(200))
     }

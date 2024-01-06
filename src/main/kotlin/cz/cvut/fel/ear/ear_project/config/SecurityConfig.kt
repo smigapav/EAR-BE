@@ -24,7 +24,6 @@ import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
-
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 class SecurityConfig(
@@ -62,8 +61,6 @@ class SecurityConfig(
         return http.build()
     }
 
-
-
     private fun authenticationFailureHandler(): AuthenticationFailure {
         return AuthenticationFailure(objectMapper)
     }
@@ -93,4 +90,3 @@ class SecurityConfig(
         return expressionHandler
     }
 }
-

@@ -48,7 +48,6 @@ data class Project(
         stories.add(story)
     }
 
-
     fun addSprint(sprint: AbstractSprint) {
         if (sprints.contains(sprint)) {
             throw ItemAlreadyPresentException("Sprint already present in project")

@@ -12,5 +12,7 @@ interface UserRepository : JpaRepository<User, Long> {
     fun findByUsername(username: String): User?
 
     @Query(name = "User.findAllUsersProjects")
-    fun findAllUsersProjects(@Param("userId") userId: Long): List<Project>
+    fun findAllUsersProjects(
+        @Param("userId") userId: Long,
+    ): List<Project>
 }

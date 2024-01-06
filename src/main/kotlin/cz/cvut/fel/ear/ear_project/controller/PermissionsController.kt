@@ -16,7 +16,6 @@ class PermissionsController(
     @Autowired
     private val permissionsService: PermissionsService,
 ) {
-
     @PostMapping("/changePermission")
     @PreAuthorize("hasPermission(#projectName, 'admin')")
     fun changePermission(

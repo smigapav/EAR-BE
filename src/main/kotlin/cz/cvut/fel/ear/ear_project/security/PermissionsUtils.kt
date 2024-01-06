@@ -17,7 +17,10 @@ class PermissionsUtils {
             SecurityContextHolder.getContext().authentication = newAuthentication
         }
 
-        fun addUserRoles(user: User, authorities: MutableSet<GrantedAuthority>) {
+        fun addUserRoles(
+            user: User,
+            authorities: MutableSet<GrantedAuthority>,
+        ) {
             user.permissions.forEach { permissions ->
                 if (permissions.projectAdmin) {
                     val authority = "${permissions.project?.id!!}admin"

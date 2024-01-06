@@ -26,7 +26,6 @@ class KanbanSprintServiceTest(
     private lateinit var story: Story
     private lateinit var project: Project
 
-
     @BeforeEach
     fun init() {
         // KanbanSprint constructor
@@ -93,5 +92,4 @@ class KanbanSprintServiceTest(
         val result = em.find(KanbanSprint::class.java, sprint.id!!)
         assertTrue(!result.stories.contains(story))
     }
-
 }
