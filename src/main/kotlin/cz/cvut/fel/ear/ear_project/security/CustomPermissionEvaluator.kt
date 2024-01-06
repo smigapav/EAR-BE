@@ -1,5 +1,6 @@
 import cz.cvut.fel.ear.ear_project.service.ProjectService
 import cz.cvut.fel.ear.ear_project.service.StoryService
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.access.PermissionEvaluator
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -11,6 +12,7 @@ class CustomPermissionEvaluator(
     private val projectService: ProjectService,
     private val storyService: StoryService,
 ) : PermissionEvaluator {
+    val accessDeniedException = "Access is denied"
     override fun hasPermission(
         authentication: Authentication,
         targetDomainObject: Any?,
@@ -18,7 +20,11 @@ class CustomPermissionEvaluator(
     ): Boolean {
         // Implement your custom permission logic here
         if (targetDomainObject is String && permission is String) {
-            return hasRoleByProjectName(authentication, targetDomainObject, permission)
+            val hasPermission = hasRoleByProjectName(authentication, targetDomainObject, permission)
+            if (!hasPermission) {
+                throw AccessDeniedException(accessDeniedException)
+            }
+            return true
         }
         return false
     }
@@ -31,8 +37,10 @@ class CustomPermissionEvaluator(
     ): Boolean {
         // Implement your custom permission logic here
         if (targetType is String && permission is String) {
-            return hasRoleByProjectName(authentication, targetType, permission)
-        }
+            val hasPermission = hasRoleByProjectName(authentication, targetType, permission)
+            if (!hasPermission) {
+                throw AccessDeniedException(accessDeniedException)
+            }        }
         return false
     }
 
@@ -43,6 +51,9 @@ class CustomPermissionEvaluator(
     ): Boolean {
         val projectId = projectService.findProjectByName(projectName).id.toString()
         val requiredAuthority = SimpleGrantedAuthority("$projectId$role")
-        return authentication.authorities.contains(requiredAuthority)
+        if (!authentication.authorities.contains(requiredAuthority)) {
+            throw AccessDeniedException(accessDeniedException)
+        }
+        return true
     }
 }

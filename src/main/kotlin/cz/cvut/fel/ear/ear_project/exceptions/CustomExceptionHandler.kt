@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.security.access.AccessDeniedException
+
 
 @ControllerAdvice
 class CustomExceptionHandler {
@@ -20,6 +22,11 @@ class CustomExceptionHandler {
     @ExceptionHandler(value = [WrongStateChangeException::class])
     fun handleWrongStateChangeException(ex: WrongStateChangeException): ResponseEntity<String> {
         return ResponseEntity(ex.message, HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(value = [AccessDeniedException::class])
+    fun handleUserWithoutPermissions(ex: AccessDeniedException): ResponseEntity<String> {
+        return ResponseEntity(ex.message ?: "Access is denied", HttpStatus.FORBIDDEN)
     }
 
     @ExceptionHandler
