@@ -2,9 +2,11 @@ package cz.cvut.fel.ear.ear_project.service
 
 import cz.cvut.fel.ear.ear_project.dao.TaskRepository
 import cz.cvut.fel.ear.ear_project.dao.UserRepository
+import cz.cvut.fel.ear.ear_project.model.Project
 import cz.cvut.fel.ear.ear_project.model.Task
 import cz.cvut.fel.ear.ear_project.model.User
 import cz.cvut.fel.ear.ear_project.security.SecurityUtils
+import jakarta.persistence.OrderBy
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -111,5 +113,9 @@ class UserService(
 
     fun taskExists(task: Task): Boolean {
         return task.id != null && !taskRepository.findById(task.id!!).isEmpty
+    }
+
+    fun findUserProjects(user: User): List<Project> {
+        return userRepository.findAllUsersProjects(user.id!!)
     }
 }

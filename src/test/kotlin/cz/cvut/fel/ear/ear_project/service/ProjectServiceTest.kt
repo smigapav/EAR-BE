@@ -26,6 +26,7 @@ class ProjectServiceTest(
     @Autowired
     private val em: TestEntityManager,
 ) {
+
     fun setUp(
         project: Project,
         user: User,
