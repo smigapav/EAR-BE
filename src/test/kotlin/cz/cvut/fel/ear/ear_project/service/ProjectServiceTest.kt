@@ -1,6 +1,7 @@
 package cz.cvut.fel.ear.ear_project.service
 
 import cz.cvut.fel.ear.ear_project.EarProjectApplication
+import cz.cvut.fel.ear.ear_project.dao.UserRepository
 import cz.cvut.fel.ear.ear_project.model.*
 import cz.cvut.fel.ear.ear_project.security.SecurityUtils
 import jakarta.transaction.Transactional
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.test.util.ReflectionTestUtils
 
 @Transactional
@@ -52,8 +55,10 @@ class ProjectServiceTest(
         user.password = "test"
         em.persist(user)
 
+        val authentication: Authentication = Mockito.mock(Authentication::class.java)
         val securityUtils = Mockito.mock(SecurityUtils::class.java)
         Mockito.`when`(securityUtils.currentUser).thenReturn(user)
+        SecurityContextHolder.getContext().authentication = authentication
 
         // Use reflection to set the private securityUtils field in UserService
         ReflectionTestUtils.setField(projectService, "securityUtils", securityUtils)

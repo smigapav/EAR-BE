@@ -44,8 +44,8 @@ class ProjectService(
         project.addPermission(permissions)
         user.addProject(project)
         user.addPermission(permissions)
-        userRepository.save(user)
         permissionsRepository.save(permissions)
+        userRepository.save(user)
         projectRepository.save(project)
 
         updateUserPermissions(user)

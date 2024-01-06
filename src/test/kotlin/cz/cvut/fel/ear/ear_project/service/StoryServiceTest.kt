@@ -97,7 +97,7 @@ class StoryServiceTest(
         story.addTask(task)
         em.persist(story)
 
-        storyService.removeTask(task, story.name.toString())
+        storyService.removeTask(task.name.toString(), story.name.toString())
 
         val foundStory = em.find(Story::class.java, story.id)
         val foundTask = em.find(Task::class.java, task.id)

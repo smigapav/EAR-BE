@@ -5,6 +5,7 @@ import cz.cvut.fel.ear.ear_project.dao.UserRepository
 import cz.cvut.fel.ear.ear_project.model.Task
 import cz.cvut.fel.ear.ear_project.model.User
 import cz.cvut.fel.ear.ear_project.security.SecurityUtils
+import jakarta.persistence.OrderBy
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -100,6 +101,7 @@ class UserService(
         user.permissions.forEach { output.add(it.toString()) }
         return output
     }
+
 
     fun findAllUsers(): List<User> {
         return userRepository.findAll()
