@@ -1,6 +1,8 @@
 package cz.cvut.fel.ear.ear_project.service
 
 import cz.cvut.fel.ear.ear_project.dao.PermissionsRepository
+import cz.cvut.fel.ear.ear_project.dao.ProjectRepository
+import cz.cvut.fel.ear.ear_project.dao.UserRepository
 import cz.cvut.fel.ear.ear_project.model.Permissions
 import cz.cvut.fel.ear.ear_project.model.Project
 import cz.cvut.fel.ear.ear_project.model.User
@@ -11,55 +13,47 @@ import org.springframework.stereotype.Service
 class PermissionsService(
     @Autowired
     private val permissionsRepository: PermissionsRepository,
+    @Autowired
+    private val projectRepository: ProjectRepository,
+    @Autowired
+    private val userRepository: UserRepository,
 ) {
-    fun changeProjectAdminUserPermissions(
-        user: User,
-        project: Project,
+    fun changePermission(
+        username: String,
+        projectName: String,
         perm: Boolean,
+        permissionSetter: Permissions.(Boolean) -> Unit
     ): Permissions? {
-        val permissions =
-            project.permissions.find { it.user == user }
-                ?: throw IllegalArgumentException("User does not have permissions for this project")
-        permissions!!.projectAdmin = perm
-        permissionsRepository.save(permissions)
+        val user = findUserByName(username)
+        val project = findProjectByName(projectName)
+        val permissions = project.permissions.find { it.user == user }
+            ?: throw IllegalArgumentException("User isn't part of this project")
+        permissions.apply {
+            permissionSetter(perm)
+            permissionsRepository.save(this)
+        }
         return permissions
     }
 
-    fun changeStoriesAndTasksManagerUserPermissions(
-        user: User,
-        project: Project,
-        perm: Boolean,
-    ): Permissions? {
-        val permissions =
-            project.permissions.find { it.user == user }
-                ?: throw IllegalArgumentException("User does not have permissions for this project")
-        permissions!!.storiesAndTasksManager = perm
-        permissionsRepository.save(permissions)
-        return permissions
-    }
+    fun changeProjectAdminUserPermissions(username: String, projectName: String, perm: Boolean) =
+        changePermission(username, projectName, perm, Permissions::projectAdmin::set)
 
-    fun changeSprintManagerAdminUserPermissions(
-        user: User,
-        project: Project,
-        perm: Boolean,
-    ): Permissions? {
-        val permissions =
-            project.permissions.find { it.user == user }
-                ?: throw IllegalArgumentException("User does not have permissions for this project")
-        permissions!!.canManageSprints = perm
-        permissionsRepository.save(permissions)
-        return permissions
-    }
+    fun changeStoriesAndTasksManagerUserPermissions(username: String, projectName: String, perm: Boolean) =
+        changePermission(username, projectName, perm, Permissions::storiesAndTasksManager::set)
 
-    fun findAllPermissions(): List<Permissions> {
-        return permissionsRepository.findAll()
-    }
+    fun changeSprintManagerAdminUserPermissions(username: String, projectName: String, perm: Boolean) =
+        changePermission(username, projectName, perm, Permissions::canManageSprints::set)
 
-    fun findPermissionById(id: Long): Permissions {
-        return permissionsRepository.findById(id).orElse(null)
-    }
+    fun findAllPermissions(): List<Permissions> = permissionsRepository.findAll()
 
-    fun permissionsExists(permissions: Permissions): Boolean {
-        return permissions.id != null && !permissionsRepository.findById(permissions.id!!).isEmpty
-    }
+    fun findPermissionById(id: Long): Permissions = permissionsRepository.findById(id).orElse(null)
+
+    fun findProjectByName(name: String): Project =
+        projectRepository.findByName(name) ?: throw NoSuchElementException("Project with name $name not found")
+
+    fun findUserByName(name: String): User =
+        userRepository.findByUsername(name) ?: throw NoSuchElementException("User with name $name not found")
+
+    fun permissionsExists(permissions: Permissions): Boolean =
+        permissions.id?.let { permissionsRepository.findById(it).isPresent } ?: false
 }
