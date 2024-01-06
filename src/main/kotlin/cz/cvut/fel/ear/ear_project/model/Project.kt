@@ -13,7 +13,7 @@ data class Project(
     var name: String? = null,
     @JsonManagedReference
     @ManyToMany
-    @OrderBy("name")
+    @OrderBy("username")
     var users: MutableList<User> = mutableListOf(),
     @JsonManagedReference
     @OneToMany(mappedBy = "project", cascade = [CascadeType.REMOVE], orphanRemoval = true)
