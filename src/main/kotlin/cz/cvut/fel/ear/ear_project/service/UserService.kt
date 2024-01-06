@@ -33,7 +33,8 @@ class UserService(
         return user
     }
 
-    fun removeUser(user: User) {
+    fun removeUser() {
+        val user = securityUtils.currentUser!!
         if (!userExists(user)) {
             throw IllegalArgumentException("User does not exist")
         }
@@ -42,9 +43,10 @@ class UserService(
 
     @Transactional
     fun addTask(
-        user: User,
-        task: Task,
+        taskName: String,
     ): User {
+        val task = findTaskByName(taskName)
+        val user = securityUtils.currentUser!!
         if (!userExists(user) || !taskExists(task)) {
             throw IllegalArgumentException("User or task does not exist")
         }
@@ -57,9 +59,10 @@ class UserService(
 
     @Transactional
     fun removeTask(
-        user: User,
-        task: Task,
+        taskName: String,
     ) {
+        val task = findTaskByName(taskName)
+        val user = securityUtils.currentUser!!
         if (!userExists(user) || !taskExists(task)) {
             throw IllegalArgumentException("User or task does not exist")
         }
@@ -90,23 +93,16 @@ class UserService(
         return user
     }
 
-    fun getAllPermissions(): List<String> {
+    fun getCurrentUser(): User {
         val user = securityUtils.currentUser!!
-        if (!userExists(user)) {
+        if (user == null) {
             throw IllegalArgumentException("User does not exist")
         }
-        val output = mutableListOf<String>()
-        output.add("test ")
-        user.permissions.forEach { output.add(it.toString()) }
-        return output
+        return user
     }
 
-    fun findAllUsers(): List<User> {
-        return userRepository.findAll()
-    }
-
-    fun findUserById(id: Long): User? {
-        return userRepository.findById(id).orElse(null)
+    fun findTaskByName(taskName: String): Task {
+        return taskRepository.findByName(taskName) ?: throw NoSuchElementException("Task with $taskName not found")
     }
 
     fun userExists(user: User): Boolean {
