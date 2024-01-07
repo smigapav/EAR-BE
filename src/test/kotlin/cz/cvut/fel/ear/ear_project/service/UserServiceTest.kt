@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
@@ -48,9 +47,9 @@ class UserServiceTest(
         user.password = "test"
         em.persist(user)
 
-        val authentication: Authentication = Mockito.mock(Authentication::class.java)
-        val securityUtils = Mockito.mock(SecurityUtils::class.java)
-        Mockito.`when`(securityUtils.currentUser).thenReturn(user)
+        val authentication: Authentication = mock(Authentication::class.java)
+        val securityUtils = mock(SecurityUtils::class.java)
+        `when`(securityUtils.currentUser).thenReturn(user)
         SecurityContextHolder.getContext().authentication = authentication
 
         // Use reflection to set the private securityUtils field in UserService
@@ -70,9 +69,9 @@ class UserServiceTest(
         user.password = "test"
         em.persist(user)
 
-        val authentication: Authentication = Mockito.mock(Authentication::class.java)
-        val securityUtils = Mockito.mock(SecurityUtils::class.java)
-        Mockito.`when`(securityUtils.currentUser).thenReturn(user)
+        val authentication: Authentication = mock(Authentication::class.java)
+        val securityUtils = mock(SecurityUtils::class.java)
+        `when`(securityUtils.currentUser).thenReturn(user)
         SecurityContextHolder.getContext().authentication = authentication
 
         // Use reflection to set the private securityUtils field in UserService
@@ -98,9 +97,9 @@ class UserServiceTest(
         user.password = "test"
         em.persist(user)
 
-        val authentication: Authentication = Mockito.mock(Authentication::class.java)
-        val securityUtils = Mockito.mock(SecurityUtils::class.java)
-        Mockito.`when`(securityUtils.currentUser).thenReturn(user)
+        val authentication: Authentication = mock(Authentication::class.java)
+        val securityUtils = mock(SecurityUtils::class.java)
+        `when`(securityUtils.currentUser).thenReturn(user)
         SecurityContextHolder.getContext().authentication = authentication
 
         // Use reflection to set the private securityUtils field in UserService
@@ -128,9 +127,9 @@ class UserServiceTest(
         em.persist(user)
         em.persist(task)
 
-        val authentication: Authentication = Mockito.mock(Authentication::class.java)
-        val securityUtils = Mockito.mock(SecurityUtils::class.java)
-        Mockito.`when`(securityUtils.currentUser).thenReturn(user)
+        val authentication: Authentication = mock(Authentication::class.java)
+        val securityUtils = mock(SecurityUtils::class.java)
+        `when`(securityUtils.currentUser).thenReturn(user)
         SecurityContextHolder.getContext().authentication = authentication
 
         // Use reflection to set the private securityUtils field in UserService
@@ -151,9 +150,9 @@ class UserServiceTest(
         user.password = "test"
         em.persist(user)
 
-        val authentication: Authentication = Mockito.mock(Authentication::class.java)
-        val securityUtils = Mockito.mock(SecurityUtils::class.java)
-        Mockito.`when`(securityUtils.currentUser).thenReturn(user)
+        val authentication: Authentication = mock(Authentication::class.java)
+        val securityUtils = mock(SecurityUtils::class.java)
+        `when`(securityUtils.currentUser).thenReturn(user)
         SecurityContextHolder.getContext().authentication = authentication
 
         // Use reflection to set the private securityUtils field in UserService
@@ -173,9 +172,9 @@ class UserServiceTest(
         user.password = "test"
         em.persist(user)
 
-        val authentication: Authentication = Mockito.mock(Authentication::class.java)
-        val securityUtils = Mockito.mock(SecurityUtils::class.java)
-        Mockito.`when`(securityUtils.currentUser).thenReturn(user)
+        val authentication: Authentication = mock(Authentication::class.java)
+        val securityUtils = mock(SecurityUtils::class.java)
+        `when`(securityUtils.currentUser).thenReturn(user)
         SecurityContextHolder.getContext().authentication = authentication
 
         // Use reflection to set the private securityUtils field in UserService
@@ -197,9 +196,9 @@ class UserServiceTest(
         user.password = "test"
         em.persist(user)
 
-        val authentication: Authentication = Mockito.mock(Authentication::class.java)
-        val securityUtils = Mockito.mock(SecurityUtils::class.java)
-        Mockito.`when`(securityUtils.currentUser).thenReturn(user)
+        val authentication: Authentication = mock(Authentication::class.java)
+        val securityUtils = mock(SecurityUtils::class.java)
+        `when`(securityUtils.currentUser).thenReturn(user)
         SecurityContextHolder.getContext().authentication = authentication
 
         // Use reflection to set the private securityUtils field in UserService

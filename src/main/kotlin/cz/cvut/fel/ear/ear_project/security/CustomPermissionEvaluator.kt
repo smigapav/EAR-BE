@@ -38,7 +38,8 @@ class CustomPermissionEvaluator(
             val hasPermission = hasRoleByProjectName(authentication, targetType, permission)
             if (!hasPermission) {
                 throw AccessDeniedException(accessDeniedException)
-            }        }
+            }
+        }
         return false
     }
 
