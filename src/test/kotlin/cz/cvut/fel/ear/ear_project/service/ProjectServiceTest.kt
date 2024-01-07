@@ -2,14 +2,19 @@ package cz.cvut.fel.ear.ear_project.service
 
 import cz.cvut.fel.ear.ear_project.EarProjectApplication
 import cz.cvut.fel.ear.ear_project.model.*
+import cz.cvut.fel.ear.ear_project.security.SecurityUtils
 import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.test.util.ReflectionTestUtils
 
 @Transactional
 @AutoConfigureTestEntityManager
@@ -22,26 +27,22 @@ class ProjectServiceTest(
 ) {
     fun setUp(
         project: Project,
-        backlog: Backlog,
         user: User,
         permissions: Permissions,
     ) {
         project.name = "test"
         user.username = "test"
+        user.password = "test"
         em.persist(project)
-        em.persist(backlog)
         em.persist(user)
         em.persist(permissions)
-        project.backlog = backlog
         project.addUser(user)
         project.addPermission(permissions)
-        backlog.project = project
         user.addProject(project)
         user.addPermission(permissions)
         permissions.project = project
         permissions.user = user
         em.persist(project)
-        em.persist(backlog)
         em.persist(user)
         em.persist(permissions)
     }
@@ -50,9 +51,18 @@ class ProjectServiceTest(
     fun createProjectTest() {
         val user = User()
         user.username = "test"
+        user.password = "test"
         em.persist(user)
 
-        val project = projectService.createProject("test", user)
+        val authentication: Authentication = Mockito.mock(Authentication::class.java)
+        val securityUtils = Mockito.mock(SecurityUtils::class.java)
+        Mockito.`when`(securityUtils.currentUser).thenReturn(user)
+        SecurityContextHolder.getContext().authentication = authentication
+
+        // Use reflection to set the private securityUtils field in UserService
+        ReflectionTestUtils.setField(projectService, "securityUtils", securityUtils)
+
+        val project = projectService.createProject("test")
 
         val foundProject = em.find(Project::class.java, project.id)
 
@@ -67,10 +77,9 @@ class ProjectServiceTest(
         val user = User()
         val project = Project()
         val permissions = Permissions()
-        val backlog = Backlog()
-        setUp(project, backlog, user, permissions)
+        setUp(project, user, permissions)
 
-        projectService.changeProjectName("newName", project)
+        projectService.changeProjectName("newName", project.name.toString())
 
         val foundProject = em.find(Project::class.java, project.id)
 
@@ -81,12 +90,13 @@ class ProjectServiceTest(
     fun addExistingUserTest() {
         val user = User()
         user.username = "test"
+        user.password = "test"
         em.persist(user)
         val project = Project()
         project.name = "test"
         em.persist(project)
 
-        projectService.addExistingUser(user, project)
+        projectService.addExistingUser(user.username.toString(), project.name.toString())
 
         val foundProject = em.find(Project::class.java, project.id)
 
@@ -98,10 +108,9 @@ class ProjectServiceTest(
         val user = User()
         val project = Project()
         val permissions = Permissions()
-        val backlog = Backlog()
-        setUp(project, backlog, user, permissions)
+        setUp(project, user, permissions)
 
-        projectService.removeUser(user, project)
+        projectService.removeUser(user.username.toString(), project.name.toString())
 
         val foundProject = em.find(Project::class.java, project.id)
 
@@ -114,22 +123,20 @@ class ProjectServiceTest(
         val user = User()
         val project = Project()
         val permissions = Permissions()
-        val backlog = Backlog()
-        setUp(project, backlog, user, permissions)
+        setUp(project, user, permissions)
 
         val story =
             projectService.createStory(
                 "test",
                 "test",
                 1,
-                project,
+                project.name.toString(),
             )
 
         val foundStory = em.find(Story::class.java, story.id)
 
         assertEquals(story, foundStory)
         assertEquals(foundStory.project, project)
-        assertEquals(foundStory.backlog, backlog)
     }
 
     @Test
@@ -137,19 +144,16 @@ class ProjectServiceTest(
         val user = User()
         val project = Project()
         val permissions = Permissions()
-        val backlog = Backlog()
-        setUp(project, backlog, user, permissions)
+        setUp(project, user, permissions)
         val story = Story()
         story.name = "test"
         story.description = "test"
-        story.price = 1
+        story.storyPoints = 1
         em.persist(story)
         project.addStory(story)
-        backlog.addStory(story)
         em.persist(project)
-        em.persist(backlog)
 
-        projectService.removeStory(story, project)
+        projectService.removeStory(story.name.toString(), project.name.toString())
 
         val foundProject = em.find(Project::class.java, project.id)
         val foundStory = em.find(Story::class.java, story.id)
@@ -163,14 +167,13 @@ class ProjectServiceTest(
         val user = User()
         val project = Project()
         val permissions = Permissions()
-        val backlog = Backlog()
-        setUp(project, backlog, user, permissions)
+        setUp(project, user, permissions)
 
         val sprint =
             projectService.createSprint(
                 "test",
                 true,
-                project,
+                project.name.toString(),
             )
 
         val foundSprint = em.find(AbstractSprint::class.java, sprint.id)
@@ -185,14 +188,13 @@ class ProjectServiceTest(
         val user = User()
         val project = Project()
         val permissions = Permissions()
-        val backlog = Backlog()
-        setUp(project, backlog, user, permissions)
+        setUp(project, user, permissions)
 
         val sprint =
             projectService.createSprint(
                 "test",
                 false,
-                project,
+                project.name.toString(),
             )
 
         val foundSprint = em.find(AbstractSprint::class.java, sprint.id)
@@ -207,8 +209,7 @@ class ProjectServiceTest(
         val user = User()
         val project = Project()
         val permissions = Permissions()
-        val backlog = Backlog()
-        setUp(project, backlog, user, permissions)
+        setUp(project, user, permissions)
         val sprint = ScrumSprint()
         sprint.name = "test"
         sprint.project = project
@@ -216,7 +217,7 @@ class ProjectServiceTest(
         project.addSprint(sprint)
         em.persist(project)
 
-        projectService.removeSprint(sprint, project)
+        projectService.removeSprint(sprint.name!!, project.name!!)
 
         val foundProject = em.find(Project::class.java, project.id)
         val foundSprint = em.find(AbstractSprint::class.java, sprint.id)

@@ -1,5 +1,6 @@
 package cz.cvut.fel.ear.ear_project.model
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Entity
 import jakarta.persistence.ManyToOne
@@ -11,8 +12,10 @@ data class Permissions(
     var projectAdmin: Boolean = false,
     var storiesAndTasksManager: Boolean = false,
     var canManageSprints: Boolean = false,
+    @JsonBackReference
     @ManyToOne(cascade = [CascadeType.REMOVE])
     var user: User? = null,
+    @JsonBackReference
     @ManyToOne
     var project: Project? = null,
 ) : AbstractEntity() {
@@ -37,6 +40,6 @@ data class Permissions(
     }
 
     override fun toString(): String {
-        return "Permissions(projectAdmin=$projectAdmin, storiesAndTasksManager=$storiesAndTasksManager, canManageSprints=$canManageSprints)"
+        return "Permissions(project=${project?.name}, projectAdmin=$projectAdmin, storiesAndTasksManager=$storiesAndTasksManager, canManageSprints=$canManageSprints)"
     }
 }

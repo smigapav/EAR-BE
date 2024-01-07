@@ -15,37 +15,31 @@ class StoryService(
     @Autowired
     private val taskRepository: TaskRepository,
 ) {
-    fun changePrice(
-        story: Story,
-        price: Int,
+    fun changeStoryPoints(
+        storyName: String,
+        storyPoints: Int,
     ): Story {
-        if (!storyExists(story)) {
-            throw IllegalArgumentException("Story does not exist")
-        }
-        story.price = price
+        val story = findStoryByName(storyName)
+        story.storyPoints = storyPoints
         storyRepository.save(story)
         return story
     }
 
     fun changeName(
-        story: Story,
-        name: String,
+        storyName: String,
+        newName: String,
     ): Story {
-        if (!storyExists(story)) {
-            throw IllegalArgumentException("Story does not exist")
-        }
-        story.name = name
+        val story = findStoryByName(storyName)
+        story.name = newName
         storyRepository.save(story)
         return story
     }
 
     fun changeDescription(
-        story: Story,
+        storyName: String,
         description: String,
     ): Story {
-        if (!storyExists(story)) {
-            throw IllegalArgumentException("Story does not exist")
-        }
+        val story = findStoryByName(storyName)
         story.description = description
         storyRepository.save(story)
         return story
@@ -55,14 +49,12 @@ class StoryService(
     fun createTask(
         name: String,
         description: String,
-        story: Story,
+        storyName: String,
     ): Task {
+        val story = findStoryByName(storyName)
         val task = Task()
         task.name = name
         task.description = description
-        if (!storyExists(story)) {
-            throw IllegalArgumentException("Story does not exist")
-        }
         task.story = story
         taskRepository.save(task)
         story.addTask(task)
@@ -72,23 +64,22 @@ class StoryService(
 
     @Transactional
     fun removeTask(
-        task: Task,
-        story: Story,
+        taskName: String,
+        storyName: String,
     ) {
-        if (!taskExists(task) || !storyExists(story)) {
-            throw IllegalArgumentException("Task or Story does not exist")
-        }
+        val story = findStoryByName(storyName)
+        val task = findTaskByName(taskName)
         story.removeTask(task)
         storyRepository.save(story)
         taskRepository.delete(task)
     }
 
-    fun findAllStories(): List<Story> {
-        return storyRepository.findAll()
+    fun findStoryByName(name: String): Story {
+        return storyRepository.findByName(name) ?: throw NoSuchElementException("Story with name $name not found")
     }
 
-    fun findStoryById(id: Long): Story? {
-        return storyRepository.findById(id).orElse(null)
+    fun findTaskByName(name: String): Task {
+        return taskRepository.findByName(name) ?: throw NoSuchElementException("Task with name $name not found")
     }
 
     fun taskExists(task: Task): Boolean {
@@ -100,6 +91,6 @@ class StoryService(
     }
 
     fun toString(story: Story): String {
-        return (story.id.toString() + " " + story.name + " " + story.description + " " + story.price)
+        return (story.id.toString() + " " + story.name + " " + story.description + " " + story.storyPoints)
     }
 }

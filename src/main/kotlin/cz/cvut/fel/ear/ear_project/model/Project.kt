@@ -1,6 +1,6 @@
 package cz.cvut.fel.ear.ear_project.model
 
-import cz.cvut.fel.ear.ear_project.exceptions.EmptyNameException
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import cz.cvut.fel.ear.ear_project.exceptions.ItemAlreadyPresentException
 import cz.cvut.fel.ear.ear_project.exceptions.ItemNotFoundException
 import jakarta.persistence.*
@@ -9,17 +9,23 @@ import jakarta.persistence.*
 @Table(name = "projects")
 data class Project(
     @Basic(optional = false)
+    @Column(unique = true)
     var name: String? = null,
+    @JsonManagedReference
     @ManyToMany
+    @OrderBy("username")
     var users: MutableList<User> = mutableListOf(),
+    @JsonManagedReference
     @OneToMany(mappedBy = "project", cascade = [CascadeType.REMOVE], orphanRemoval = true)
     var permissions: MutableList<Permissions> = mutableListOf(),
+    @JsonManagedReference
     @OneToMany(mappedBy = "project", cascade = [CascadeType.REMOVE], orphanRemoval = true)
+    @OrderBy("id")
     var stories: MutableList<Story> = mutableListOf(),
+    @JsonManagedReference
     @OneToMany(mappedBy = "project", cascade = [CascadeType.REMOVE], orphanRemoval = true)
+    @OrderBy("id")
     var sprints: MutableList<AbstractSprint> = mutableListOf(),
-    @OneToOne
-    var backlog: Backlog? = null,
 ) : AbstractEntity() {
     fun addUser(user: User) {
         if (users.contains(user)) {
@@ -40,13 +46,6 @@ data class Project(
             throw ItemAlreadyPresentException("Story already present in project")
         }
         stories.add(story)
-    }
-
-    fun changeName(name: String) {
-        if (name.isEmpty()) {
-            throw EmptyNameException("Name cannot be empty")
-        }
-        this.name = name
     }
 
     fun addSprint(sprint: AbstractSprint) {
@@ -82,5 +81,9 @@ data class Project(
             throw ItemNotFoundException("Permission not found in project")
         }
         permissions.remove(permission)
+    }
+
+    override fun toString(): String {
+        return "Project(name=$name,  permissions=$permissions, stories=$stories, sprints=$sprints)"
     }
 }

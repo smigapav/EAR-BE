@@ -3,15 +3,22 @@ package cz.cvut.fel.ear.ear_project.service
 import cz.cvut.fel.ear.ear_project.EarProjectApplication
 import cz.cvut.fel.ear.ear_project.model.Task
 import cz.cvut.fel.ear.ear_project.model.User
+import cz.cvut.fel.ear.ear_project.security.SecurityUtils
 import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.test.util.ReflectionTestUtils
 
 @Transactional
 @AutoConfigureTestEntityManager
@@ -20,11 +27,13 @@ class UserServiceTest(
     @Autowired
     private val userService: UserService,
     @Autowired
+    private val projectService: ProjectService,
+    @Autowired
     private val em: TestEntityManager,
 ) {
     @Test
     fun insertUserIntoDB() {
-        val user = userService.createUser("test")
+        val user = userService.createUser("test", "test")
 
         val foundUser = em.find(User::class.java, user.id)
 
@@ -35,9 +44,18 @@ class UserServiceTest(
     fun removeUserFromDB() {
         val user = User()
         user.username = "test"
+        user.password = "test"
         em.persist(user)
 
-        userService.removeUser(user)
+        val authentication: Authentication = mock(Authentication::class.java)
+        val securityUtils = mock(SecurityUtils::class.java)
+        `when`(securityUtils.currentUser).thenReturn(user)
+        SecurityContextHolder.getContext().authentication = authentication
+
+        // Use reflection to set the private securityUtils field in UserService
+        ReflectionTestUtils.setField(userService, "securityUtils", securityUtils)
+
+        userService.removeUser()
 
         val foundUser = em.find(User::class.java, user.id)
 
@@ -48,13 +66,23 @@ class UserServiceTest(
     fun addTaskToUser() {
         val user = User()
         user.username = "test"
+        user.password = "test"
         em.persist(user)
+
+        val authentication: Authentication = mock(Authentication::class.java)
+        val securityUtils = mock(SecurityUtils::class.java)
+        `when`(securityUtils.currentUser).thenReturn(user)
+        SecurityContextHolder.getContext().authentication = authentication
+
+        // Use reflection to set the private securityUtils field in UserService
+        ReflectionTestUtils.setField(userService, "securityUtils", securityUtils)
+
         val task = Task()
         task.name = "test"
         task.description = "test"
         em.persist(task)
 
-        userService.addTask(user, task)
+        userService.addTask("test")
 
         val foundUser = em.find(User::class.java, user.id)
 
@@ -66,13 +94,23 @@ class UserServiceTest(
     fun addTaskToUserShouldThrowError() {
         val user = User()
         user.username = "test"
+        user.password = "test"
         em.persist(user)
+
+        val authentication: Authentication = mock(Authentication::class.java)
+        val securityUtils = mock(SecurityUtils::class.java)
+        `when`(securityUtils.currentUser).thenReturn(user)
+        SecurityContextHolder.getContext().authentication = authentication
+
+        // Use reflection to set the private securityUtils field in UserService
+        ReflectionTestUtils.setField(userService, "securityUtils", securityUtils)
+
         val task = Task()
         task.name = "test"
         task.description = "test"
 
-        assertThrows<IllegalArgumentException> {
-            userService.addTask(user, task)
+        assertThrows<NoSuchElementException> {
+            userService.addTask("test")
         }
     }
 
@@ -80,6 +118,7 @@ class UserServiceTest(
     fun removeTaskFromUser() {
         val user = User()
         user.username = "test"
+        user.password = "test"
         val task = Task()
         task.name = "test"
         task.description = "test"
@@ -88,7 +127,15 @@ class UserServiceTest(
         em.persist(user)
         em.persist(task)
 
-        userService.removeTask(user, task)
+        val authentication: Authentication = mock(Authentication::class.java)
+        val securityUtils = mock(SecurityUtils::class.java)
+        `when`(securityUtils.currentUser).thenReturn(user)
+        SecurityContextHolder.getContext().authentication = authentication
+
+        // Use reflection to set the private securityUtils field in UserService
+        ReflectionTestUtils.setField(userService, "securityUtils", securityUtils)
+
+        userService.removeTask("test")
 
         val foundUser = em.find(User::class.java, user.id)
         val userTasks = foundUser.tasks
@@ -100,12 +147,71 @@ class UserServiceTest(
     fun changeUsernameTest() {
         val user = User()
         user.username = "test"
+        user.password = "test"
         em.persist(user)
 
-        userService.changeUsername(user, "test2")
+        val authentication: Authentication = mock(Authentication::class.java)
+        val securityUtils = mock(SecurityUtils::class.java)
+        `when`(securityUtils.currentUser).thenReturn(user)
+        SecurityContextHolder.getContext().authentication = authentication
+
+        // Use reflection to set the private securityUtils field in UserService
+        ReflectionTestUtils.setField(userService, "securityUtils", securityUtils)
+
+        userService.changeUsername("test2")
 
         val foundUser = em.find(User::class.java, user.id)
 
         assertEquals("test2", foundUser.username)
+    }
+
+    @Test
+    fun changePasswordTest() {
+        val user = User()
+        user.username = "test"
+        user.password = "test"
+        em.persist(user)
+
+        val authentication: Authentication = mock(Authentication::class.java)
+        val securityUtils = mock(SecurityUtils::class.java)
+        `when`(securityUtils.currentUser).thenReturn(user)
+        SecurityContextHolder.getContext().authentication = authentication
+
+        // Use reflection to set the private securityUtils field in UserService
+        ReflectionTestUtils.setField(userService, "securityUtils", securityUtils)
+
+        userService.changePassword("test2")
+
+        val foundUser = em.find(User::class.java, user.id)
+
+        val passwordEncoder = ReflectionTestUtils.getField(userService, "passwordEncoder") as PasswordEncoder
+
+        assertEquals(true, passwordEncoder.matches("test2", foundUser.password))
+    }
+
+    @Test
+    fun findAllUsersProjectsTest() {
+        val user = User()
+        user.username = "test"
+        user.password = "test"
+        em.persist(user)
+
+        val authentication: Authentication = mock(Authentication::class.java)
+        val securityUtils = mock(SecurityUtils::class.java)
+        `when`(securityUtils.currentUser).thenReturn(user)
+        SecurityContextHolder.getContext().authentication = authentication
+
+        // Use reflection to set the private securityUtils field in UserService
+        ReflectionTestUtils.setField(projectService, "securityUtils", securityUtils)
+
+        val project = projectService.createProject("test")
+        val project1 = projectService.createProject("test1")
+        val project2 = projectService.createProject("1")
+
+        val foundProjects = userService.findAllUsersProjects(user)
+
+        assertEquals(project2, foundProjects[0])
+        assertEquals(project, foundProjects[1])
+        assertEquals(project1, foundProjects[2])
     }
 }

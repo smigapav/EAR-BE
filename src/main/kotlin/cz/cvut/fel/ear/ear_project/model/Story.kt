@@ -1,5 +1,7 @@
 package cz.cvut.fel.ear.ear_project.model
 
+import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import cz.cvut.fel.ear.ear_project.exceptions.ItemAlreadyPresentException
 import cz.cvut.fel.ear.ear_project.exceptions.ItemNotFoundException
 import jakarta.persistence.*
@@ -8,24 +10,24 @@ import jakarta.persistence.*
 @Table(name = "stories")
 class Story(
     @Basic(optional = false)
-    var price: Int? = null,
+    var storyPoints: Int? = null,
     @Basic(optional = false)
+    @Column(unique = true)
     var name: String? = null,
     @Basic(optional = false)
     var description: String? = null,
-    @ManyToOne
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.EAGER)
     var project: Project? = null,
+    @JsonManagedReference
     @OneToMany(mappedBy = "story", cascade = [CascadeType.REMOVE])
+    @OrderBy("id")
     var tasks: MutableList<Task> = mutableListOf(),
+    @JsonBackReference
     @ManyToOne
     var sprint: AbstractSprint? = null,
-    @ManyToOne
-    var backlog: Backlog? = null,
 ) : AbstractEntity() {
     fun addTask(task: Task) {
-        if (tasks == null) {
-            tasks = mutableListOf()
-        }
         if (tasks.contains(task)) {
             throw ItemAlreadyPresentException("Task already present in story")
         }
@@ -33,9 +35,6 @@ class Story(
     }
 
     fun removeTask(task: Task) {
-        if (tasks == null) {
-            return
-        }
         if (!tasks.contains(task)) {
             throw ItemNotFoundException("Task not found in story")
         }
@@ -43,6 +42,6 @@ class Story(
     }
 
     override fun toString(): String {
-        return "Story(price=$price, name=$name, description=$description, project=$project, tasks=$tasks, sprint=$sprint, backlog=$backlog)"
+        return "Story(sotoryPoints=$storyPoints, name=$name, description=$description, projectName=${project?.name}, tasks=$tasks, sprintName=${sprint?.name})"
     }
 }

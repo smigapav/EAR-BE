@@ -11,4 +11,4 @@ class KanbanSprintService(
     sprintRepository: SprintRepository,
     @Autowired
     storyRepository: StoryRepository,
-) : AbstractSprintService(sprintRepository, storyRepository)
+) : SprintService(sprintRepository, storyRepository)

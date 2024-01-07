@@ -1,5 +1,7 @@
 package cz.cvut.fel.ear.ear_project.model
 
+import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import cz.cvut.fel.ear.ear_project.exceptions.ItemAlreadyPresentException
 import cz.cvut.fel.ear.ear_project.exceptions.ItemNotFoundException
 import jakarta.persistence.*
@@ -11,10 +13,14 @@ abstract class AbstractSprint(
     @GeneratedValue(strategy = GenerationType.AUTO)
     open var id: Long? = null,
     @Basic(optional = false)
+    @Column(unique = true)
     open var name: String? = null,
+    @JsonBackReference
     @ManyToOne
     open var project: Project? = null,
+    @JsonManagedReference
     @OneToMany(mappedBy = "sprint")
+    @OrderBy("id")
     open var stories: MutableList<Story> = mutableListOf(),
     open var state: SprintState = SprintState.WAITING,
 ) {
@@ -36,6 +42,6 @@ abstract class AbstractSprint(
     }
 
     override fun toString(): String {
-        return "Sprint(id=$id, name=$name, project=$project, stories=$stories)"
+        return "Sprint(id=$id, name=$name, projectNmae=${project?.name}, stories=$stories)"
     }
 }

@@ -1,9 +1,7 @@
 package cz.cvut.fel.ear.ear_project.model
 
-import jakarta.persistence.Basic
-import jakarta.persistence.Entity
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.Table
+import com.fasterxml.jackson.annotation.JsonBackReference
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "tasks")
@@ -11,15 +9,18 @@ class Task(
     var state: TaskState = TaskState.WAITING,
     var timeSpent: Int = 0,
     @Basic(optional = false)
+    @Column(unique = true)
     var name: String? = null,
     @Basic(optional = false)
     var description: String? = null,
-    @ManyToOne
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.EAGER)
     var story: Story? = null,
+    @JsonBackReference
     @ManyToOne(optional = true)
     var user: User? = null,
 ) : AbstractEntity() {
-    //    override fun toString(): String {
-//        return "Task(state=$state, timeSpent=$timeSpent, name=$name, description=$description, story=$story, user=$user)"
-//    }
+    override fun toString(): String {
+        return "Task(state=$state, timeSpent=$timeSpent, name=$name, description=$description, storyName=${story?.name}, userName=${user?.username})"
+    }
 }
