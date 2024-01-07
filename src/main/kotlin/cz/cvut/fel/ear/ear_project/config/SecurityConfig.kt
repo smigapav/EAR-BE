@@ -86,7 +86,7 @@ class SecurityConfig(
 
     override fun createExpressionHandler(): MethodSecurityExpressionHandler {
         val expressionHandler = DefaultMethodSecurityExpressionHandler()
-        expressionHandler.setPermissionEvaluator(CustomPermissionEvaluator(projectService, storyService))
+        expressionHandler.setPermissionEvaluator(CustomPermissionEvaluator(projectService))
         return expressionHandler
     }
 }
